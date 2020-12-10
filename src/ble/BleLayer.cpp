@@ -100,7 +100,7 @@ class BleEndPointPool
 public:
     int Size() const { return BLE_LAYER_NUM_BLE_ENDPOINTS; }
 
-    BLEEndPoint * Get(int i) const
+    BLEEndPoint * Get(size_t i) const
     {
         static union
         {
@@ -123,7 +123,7 @@ public:
             return nullptr;
         }
 
-        for (int i = 0; i < BLE_LAYER_NUM_BLE_ENDPOINTS; i++)
+        for (size_t i = 0; i < BLE_LAYER_NUM_BLE_ENDPOINTS; i++)
         {
             BLEEndPoint * elem = Get(i);
             if (elem->mBle != nullptr && elem->mConnObj == c)
@@ -137,7 +137,7 @@ public:
 
     BLEEndPoint * GetFree() const
     {
-        for (int i = 0; i < BLE_LAYER_NUM_BLE_ENDPOINTS; i++)
+        for (size_t i = 0; i < BLE_LAYER_NUM_BLE_ENDPOINTS; i++)
         {
             BLEEndPoint * elem = Get(i);
             if (elem->mBle == nullptr)
@@ -162,10 +162,6 @@ const ChipBleUUID BleLayer::CHIP_BLE_CHAR_1_ID = { { // 18EE2EF5-263D-4559-959F-
 const ChipBleUUID BleLayer::CHIP_BLE_CHAR_2_ID = { { // 18EE2EF5-263D-4559-959F-4F9C429F9D12
                                                      0x18, 0xEE, 0x2E, 0xF5, 0x26, 0x3D, 0x45, 0x59, 0x95, 0x9F, 0x4F, 0x9C, 0x42,
                                                      0x9F, 0x9D, 0x12 } };
-
-const ChipBleUUID BleLayer::CHIP_BLE_CHAR_3_ID = { { // 18EE2EF5-263D-4559-959F-4F9C429F9D13
-                                                     0x18, 0xEE, 0x2E, 0xF5, 0x26, 0x3D, 0x45, 0x59, 0x95, 0x9F, 0x4F, 0x9C, 0x42,
-                                                     0x9F, 0x9D, 0x13 } };
 
 void BleLayerObject::Release()
 {
@@ -192,13 +188,14 @@ void BleTransportCapabilitiesRequestMessage::SetSupportedProtocolVersion(uint8_t
     else
     {
         mask    = 0xF0;
-        version = version << 4;
+        version = static_cast<uint8_t>(version << 4);
     }
 
     version &= mask;
 
-    mSupportedProtocolVersions[(index / 2)] &= ~mask; // Clear version at index; leave other version in same byte alone
-    mSupportedProtocolVersions[(index / 2)] |= version;
+    uint8_t & slot = mSupportedProtocolVersions[(index / 2)];
+    slot           = static_cast<uint8_t>(slot & ~mask); // Clear version at index; leave other version in same byte alone
+    slot |= version;
 }
 
 BLE_ERROR BleTransportCapabilitiesRequestMessage::Encode(const PacketBufferHandle & msgBuf) const
@@ -346,7 +343,7 @@ BLE_ERROR BleLayer::Shutdown()
     mState = kState_NotInitialized;
 
     // Close and free all BLE end points.
-    for (int i = 0; i < BLE_LAYER_NUM_BLE_ENDPOINTS; i++)
+    for (size_t i = 0; i < BLE_LAYER_NUM_BLE_ENDPOINTS; i++)
     {
         BLEEndPoint * elem = sBLEEndPointPool.Get(i);
 
@@ -603,7 +600,7 @@ bool BleLayer::HandleSubscribeReceived(BLE_CONNECTION_OBJECT connObj, const Chip
         return false;
     }
 
-    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId) || UUIDsMatch(&CHIP_BLE_CHAR_3_ID, charId))
+    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId))
     {
         // Find end point already associated with BLE connection, if any.
         BLEEndPoint * endPoint = sBLEEndPointPool.Find(connObj);
@@ -628,7 +625,7 @@ bool BleLayer::HandleSubscribeComplete(BLE_CONNECTION_OBJECT connObj, const Chip
         return false;
     }
 
-    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId) || UUIDsMatch(&CHIP_BLE_CHAR_3_ID, charId))
+    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId))
     {
         BLEEndPoint * endPoint = sBLEEndPointPool.Find(connObj);
 
@@ -652,7 +649,7 @@ bool BleLayer::HandleUnsubscribeReceived(BLE_CONNECTION_OBJECT connObj, const Ch
         return false;
     }
 
-    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId) || UUIDsMatch(&CHIP_BLE_CHAR_3_ID, charId))
+    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId))
     {
         // Find end point already associated with BLE connection, if any.
         BLEEndPoint * endPoint = sBLEEndPointPool.Find(connObj);
@@ -677,7 +674,7 @@ bool BleLayer::HandleUnsubscribeComplete(BLE_CONNECTION_OBJECT connObj, const Ch
         return false;
     }
 
-    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId) || UUIDsMatch(&CHIP_BLE_CHAR_3_ID, charId))
+    if (UUIDsMatch(&CHIP_BLE_CHAR_2_ID, charId))
     {
         // Find end point already associated with BLE connection, if any.
         BLEEndPoint * endPoint = sBLEEndPointPool.Find(connObj);
