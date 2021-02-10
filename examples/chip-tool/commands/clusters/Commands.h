@@ -133,8 +133,7 @@ static void OnDoorLockClusterClearYeardayScheduleResponse(void * context)
     command->SetCommandExitStatus(true);
 }
 
-static void OnDoorLockClusterGetHolidayScheduleResponse(void * context, uint8_t scheduleId, uint32_t localStartTime,
-                                                        uint32_t localEndTime, uint8_t operatingModeDuringHoliday)
+static void OnDoorLockClusterGetHolidayScheduleResponse(void * context, uint8_t scheduleId, uint32_t localStartTime, uint32_t localEndTime, uint8_t operatingModeDuringHoliday)
 {
     ChipLogProgress(chipTool, "DoorLockClusterGetHolidayScheduleResponse");
 
@@ -142,8 +141,7 @@ static void OnDoorLockClusterGetHolidayScheduleResponse(void * context, uint8_t 
     command->SetCommandExitStatus(true);
 }
 
-static void OnDoorLockClusterGetLogRecordResponse(void * context, uint16_t logEntryId, uint32_t timestamp, uint8_t eventType,
-                                                  uint8_t source, uint8_t eventIdOrAlarmCode, uint16_t userId, uint8_t * pin)
+static void OnDoorLockClusterGetLogRecordResponse(void * context, uint16_t logEntryId, uint32_t timestamp, uint8_t eventType, uint8_t source, uint8_t eventIdOrAlarmCode, uint16_t userId, uint8_t * pin)
 {
     ChipLogProgress(chipTool, "DoorLockClusterGetLogRecordResponse");
 
@@ -175,8 +173,7 @@ static void OnDoorLockClusterGetUserTypeResponse(void * context, uint16_t userId
     command->SetCommandExitStatus(true);
 }
 
-static void OnDoorLockClusterGetWeekdayScheduleResponse(void * context, uint8_t scheduleId, uint16_t userId, uint8_t daysMask,
-                                                        uint8_t startHour, uint8_t startMinute, uint8_t endHour, uint8_t endMinute)
+static void OnDoorLockClusterGetWeekdayScheduleResponse(void * context, uint8_t scheduleId, uint16_t userId, uint8_t daysMask, uint8_t startHour, uint8_t startMinute, uint8_t endHour, uint8_t endMinute)
 {
     ChipLogProgress(chipTool, "DoorLockClusterGetWeekdayScheduleResponse");
 
@@ -184,8 +181,7 @@ static void OnDoorLockClusterGetWeekdayScheduleResponse(void * context, uint8_t 
     command->SetCommandExitStatus(true);
 }
 
-static void OnDoorLockClusterGetYeardayScheduleResponse(void * context, uint8_t scheduleId, uint16_t userId,
-                                                        uint32_t localStartTime, uint32_t localEndTime)
+static void OnDoorLockClusterGetYeardayScheduleResponse(void * context, uint8_t scheduleId, uint16_t userId, uint32_t localStartTime, uint32_t localEndTime)
 {
     ChipLogProgress(chipTool, "DoorLockClusterGetYeardayScheduleResponse");
 
@@ -273,8 +269,7 @@ static void OnGroupsClusterAddGroupResponse(void * context, uint16_t groupId)
     command->SetCommandExitStatus(true);
 }
 
-static void OnGroupsClusterGetGroupMembershipResponse(void * context, uint8_t capacity, uint8_t groupCount,
-                                                      /* TYPE WARNING: array array defaults to */ uint8_t * groupList)
+static void OnGroupsClusterGetGroupMembershipResponse(void * context, uint8_t capacity, uint8_t groupCount, /* TYPE WARNING: array array defaults to */ uint8_t *  groupList)
 {
     ChipLogProgress(chipTool, "GroupsClusterGetGroupMembershipResponse");
 
@@ -314,8 +309,7 @@ static void OnScenesClusterAddSceneResponse(void * context, uint16_t groupId, ui
     command->SetCommandExitStatus(true);
 }
 
-static void OnScenesClusterGetSceneMembershipResponse(void * context, uint8_t capacity, uint16_t groupId, uint8_t sceneCount,
-                                                      /* TYPE WARNING: array array defaults to */ uint8_t * sceneList)
+static void OnScenesClusterGetSceneMembershipResponse(void * context, uint8_t capacity, uint16_t groupId, uint8_t sceneCount, /* TYPE WARNING: array array defaults to */ uint8_t *  sceneList)
 {
     ChipLogProgress(chipTool, "ScenesClusterGetSceneMembershipResponse");
 
@@ -347,9 +341,7 @@ static void OnScenesClusterStoreSceneResponse(void * context, uint16_t groupId, 
     command->SetCommandExitStatus(true);
 }
 
-static void OnScenesClusterViewSceneResponse(void * context, uint16_t groupId, uint8_t sceneId, uint16_t transitionTime,
-                                             uint8_t * sceneName,
-                                             /* TYPE WARNING: array array defaults to */ uint8_t * extensionFieldSets)
+static void OnScenesClusterViewSceneResponse(void * context, uint16_t groupId, uint8_t sceneId, uint16_t transitionTime, uint8_t * sceneName, /* TYPE WARNING: array array defaults to */ uint8_t *  extensionFieldSets)
 {
     ChipLogProgress(chipTool, "ScenesClusterViewSceneResponse");
 
@@ -357,12 +349,12 @@ static void OnScenesClusterViewSceneResponse(void * context, uint16_t groupId, u
     command->SetCommandExitStatus(true);
 }
 
+
 /*----------------------------------------------------------------------------*\
 | Cluster Name                                                        |   ID   |
 |---------------------------------------------------------------------+--------|
 | BarrierControl                                                      | 0x0103 |
 | Basic                                                               | 0x0000 |
-| Binding                                                             | 0xF000 |
 | ColorControl                                                        | 0x0300 |
 | DoorLock                                                            | 0x0101 |
 | Groups                                                              | 0x0004 |
@@ -371,19 +363,20 @@ static void OnScenesClusterViewSceneResponse(void * context, uint16_t groupId, u
 | OnOff                                                               | 0x0006 |
 | Scenes                                                              | 0x0005 |
 | TemperatureMeasurement                                              | 0x0402 |
+| Thermostat                                                          | 0x0201 |
 \*----------------------------------------------------------------------------*/
 
-constexpr chip::ClusterId kBarrierControlClusterId         = 0x0103;
-constexpr chip::ClusterId kBasicClusterId                  = 0x0000;
-constexpr chip::ClusterId kBindingClusterId                = 0xF000;
-constexpr chip::ClusterId kColorControlClusterId           = 0x0300;
-constexpr chip::ClusterId kDoorLockClusterId               = 0x0101;
-constexpr chip::ClusterId kGroupsClusterId                 = 0x0004;
-constexpr chip::ClusterId kIdentifyClusterId               = 0x0003;
-constexpr chip::ClusterId kLevelControlClusterId           = 0x0008;
-constexpr chip::ClusterId kOnOffClusterId                  = 0x0006;
-constexpr chip::ClusterId kScenesClusterId                 = 0x0005;
+constexpr chip::ClusterId kBarrierControlClusterId = 0x0103;
+constexpr chip::ClusterId kBasicClusterId = 0x0000;
+constexpr chip::ClusterId kColorControlClusterId = 0x0300;
+constexpr chip::ClusterId kDoorLockClusterId = 0x0101;
+constexpr chip::ClusterId kGroupsClusterId = 0x0004;
+constexpr chip::ClusterId kIdentifyClusterId = 0x0003;
+constexpr chip::ClusterId kLevelControlClusterId = 0x0008;
+constexpr chip::ClusterId kOnOffClusterId = 0x0006;
+constexpr chip::ClusterId kScenesClusterId = 0x0005;
 constexpr chip::ClusterId kTemperatureMeasurementClusterId = 0x0402;
+constexpr chip::ClusterId kThermostatClusterId = 0x0201;
 
 /*----------------------------------------------------------------------------*\
 | Cluster BarrierControl                                              | 0x0103 |
@@ -403,10 +396,10 @@ constexpr chip::ClusterId kTemperatureMeasurementClusterId = 0x0402;
 /*
  * Command BarrierControlGoToPercent
  */
-class BarrierControlBarrierControlGoToPercent : public ModelCommand
+class BarrierControlBarrierControlGoToPercent: public ModelCommand
 {
 public:
-    BarrierControlBarrierControlGoToPercent() : ModelCommand("barrier-control-go-to-percent")
+    BarrierControlBarrierControlGoToPercent(): ModelCommand("barrier-control-go-to-percent")
     {
         AddArgument("percentOpen", 0, UINT8_MAX, &mPercentOpen);
         ModelCommand::AddArguments();
@@ -422,20 +415,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mPercentOpen;
 };
 
 /*
  * Command BarrierControlStop
  */
-class BarrierControlBarrierControlStop : public ModelCommand
+class BarrierControlBarrierControlStop: public ModelCommand
 {
 public:
-    BarrierControlBarrierControlStop() : ModelCommand("barrier-control-stop") { ModelCommand::AddArguments(); }
+    BarrierControlBarrierControlStop(): ModelCommand("barrier-control-stop")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -447,19 +441,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
 
 /*
  * Discover Attributes
  */
-class DiscoverBarrierControlAttributes : public ModelCommand
+class DiscoverBarrierControlAttributes: public ModelCommand
 {
 public:
-    DiscoverBarrierControlAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverBarrierControlAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -471,19 +467,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute BarrierMovingState
  */
-class ReadBarrierControlBarrierMovingState : public ModelCommand
+class ReadBarrierControlBarrierMovingState: public ModelCommand
 {
 public:
-    ReadBarrierControlBarrierMovingState() : ModelCommand("read")
+    ReadBarrierControlBarrierMovingState(): ModelCommand("read")
     {
         AddArgument("attr-name", "barrier-moving-state");
         ModelCommand::AddArguments();
@@ -499,19 +493,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute BarrierSafetyStatus
  */
-class ReadBarrierControlBarrierSafetyStatus : public ModelCommand
+class ReadBarrierControlBarrierSafetyStatus: public ModelCommand
 {
 public:
-    ReadBarrierControlBarrierSafetyStatus() : ModelCommand("read")
+    ReadBarrierControlBarrierSafetyStatus(): ModelCommand("read")
     {
         AddArgument("attr-name", "barrier-safety-status");
         ModelCommand::AddArguments();
@@ -527,19 +519,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute BarrierCapabilities
  */
-class ReadBarrierControlBarrierCapabilities : public ModelCommand
+class ReadBarrierControlBarrierCapabilities: public ModelCommand
 {
 public:
-    ReadBarrierControlBarrierCapabilities() : ModelCommand("read")
+    ReadBarrierControlBarrierCapabilities(): ModelCommand("read")
     {
         AddArgument("attr-name", "barrier-capabilities");
         ModelCommand::AddArguments();
@@ -555,19 +545,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute BarrierPosition
  */
-class ReadBarrierControlBarrierPosition : public ModelCommand
+class ReadBarrierControlBarrierPosition: public ModelCommand
 {
 public:
-    ReadBarrierControlBarrierPosition() : ModelCommand("read")
+    ReadBarrierControlBarrierPosition(): ModelCommand("read")
     {
         AddArgument("attr-name", "barrier-position");
         ModelCommand::AddArguments();
@@ -583,19 +571,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadBarrierControlClusterRevision : public ModelCommand
+class ReadBarrierControlClusterRevision: public ModelCommand
 {
 public:
-    ReadBarrierControlClusterRevision() : ModelCommand("read")
+    ReadBarrierControlClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -611,17 +597,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
 | Cluster Basic                                                       | 0x0000 |
 |------------------------------------------------------------------------------|
 | Commands:                                                           |        |
-| * MfgSpecificPing                                                   |   0x00 |
 | * ResetToFactoryDefaults                                            |   0x00 |
 |------------------------------------------------------------------------------|
 | Attributes:                                                         |        |
@@ -631,36 +614,15 @@ private:
 \*----------------------------------------------------------------------------*/
 
 /*
- * Command MfgSpecificPing
- */
-class BasicMfgSpecificPing : public ModelCommand
-{
-public:
-    BasicMfgSpecificPing() : ModelCommand("mfg-specific-ping") { ModelCommand::AddArguments(); }
-
-    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
-    {
-        ChipLogProgress(chipTool, "Sending cluster (0x0000) command (0x00) on endpoint %" PRIu16, endpointId);
-
-        chip::Controller::BasicCluster cluster;
-        cluster.Associate(device, endpointId);
-        return cluster.MfgSpecificPing(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
-    }
-
-private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-};
-
-/*
  * Command ResetToFactoryDefaults
  */
-class BasicResetToFactoryDefaults : public ModelCommand
+class BasicResetToFactoryDefaults: public ModelCommand
 {
 public:
-    BasicResetToFactoryDefaults() : ModelCommand("reset-to-factory-defaults") { ModelCommand::AddArguments(); }
+    BasicResetToFactoryDefaults(): ModelCommand("reset-to-factory-defaults")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -672,19 +634,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
 
 /*
  * Discover Attributes
  */
-class DiscoverBasicAttributes : public ModelCommand
+class DiscoverBasicAttributes: public ModelCommand
 {
 public:
-    DiscoverBasicAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverBasicAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -696,19 +660,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ZclVersion
  */
-class ReadBasicZclVersion : public ModelCommand
+class ReadBasicZclVersion: public ModelCommand
 {
 public:
-    ReadBasicZclVersion() : ModelCommand("read")
+    ReadBasicZclVersion(): ModelCommand("read")
     {
         AddArgument("attr-name", "zcl-version");
         ModelCommand::AddArguments();
@@ -724,19 +686,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute PowerSource
  */
-class ReadBasicPowerSource : public ModelCommand
+class ReadBasicPowerSource: public ModelCommand
 {
 public:
-    ReadBasicPowerSource() : ModelCommand("read")
+    ReadBasicPowerSource(): ModelCommand("read")
     {
         AddArgument("attr-name", "power-source");
         ModelCommand::AddArguments();
@@ -752,19 +712,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadBasicClusterRevision : public ModelCommand
+class ReadBasicClusterRevision: public ModelCommand
 {
 public:
-    ReadBasicClusterRevision() : ModelCommand("read")
+    ReadBasicClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -780,143 +738,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-};
-
-/*----------------------------------------------------------------------------*\
-| Cluster Binding                                                     | 0xF000 |
-|------------------------------------------------------------------------------|
-| Commands:                                                           |        |
-| * Bind                                                              |   0x00 |
-| * Unbind                                                            |   0x01 |
-|------------------------------------------------------------------------------|
-| Attributes:                                                         |        |
-| * ClusterRevision                                                   | 0xFFFD |
-\*----------------------------------------------------------------------------*/
-
-/*
- * Command Bind
- */
-class BindingBind : public ModelCommand
-{
-public:
-    BindingBind() : ModelCommand("bind")
-    {
-        AddArgument("nodeId", 0, UINT64_MAX, &mNodeId);
-        AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
-        AddArgument("endpointId", 0, UINT8_MAX, &mEndpointId);
-        AddArgument("clusterId", 0, UINT16_MAX, &mClusterId);
-        ModelCommand::AddArguments();
-    }
-
-    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
-    {
-        ChipLogProgress(chipTool, "Sending cluster (0xF000) command (0x00) on endpoint %" PRIu16, endpointId);
-
-        chip::Controller::BindingCluster cluster;
-        cluster.Associate(device, endpointId);
-        return cluster.Bind(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mNodeId, mGroupId, mEndpointId, mClusterId);
-    }
-
-private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::NodeId mNodeId;
-    chip::GroupId mGroupId;
-    chip::EndpointId mEndpointId;
-    chip::ClusterId mClusterId;
-};
-
-/*
- * Command Unbind
- */
-class BindingUnbind : public ModelCommand
-{
-public:
-    BindingUnbind() : ModelCommand("unbind")
-    {
-        AddArgument("nodeId", 0, UINT64_MAX, &mNodeId);
-        AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
-        AddArgument("endpointId", 0, UINT8_MAX, &mEndpointId);
-        AddArgument("clusterId", 0, UINT16_MAX, &mClusterId);
-        ModelCommand::AddArguments();
-    }
-
-    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
-    {
-        ChipLogProgress(chipTool, "Sending cluster (0xF000) command (0x01) on endpoint %" PRIu16, endpointId);
-
-        chip::Controller::BindingCluster cluster;
-        cluster.Associate(device, endpointId);
-        return cluster.Unbind(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mNodeId, mGroupId, mEndpointId, mClusterId);
-    }
-
-private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::NodeId mNodeId;
-    chip::GroupId mGroupId;
-    chip::EndpointId mEndpointId;
-    chip::ClusterId mClusterId;
-};
-
-/*
- * Discover Attributes
- */
-class DiscoverBindingAttributes : public ModelCommand
-{
-public:
-    DiscoverBindingAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
-
-    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
-    {
-        ChipLogProgress(chipTool, "Sending cluster (0x0000) command (0x0C) on endpoint %" PRIu16, endpointId);
-
-        chip::Controller::BindingCluster cluster;
-        cluster.Associate(device, endpointId);
-        return cluster.DiscoverAttributes(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
-    }
-
-private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-};
-
-/*
- * Attribute ClusterRevision
- */
-class ReadBindingClusterRevision : public ModelCommand
-{
-public:
-    ReadBindingClusterRevision() : ModelCommand("read")
-    {
-        AddArgument("attr-name", "cluster-revision");
-        ModelCommand::AddArguments();
-    }
-
-    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
-    {
-        ChipLogProgress(chipTool, "Sending cluster (0xF000) command (0x00) on endpoint %" PRIu16, endpointId);
-
-        chip::Controller::BindingCluster cluster;
-        cluster.Associate(device, endpointId);
-        return cluster.ReadAttributeClusterRevision(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
-    }
-
-private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -995,10 +818,10 @@ private:
 /*
  * Command MoveColor
  */
-class ColorControlMoveColor : public ModelCommand
+class ColorControlMoveColor: public ModelCommand
 {
 public:
-    ColorControlMoveColor() : ModelCommand("move-color")
+    ColorControlMoveColor(): ModelCommand("move-color")
     {
         AddArgument("rateX", INT16_MIN, INT16_MAX, &mRateX);
         AddArgument("rateY", INT16_MIN, INT16_MAX, &mRateY);
@@ -1013,15 +836,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveColor(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mRateX, mRateY, mOptionsMask,
-                                 mOptionsOverride);
+        return cluster.MoveColor(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mRateX, mRateY, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     int16_t mRateX;
     int16_t mRateY;
     uint8_t mOptionsMask;
@@ -1031,10 +851,10 @@ private:
 /*
  * Command MoveColorTemperature
  */
-class ColorControlMoveColorTemperature : public ModelCommand
+class ColorControlMoveColorTemperature: public ModelCommand
 {
 public:
-    ColorControlMoveColorTemperature() : ModelCommand("move-color-temperature")
+    ColorControlMoveColorTemperature(): ModelCommand("move-color-temperature")
     {
         AddArgument("moveMode", 0, UINT8_MAX, &mMoveMode);
         AddArgument("rate", 0, UINT16_MAX, &mRate);
@@ -1051,15 +871,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate,
-                                            mColorTemperatureMinimum, mColorTemperatureMaximum, mOptionsMask, mOptionsOverride);
+        return cluster.MoveColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mColorTemperatureMinimum, mColorTemperatureMaximum, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mMoveMode;
     uint16_t mRate;
     uint16_t mColorTemperatureMinimum;
@@ -1071,10 +888,10 @@ private:
 /*
  * Command MoveHue
  */
-class ColorControlMoveHue : public ModelCommand
+class ColorControlMoveHue: public ModelCommand
 {
 public:
-    ColorControlMoveHue() : ModelCommand("move-hue")
+    ColorControlMoveHue(): ModelCommand("move-hue")
     {
         AddArgument("moveMode", 0, UINT8_MAX, &mMoveMode);
         AddArgument("rate", 0, UINT8_MAX, &mRate);
@@ -1089,15 +906,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mOptionsMask,
-                               mOptionsOverride);
+        return cluster.MoveHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mMoveMode;
     uint8_t mRate;
     uint8_t mOptionsMask;
@@ -1107,10 +921,10 @@ private:
 /*
  * Command MoveSaturation
  */
-class ColorControlMoveSaturation : public ModelCommand
+class ColorControlMoveSaturation: public ModelCommand
 {
 public:
-    ColorControlMoveSaturation() : ModelCommand("move-saturation")
+    ColorControlMoveSaturation(): ModelCommand("move-saturation")
     {
         AddArgument("moveMode", 0, UINT8_MAX, &mMoveMode);
         AddArgument("rate", 0, UINT8_MAX, &mRate);
@@ -1125,15 +939,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mOptionsMask,
-                                      mOptionsOverride);
+        return cluster.MoveSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mMoveMode;
     uint8_t mRate;
     uint8_t mOptionsMask;
@@ -1143,10 +954,10 @@ private:
 /*
  * Command MoveToColor
  */
-class ColorControlMoveToColor : public ModelCommand
+class ColorControlMoveToColor: public ModelCommand
 {
 public:
-    ColorControlMoveToColor() : ModelCommand("move-to-color")
+    ColorControlMoveToColor(): ModelCommand("move-to-color")
     {
         AddArgument("colorX", 0, UINT16_MAX, &mColorX);
         AddArgument("colorY", 0, UINT16_MAX, &mColorY);
@@ -1162,15 +973,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveToColor(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mColorX, mColorY, mTransitionTime,
-                                   mOptionsMask, mOptionsOverride);
+        return cluster.MoveToColor(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mColorX, mColorY, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mColorX;
     uint16_t mColorY;
     uint16_t mTransitionTime;
@@ -1181,10 +989,10 @@ private:
 /*
  * Command MoveToColorTemperature
  */
-class ColorControlMoveToColorTemperature : public ModelCommand
+class ColorControlMoveToColorTemperature: public ModelCommand
 {
 public:
-    ColorControlMoveToColorTemperature() : ModelCommand("move-to-color-temperature")
+    ColorControlMoveToColorTemperature(): ModelCommand("move-to-color-temperature")
     {
         AddArgument("colorTemperature", 0, UINT16_MAX, &mColorTemperature);
         AddArgument("transitionTime", 0, UINT16_MAX, &mTransitionTime);
@@ -1199,15 +1007,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveToColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mColorTemperature,
-                                              mTransitionTime, mOptionsMask, mOptionsOverride);
+        return cluster.MoveToColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mColorTemperature, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mColorTemperature;
     uint16_t mTransitionTime;
     uint8_t mOptionsMask;
@@ -1217,10 +1022,10 @@ private:
 /*
  * Command MoveToHue
  */
-class ColorControlMoveToHue : public ModelCommand
+class ColorControlMoveToHue: public ModelCommand
 {
 public:
-    ColorControlMoveToHue() : ModelCommand("move-to-hue")
+    ColorControlMoveToHue(): ModelCommand("move-to-hue")
     {
         AddArgument("hue", 0, UINT8_MAX, &mHue);
         AddArgument("direction", 0, UINT8_MAX, &mDirection);
@@ -1236,15 +1041,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveToHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mHue, mDirection, mTransitionTime,
-                                 mOptionsMask, mOptionsOverride);
+        return cluster.MoveToHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mHue, mDirection, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mHue;
     uint8_t mDirection;
     uint16_t mTransitionTime;
@@ -1255,10 +1057,10 @@ private:
 /*
  * Command MoveToHueAndSaturation
  */
-class ColorControlMoveToHueAndSaturation : public ModelCommand
+class ColorControlMoveToHueAndSaturation: public ModelCommand
 {
 public:
-    ColorControlMoveToHueAndSaturation() : ModelCommand("move-to-hue-and-saturation")
+    ColorControlMoveToHueAndSaturation(): ModelCommand("move-to-hue-and-saturation")
     {
         AddArgument("hue", 0, UINT8_MAX, &mHue);
         AddArgument("saturation", 0, UINT8_MAX, &mSaturation);
@@ -1274,15 +1076,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveToHueAndSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mHue, mSaturation,
-                                              mTransitionTime, mOptionsMask, mOptionsOverride);
+        return cluster.MoveToHueAndSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mHue, mSaturation, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mHue;
     uint8_t mSaturation;
     uint16_t mTransitionTime;
@@ -1293,10 +1092,10 @@ private:
 /*
  * Command MoveToSaturation
  */
-class ColorControlMoveToSaturation : public ModelCommand
+class ColorControlMoveToSaturation: public ModelCommand
 {
 public:
-    ColorControlMoveToSaturation() : ModelCommand("move-to-saturation")
+    ColorControlMoveToSaturation(): ModelCommand("move-to-saturation")
     {
         AddArgument("saturation", 0, UINT8_MAX, &mSaturation);
         AddArgument("transitionTime", 0, UINT16_MAX, &mTransitionTime);
@@ -1311,15 +1110,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveToSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mSaturation, mTransitionTime,
-                                        mOptionsMask, mOptionsOverride);
+        return cluster.MoveToSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mSaturation, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mSaturation;
     uint16_t mTransitionTime;
     uint8_t mOptionsMask;
@@ -1329,10 +1125,10 @@ private:
 /*
  * Command StepColor
  */
-class ColorControlStepColor : public ModelCommand
+class ColorControlStepColor: public ModelCommand
 {
 public:
-    ColorControlStepColor() : ModelCommand("step-color")
+    ColorControlStepColor(): ModelCommand("step-color")
     {
         AddArgument("stepX", INT16_MIN, INT16_MAX, &mStepX);
         AddArgument("stepY", INT16_MIN, INT16_MAX, &mStepY);
@@ -1348,15 +1144,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.StepColor(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepX, mStepY, mTransitionTime,
-                                 mOptionsMask, mOptionsOverride);
+        return cluster.StepColor(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepX, mStepY, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     int16_t mStepX;
     int16_t mStepY;
     uint16_t mTransitionTime;
@@ -1367,10 +1160,10 @@ private:
 /*
  * Command StepColorTemperature
  */
-class ColorControlStepColorTemperature : public ModelCommand
+class ColorControlStepColorTemperature: public ModelCommand
 {
 public:
-    ColorControlStepColorTemperature() : ModelCommand("step-color-temperature")
+    ColorControlStepColorTemperature(): ModelCommand("step-color-temperature")
     {
         AddArgument("stepMode", 0, UINT8_MAX, &mStepMode);
         AddArgument("stepSize", 0, UINT16_MAX, &mStepSize);
@@ -1388,16 +1181,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.StepColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize,
-                                            mTransitionTime, mColorTemperatureMinimum, mColorTemperatureMaximum, mOptionsMask,
-                                            mOptionsOverride);
+        return cluster.StepColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime, mColorTemperatureMinimum, mColorTemperatureMaximum, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mStepMode;
     uint16_t mStepSize;
     uint16_t mTransitionTime;
@@ -1410,10 +1199,10 @@ private:
 /*
  * Command StepHue
  */
-class ColorControlStepHue : public ModelCommand
+class ColorControlStepHue: public ModelCommand
 {
 public:
-    ColorControlStepHue() : ModelCommand("step-hue")
+    ColorControlStepHue(): ModelCommand("step-hue")
     {
         AddArgument("stepMode", 0, UINT8_MAX, &mStepMode);
         AddArgument("stepSize", 0, UINT8_MAX, &mStepSize);
@@ -1429,15 +1218,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.StepHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime,
-                               mOptionsMask, mOptionsOverride);
+        return cluster.StepHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mStepMode;
     uint8_t mStepSize;
     uint8_t mTransitionTime;
@@ -1448,10 +1234,10 @@ private:
 /*
  * Command StepSaturation
  */
-class ColorControlStepSaturation : public ModelCommand
+class ColorControlStepSaturation: public ModelCommand
 {
 public:
-    ColorControlStepSaturation() : ModelCommand("step-saturation")
+    ColorControlStepSaturation(): ModelCommand("step-saturation")
     {
         AddArgument("stepMode", 0, UINT8_MAX, &mStepMode);
         AddArgument("stepSize", 0, UINT8_MAX, &mStepSize);
@@ -1467,15 +1253,12 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.StepSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize,
-                                      mTransitionTime, mOptionsMask, mOptionsOverride);
+        return cluster.StepSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime, mOptionsMask, mOptionsOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mStepMode;
     uint8_t mStepSize;
     uint8_t mTransitionTime;
@@ -1486,10 +1269,10 @@ private:
 /*
  * Command StopMoveStep
  */
-class ColorControlStopMoveStep : public ModelCommand
+class ColorControlStopMoveStep: public ModelCommand
 {
 public:
-    ColorControlStopMoveStep() : ModelCommand("stop-move-step")
+    ColorControlStopMoveStep(): ModelCommand("stop-move-step")
     {
         AddArgument("optionsMask", 0, UINT8_MAX, &mOptionsMask);
         AddArgument("optionsOverride", 0, UINT8_MAX, &mOptionsOverride);
@@ -1506,21 +1289,23 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mOptionsMask;
     uint8_t mOptionsOverride;
 };
 
+
 /*
  * Discover Attributes
  */
-class DiscoverColorControlAttributes : public ModelCommand
+class DiscoverColorControlAttributes: public ModelCommand
 {
 public:
-    DiscoverColorControlAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverColorControlAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -1532,19 +1317,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CurrentHue
  */
-class ReadColorControlCurrentHue : public ModelCommand
+class ReadColorControlCurrentHue: public ModelCommand
 {
 public:
-    ReadColorControlCurrentHue() : ModelCommand("read")
+    ReadColorControlCurrentHue(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-hue");
         ModelCommand::AddArguments();
@@ -1560,16 +1343,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportColorControlCurrentHue : public ModelCommand
+class ReportColorControlCurrentHue: public ModelCommand
 {
 public:
-    ReportColorControlCurrentHue() : ModelCommand("report")
+    ReportColorControlCurrentHue(): ModelCommand("report")
     {
         AddArgument("attr-name", "current-hue");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -1591,17 +1372,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeCurrentHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                    mMaxInterval, mChange);
+        return cluster.ConfigureAttributeCurrentHue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     uint8_t mChange;
@@ -1610,10 +1387,10 @@ private:
 /*
  * Attribute CurrentSaturation
  */
-class ReadColorControlCurrentSaturation : public ModelCommand
+class ReadColorControlCurrentSaturation: public ModelCommand
 {
 public:
-    ReadColorControlCurrentSaturation() : ModelCommand("read")
+    ReadColorControlCurrentSaturation(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-saturation");
         ModelCommand::AddArguments();
@@ -1629,16 +1406,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportColorControlCurrentSaturation : public ModelCommand
+class ReportColorControlCurrentSaturation: public ModelCommand
 {
 public:
-    ReportColorControlCurrentSaturation() : ModelCommand("report")
+    ReportColorControlCurrentSaturation(): ModelCommand("report")
     {
         AddArgument("attr-name", "current-saturation");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -1660,17 +1435,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeCurrentSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                           mMaxInterval, mChange);
+        return cluster.ConfigureAttributeCurrentSaturation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     uint8_t mChange;
@@ -1679,10 +1450,10 @@ private:
 /*
  * Attribute RemainingTime
  */
-class ReadColorControlRemainingTime : public ModelCommand
+class ReadColorControlRemainingTime: public ModelCommand
 {
 public:
-    ReadColorControlRemainingTime() : ModelCommand("read")
+    ReadColorControlRemainingTime(): ModelCommand("read")
     {
         AddArgument("attr-name", "remaining-time");
         ModelCommand::AddArguments();
@@ -1698,19 +1469,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CurrentX
  */
-class ReadColorControlCurrentX : public ModelCommand
+class ReadColorControlCurrentX: public ModelCommand
 {
 public:
-    ReadColorControlCurrentX() : ModelCommand("read")
+    ReadColorControlCurrentX(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-x");
         ModelCommand::AddArguments();
@@ -1726,16 +1495,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportColorControlCurrentX : public ModelCommand
+class ReportColorControlCurrentX: public ModelCommand
 {
 public:
-    ReportColorControlCurrentX() : ModelCommand("report")
+    ReportColorControlCurrentX(): ModelCommand("report")
     {
         AddArgument("attr-name", "current-x");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -1757,17 +1524,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeCurrentX(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                  mMaxInterval, mChange);
+        return cluster.ConfigureAttributeCurrentX(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int16uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     uint16_t mChange;
@@ -1776,10 +1539,10 @@ private:
 /*
  * Attribute CurrentY
  */
-class ReadColorControlCurrentY : public ModelCommand
+class ReadColorControlCurrentY: public ModelCommand
 {
 public:
-    ReadColorControlCurrentY() : ModelCommand("read")
+    ReadColorControlCurrentY(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-y");
         ModelCommand::AddArguments();
@@ -1795,16 +1558,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportColorControlCurrentY : public ModelCommand
+class ReportColorControlCurrentY: public ModelCommand
 {
 public:
-    ReportColorControlCurrentY() : ModelCommand("report")
+    ReportColorControlCurrentY(): ModelCommand("report")
     {
         AddArgument("attr-name", "current-y");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -1826,17 +1587,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeCurrentY(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                  mMaxInterval, mChange);
+        return cluster.ConfigureAttributeCurrentY(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int16uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     uint16_t mChange;
@@ -1845,10 +1602,10 @@ private:
 /*
  * Attribute DriftCompensation
  */
-class ReadColorControlDriftCompensation : public ModelCommand
+class ReadColorControlDriftCompensation: public ModelCommand
 {
 public:
-    ReadColorControlDriftCompensation() : ModelCommand("read")
+    ReadColorControlDriftCompensation(): ModelCommand("read")
     {
         AddArgument("attr-name", "drift-compensation");
         ModelCommand::AddArguments();
@@ -1864,19 +1621,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CompensationText
  */
-class ReadColorControlCompensationText : public ModelCommand
+class ReadColorControlCompensationText: public ModelCommand
 {
 public:
-    ReadColorControlCompensationText() : ModelCommand("read")
+    ReadColorControlCompensationText(): ModelCommand("read")
     {
         AddArgument("attr-name", "compensation-text");
         ModelCommand::AddArguments();
@@ -1892,19 +1647,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<UnsupportedAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<UnsupportedAttributeCallback>(OnUnsupportedAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<UnsupportedAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<UnsupportedAttributeCallback>(OnUnsupportedAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorTemperature
  */
-class ReadColorControlColorTemperature : public ModelCommand
+class ReadColorControlColorTemperature: public ModelCommand
 {
 public:
-    ReadColorControlColorTemperature() : ModelCommand("read")
+    ReadColorControlColorTemperature(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-temperature");
         ModelCommand::AddArguments();
@@ -1920,16 +1673,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportColorControlColorTemperature : public ModelCommand
+class ReportColorControlColorTemperature: public ModelCommand
 {
 public:
-    ReportColorControlColorTemperature() : ModelCommand("report")
+    ReportColorControlColorTemperature(): ModelCommand("report")
     {
         AddArgument("attr-name", "color-temperature");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -1951,17 +1702,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                          mMaxInterval, mChange);
+        return cluster.ConfigureAttributeColorTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int16uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     uint16_t mChange;
@@ -1970,10 +1717,10 @@ private:
 /*
  * Attribute ColorMode
  */
-class ReadColorControlColorMode : public ModelCommand
+class ReadColorControlColorMode: public ModelCommand
 {
 public:
-    ReadColorControlColorMode() : ModelCommand("read")
+    ReadColorControlColorMode(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-mode");
         ModelCommand::AddArguments();
@@ -1989,19 +1736,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorControlOptions
  */
-class ReadColorControlColorControlOptions : public ModelCommand
+class ReadColorControlColorControlOptions: public ModelCommand
 {
 public:
-    ReadColorControlColorControlOptions() : ModelCommand("read")
+    ReadColorControlColorControlOptions(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-control-options");
         ModelCommand::AddArguments();
@@ -2017,16 +1762,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorControlOptions : public ModelCommand
+class WriteColorControlColorControlOptions: public ModelCommand
 {
 public:
-    WriteColorControlColorControlOptions() : ModelCommand("write")
+    WriteColorControlColorControlOptions(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-control-options");
         AddArgument("attr-value", 0, UINT8_MAX, &mValue);
@@ -2043,20 +1786,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mValue;
 };
 
 /*
  * Attribute NumberOfPrimaries
  */
-class ReadColorControlNumberOfPrimaries : public ModelCommand
+class ReadColorControlNumberOfPrimaries: public ModelCommand
 {
 public:
-    ReadColorControlNumberOfPrimaries() : ModelCommand("read")
+    ReadColorControlNumberOfPrimaries(): ModelCommand("read")
     {
         AddArgument("attr-name", "number-of-primaries");
         ModelCommand::AddArguments();
@@ -2072,19 +1813,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary1X
  */
-class ReadColorControlPrimary1X : public ModelCommand
+class ReadColorControlPrimary1X: public ModelCommand
 {
 public:
-    ReadColorControlPrimary1X() : ModelCommand("read")
+    ReadColorControlPrimary1X(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary1x");
         ModelCommand::AddArguments();
@@ -2100,19 +1839,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary1Y
  */
-class ReadColorControlPrimary1Y : public ModelCommand
+class ReadColorControlPrimary1Y: public ModelCommand
 {
 public:
-    ReadColorControlPrimary1Y() : ModelCommand("read")
+    ReadColorControlPrimary1Y(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary1y");
         ModelCommand::AddArguments();
@@ -2128,19 +1865,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary1Intensity
  */
-class ReadColorControlPrimary1Intensity : public ModelCommand
+class ReadColorControlPrimary1Intensity: public ModelCommand
 {
 public:
-    ReadColorControlPrimary1Intensity() : ModelCommand("read")
+    ReadColorControlPrimary1Intensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary1intensity");
         ModelCommand::AddArguments();
@@ -2156,19 +1891,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary2X
  */
-class ReadColorControlPrimary2X : public ModelCommand
+class ReadColorControlPrimary2X: public ModelCommand
 {
 public:
-    ReadColorControlPrimary2X() : ModelCommand("read")
+    ReadColorControlPrimary2X(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary2x");
         ModelCommand::AddArguments();
@@ -2184,19 +1917,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary2Y
  */
-class ReadColorControlPrimary2Y : public ModelCommand
+class ReadColorControlPrimary2Y: public ModelCommand
 {
 public:
-    ReadColorControlPrimary2Y() : ModelCommand("read")
+    ReadColorControlPrimary2Y(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary2y");
         ModelCommand::AddArguments();
@@ -2212,19 +1943,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary2Intensity
  */
-class ReadColorControlPrimary2Intensity : public ModelCommand
+class ReadColorControlPrimary2Intensity: public ModelCommand
 {
 public:
-    ReadColorControlPrimary2Intensity() : ModelCommand("read")
+    ReadColorControlPrimary2Intensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary2intensity");
         ModelCommand::AddArguments();
@@ -2240,19 +1969,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary3X
  */
-class ReadColorControlPrimary3X : public ModelCommand
+class ReadColorControlPrimary3X: public ModelCommand
 {
 public:
-    ReadColorControlPrimary3X() : ModelCommand("read")
+    ReadColorControlPrimary3X(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary3x");
         ModelCommand::AddArguments();
@@ -2268,19 +1995,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary3Y
  */
-class ReadColorControlPrimary3Y : public ModelCommand
+class ReadColorControlPrimary3Y: public ModelCommand
 {
 public:
-    ReadColorControlPrimary3Y() : ModelCommand("read")
+    ReadColorControlPrimary3Y(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary3y");
         ModelCommand::AddArguments();
@@ -2296,19 +2021,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary3Intensity
  */
-class ReadColorControlPrimary3Intensity : public ModelCommand
+class ReadColorControlPrimary3Intensity: public ModelCommand
 {
 public:
-    ReadColorControlPrimary3Intensity() : ModelCommand("read")
+    ReadColorControlPrimary3Intensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary3intensity");
         ModelCommand::AddArguments();
@@ -2324,19 +2047,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary4X
  */
-class ReadColorControlPrimary4X : public ModelCommand
+class ReadColorControlPrimary4X: public ModelCommand
 {
 public:
-    ReadColorControlPrimary4X() : ModelCommand("read")
+    ReadColorControlPrimary4X(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary4x");
         ModelCommand::AddArguments();
@@ -2352,19 +2073,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary4Y
  */
-class ReadColorControlPrimary4Y : public ModelCommand
+class ReadColorControlPrimary4Y: public ModelCommand
 {
 public:
-    ReadColorControlPrimary4Y() : ModelCommand("read")
+    ReadColorControlPrimary4Y(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary4y");
         ModelCommand::AddArguments();
@@ -2380,19 +2099,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary4Intensity
  */
-class ReadColorControlPrimary4Intensity : public ModelCommand
+class ReadColorControlPrimary4Intensity: public ModelCommand
 {
 public:
-    ReadColorControlPrimary4Intensity() : ModelCommand("read")
+    ReadColorControlPrimary4Intensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary4intensity");
         ModelCommand::AddArguments();
@@ -2408,19 +2125,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary5X
  */
-class ReadColorControlPrimary5X : public ModelCommand
+class ReadColorControlPrimary5X: public ModelCommand
 {
 public:
-    ReadColorControlPrimary5X() : ModelCommand("read")
+    ReadColorControlPrimary5X(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary5x");
         ModelCommand::AddArguments();
@@ -2436,19 +2151,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary5Y
  */
-class ReadColorControlPrimary5Y : public ModelCommand
+class ReadColorControlPrimary5Y: public ModelCommand
 {
 public:
-    ReadColorControlPrimary5Y() : ModelCommand("read")
+    ReadColorControlPrimary5Y(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary5y");
         ModelCommand::AddArguments();
@@ -2464,19 +2177,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary5Intensity
  */
-class ReadColorControlPrimary5Intensity : public ModelCommand
+class ReadColorControlPrimary5Intensity: public ModelCommand
 {
 public:
-    ReadColorControlPrimary5Intensity() : ModelCommand("read")
+    ReadColorControlPrimary5Intensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary5intensity");
         ModelCommand::AddArguments();
@@ -2492,19 +2203,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary6X
  */
-class ReadColorControlPrimary6X : public ModelCommand
+class ReadColorControlPrimary6X: public ModelCommand
 {
 public:
-    ReadColorControlPrimary6X() : ModelCommand("read")
+    ReadColorControlPrimary6X(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary6x");
         ModelCommand::AddArguments();
@@ -2520,19 +2229,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary6Y
  */
-class ReadColorControlPrimary6Y : public ModelCommand
+class ReadColorControlPrimary6Y: public ModelCommand
 {
 public:
-    ReadColorControlPrimary6Y() : ModelCommand("read")
+    ReadColorControlPrimary6Y(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary6y");
         ModelCommand::AddArguments();
@@ -2548,19 +2255,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute Primary6Intensity
  */
-class ReadColorControlPrimary6Intensity : public ModelCommand
+class ReadColorControlPrimary6Intensity: public ModelCommand
 {
 public:
-    ReadColorControlPrimary6Intensity() : ModelCommand("read")
+    ReadColorControlPrimary6Intensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "primary6intensity");
         ModelCommand::AddArguments();
@@ -2576,19 +2281,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute WhitePointX
  */
-class ReadColorControlWhitePointX : public ModelCommand
+class ReadColorControlWhitePointX: public ModelCommand
 {
 public:
-    ReadColorControlWhitePointX() : ModelCommand("read")
+    ReadColorControlWhitePointX(): ModelCommand("read")
     {
         AddArgument("attr-name", "white-point-x");
         ModelCommand::AddArguments();
@@ -2604,16 +2307,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlWhitePointX : public ModelCommand
+class WriteColorControlWhitePointX: public ModelCommand
 {
 public:
-    WriteColorControlWhitePointX() : ModelCommand("write")
+    WriteColorControlWhitePointX(): ModelCommand("write")
     {
         AddArgument("attr-name", "white-point-x");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -2630,20 +2331,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute WhitePointY
  */
-class ReadColorControlWhitePointY : public ModelCommand
+class ReadColorControlWhitePointY: public ModelCommand
 {
 public:
-    ReadColorControlWhitePointY() : ModelCommand("read")
+    ReadColorControlWhitePointY(): ModelCommand("read")
     {
         AddArgument("attr-name", "white-point-y");
         ModelCommand::AddArguments();
@@ -2659,16 +2358,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlWhitePointY : public ModelCommand
+class WriteColorControlWhitePointY: public ModelCommand
 {
 public:
-    WriteColorControlWhitePointY() : ModelCommand("write")
+    WriteColorControlWhitePointY(): ModelCommand("write")
     {
         AddArgument("attr-name", "white-point-y");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -2685,20 +2382,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointRX
  */
-class ReadColorControlColorPointRX : public ModelCommand
+class ReadColorControlColorPointRX: public ModelCommand
 {
 public:
-    ReadColorControlColorPointRX() : ModelCommand("read")
+    ReadColorControlColorPointRX(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-rx");
         ModelCommand::AddArguments();
@@ -2714,16 +2409,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointRX : public ModelCommand
+class WriteColorControlColorPointRX: public ModelCommand
 {
 public:
-    WriteColorControlColorPointRX() : ModelCommand("write")
+    WriteColorControlColorPointRX(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-rx");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -2740,20 +2433,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointRY
  */
-class ReadColorControlColorPointRY : public ModelCommand
+class ReadColorControlColorPointRY: public ModelCommand
 {
 public:
-    ReadColorControlColorPointRY() : ModelCommand("read")
+    ReadColorControlColorPointRY(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-ry");
         ModelCommand::AddArguments();
@@ -2769,16 +2460,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointRY : public ModelCommand
+class WriteColorControlColorPointRY: public ModelCommand
 {
 public:
-    WriteColorControlColorPointRY() : ModelCommand("write")
+    WriteColorControlColorPointRY(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-ry");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -2795,20 +2484,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointRIntensity
  */
-class ReadColorControlColorPointRIntensity : public ModelCommand
+class ReadColorControlColorPointRIntensity: public ModelCommand
 {
 public:
-    ReadColorControlColorPointRIntensity() : ModelCommand("read")
+    ReadColorControlColorPointRIntensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-rintensity");
         ModelCommand::AddArguments();
@@ -2824,16 +2511,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointRIntensity : public ModelCommand
+class WriteColorControlColorPointRIntensity: public ModelCommand
 {
 public:
-    WriteColorControlColorPointRIntensity() : ModelCommand("write")
+    WriteColorControlColorPointRIntensity(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-rintensity");
         AddArgument("attr-value", 0, UINT8_MAX, &mValue);
@@ -2850,20 +2535,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mValue;
 };
 
 /*
  * Attribute ColorPointGX
  */
-class ReadColorControlColorPointGX : public ModelCommand
+class ReadColorControlColorPointGX: public ModelCommand
 {
 public:
-    ReadColorControlColorPointGX() : ModelCommand("read")
+    ReadColorControlColorPointGX(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-gx");
         ModelCommand::AddArguments();
@@ -2879,16 +2562,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointGX : public ModelCommand
+class WriteColorControlColorPointGX: public ModelCommand
 {
 public:
-    WriteColorControlColorPointGX() : ModelCommand("write")
+    WriteColorControlColorPointGX(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-gx");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -2905,20 +2586,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointGY
  */
-class ReadColorControlColorPointGY : public ModelCommand
+class ReadColorControlColorPointGY: public ModelCommand
 {
 public:
-    ReadColorControlColorPointGY() : ModelCommand("read")
+    ReadColorControlColorPointGY(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-gy");
         ModelCommand::AddArguments();
@@ -2934,16 +2613,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointGY : public ModelCommand
+class WriteColorControlColorPointGY: public ModelCommand
 {
 public:
-    WriteColorControlColorPointGY() : ModelCommand("write")
+    WriteColorControlColorPointGY(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-gy");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -2960,20 +2637,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointGIntensity
  */
-class ReadColorControlColorPointGIntensity : public ModelCommand
+class ReadColorControlColorPointGIntensity: public ModelCommand
 {
 public:
-    ReadColorControlColorPointGIntensity() : ModelCommand("read")
+    ReadColorControlColorPointGIntensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-gintensity");
         ModelCommand::AddArguments();
@@ -2989,16 +2664,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointGIntensity : public ModelCommand
+class WriteColorControlColorPointGIntensity: public ModelCommand
 {
 public:
-    WriteColorControlColorPointGIntensity() : ModelCommand("write")
+    WriteColorControlColorPointGIntensity(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-gintensity");
         AddArgument("attr-value", 0, UINT8_MAX, &mValue);
@@ -3015,20 +2688,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mValue;
 };
 
 /*
  * Attribute ColorPointBX
  */
-class ReadColorControlColorPointBX : public ModelCommand
+class ReadColorControlColorPointBX: public ModelCommand
 {
 public:
-    ReadColorControlColorPointBX() : ModelCommand("read")
+    ReadColorControlColorPointBX(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-bx");
         ModelCommand::AddArguments();
@@ -3044,16 +2715,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointBX : public ModelCommand
+class WriteColorControlColorPointBX: public ModelCommand
 {
 public:
-    WriteColorControlColorPointBX() : ModelCommand("write")
+    WriteColorControlColorPointBX(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-bx");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -3070,20 +2739,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointBY
  */
-class ReadColorControlColorPointBY : public ModelCommand
+class ReadColorControlColorPointBY: public ModelCommand
 {
 public:
-    ReadColorControlColorPointBY() : ModelCommand("read")
+    ReadColorControlColorPointBY(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-by");
         ModelCommand::AddArguments();
@@ -3099,16 +2766,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointBY : public ModelCommand
+class WriteColorControlColorPointBY: public ModelCommand
 {
 public:
-    WriteColorControlColorPointBY() : ModelCommand("write")
+    WriteColorControlColorPointBY(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-by");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -3125,20 +2790,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ColorPointBIntensity
  */
-class ReadColorControlColorPointBIntensity : public ModelCommand
+class ReadColorControlColorPointBIntensity: public ModelCommand
 {
 public:
-    ReadColorControlColorPointBIntensity() : ModelCommand("read")
+    ReadColorControlColorPointBIntensity(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-point-bintensity");
         ModelCommand::AddArguments();
@@ -3154,16 +2817,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlColorPointBIntensity : public ModelCommand
+class WriteColorControlColorPointBIntensity: public ModelCommand
 {
 public:
-    WriteColorControlColorPointBIntensity() : ModelCommand("write")
+    WriteColorControlColorPointBIntensity(): ModelCommand("write")
     {
         AddArgument("attr-name", "color-point-bintensity");
         AddArgument("attr-value", 0, UINT8_MAX, &mValue);
@@ -3180,20 +2841,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mValue;
 };
 
 /*
  * Attribute EnhancedCurrentHue
  */
-class ReadColorControlEnhancedCurrentHue : public ModelCommand
+class ReadColorControlEnhancedCurrentHue: public ModelCommand
 {
 public:
-    ReadColorControlEnhancedCurrentHue() : ModelCommand("read")
+    ReadColorControlEnhancedCurrentHue(): ModelCommand("read")
     {
         AddArgument("attr-name", "enhanced-current-hue");
         ModelCommand::AddArguments();
@@ -3209,19 +2868,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute EnhancedColorMode
  */
-class ReadColorControlEnhancedColorMode : public ModelCommand
+class ReadColorControlEnhancedColorMode: public ModelCommand
 {
 public:
-    ReadColorControlEnhancedColorMode() : ModelCommand("read")
+    ReadColorControlEnhancedColorMode(): ModelCommand("read")
     {
         AddArgument("attr-name", "enhanced-color-mode");
         ModelCommand::AddArguments();
@@ -3237,19 +2894,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorLoopActive
  */
-class ReadColorControlColorLoopActive : public ModelCommand
+class ReadColorControlColorLoopActive: public ModelCommand
 {
 public:
-    ReadColorControlColorLoopActive() : ModelCommand("read")
+    ReadColorControlColorLoopActive(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-loop-active");
         ModelCommand::AddArguments();
@@ -3265,19 +2920,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorLoopDirection
  */
-class ReadColorControlColorLoopDirection : public ModelCommand
+class ReadColorControlColorLoopDirection: public ModelCommand
 {
 public:
-    ReadColorControlColorLoopDirection() : ModelCommand("read")
+    ReadColorControlColorLoopDirection(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-loop-direction");
         ModelCommand::AddArguments();
@@ -3293,19 +2946,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorLoopTime
  */
-class ReadColorControlColorLoopTime : public ModelCommand
+class ReadColorControlColorLoopTime: public ModelCommand
 {
 public:
-    ReadColorControlColorLoopTime() : ModelCommand("read")
+    ReadColorControlColorLoopTime(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-loop-time");
         ModelCommand::AddArguments();
@@ -3321,19 +2972,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorCapabilities
  */
-class ReadColorControlColorCapabilities : public ModelCommand
+class ReadColorControlColorCapabilities: public ModelCommand
 {
 public:
-    ReadColorControlColorCapabilities() : ModelCommand("read")
+    ReadColorControlColorCapabilities(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-capabilities");
         ModelCommand::AddArguments();
@@ -3349,19 +2998,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorTempPhysicalMin
  */
-class ReadColorControlColorTempPhysicalMin : public ModelCommand
+class ReadColorControlColorTempPhysicalMin: public ModelCommand
 {
 public:
-    ReadColorControlColorTempPhysicalMin() : ModelCommand("read")
+    ReadColorControlColorTempPhysicalMin(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-temp-physical-min");
         ModelCommand::AddArguments();
@@ -3377,19 +3024,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ColorTempPhysicalMax
  */
-class ReadColorControlColorTempPhysicalMax : public ModelCommand
+class ReadColorControlColorTempPhysicalMax: public ModelCommand
 {
 public:
-    ReadColorControlColorTempPhysicalMax() : ModelCommand("read")
+    ReadColorControlColorTempPhysicalMax(): ModelCommand("read")
     {
         AddArgument("attr-name", "color-temp-physical-max");
         ModelCommand::AddArguments();
@@ -3405,19 +3050,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CoupleColorTempToLevelMinMireds
  */
-class ReadColorControlCoupleColorTempToLevelMinMireds : public ModelCommand
+class ReadColorControlCoupleColorTempToLevelMinMireds: public ModelCommand
 {
 public:
-    ReadColorControlCoupleColorTempToLevelMinMireds() : ModelCommand("read")
+    ReadColorControlCoupleColorTempToLevelMinMireds(): ModelCommand("read")
     {
         AddArgument("attr-name", "couple-color-temp-to-level-min-mireds");
         ModelCommand::AddArguments();
@@ -3433,19 +3076,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute StartUpColorTemperatureMireds
  */
-class ReadColorControlStartUpColorTemperatureMireds : public ModelCommand
+class ReadColorControlStartUpColorTemperatureMireds: public ModelCommand
 {
 public:
-    ReadColorControlStartUpColorTemperatureMireds() : ModelCommand("read")
+    ReadColorControlStartUpColorTemperatureMireds(): ModelCommand("read")
     {
         AddArgument("attr-name", "start-up-color-temperature-mireds");
         ModelCommand::AddArguments();
@@ -3461,16 +3102,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteColorControlStartUpColorTemperatureMireds : public ModelCommand
+class WriteColorControlStartUpColorTemperatureMireds: public ModelCommand
 {
 public:
-    WriteColorControlStartUpColorTemperatureMireds() : ModelCommand("write")
+    WriteColorControlStartUpColorTemperatureMireds(): ModelCommand("write")
     {
         AddArgument("attr-name", "start-up-color-temperature-mireds");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -3483,25 +3122,22 @@ public:
 
         chip::Controller::ColorControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.WriteAttributeStartUpColorTemperatureMireds(onSuccessCallback->Cancel(), onFailureCallback->Cancel(),
-                                                                   mValue);
+        return cluster.WriteAttributeStartUpColorTemperatureMireds(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadColorControlClusterRevision : public ModelCommand
+class ReadColorControlClusterRevision: public ModelCommand
 {
 public:
-    ReadColorControlClusterRevision() : ModelCommand("read")
+    ReadColorControlClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -3517,10 +3153,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -3561,10 +3195,13 @@ private:
 /*
  * Command ClearAllPins
  */
-class DoorLockClearAllPins : public ModelCommand
+class DoorLockClearAllPins: public ModelCommand
 {
 public:
-    DoorLockClearAllPins() : ModelCommand("clear-all-pins") { ModelCommand::AddArguments(); }
+    DoorLockClearAllPins(): ModelCommand("clear-all-pins")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -3576,19 +3213,20 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearAllPinsResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearAllPinsResponseCallback>(OnDoorLockClusterClearAllPinsResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearAllPinsResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearAllPinsResponseCallback>(OnDoorLockClusterClearAllPinsResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command ClearAllRfids
  */
-class DoorLockClearAllRfids : public ModelCommand
+class DoorLockClearAllRfids: public ModelCommand
 {
 public:
-    DoorLockClearAllRfids() : ModelCommand("clear-all-rfids") { ModelCommand::AddArguments(); }
+    DoorLockClearAllRfids(): ModelCommand("clear-all-rfids")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -3600,19 +3238,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearAllRfidsResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearAllRfidsResponseCallback>(OnDoorLockClusterClearAllRfidsResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearAllRfidsResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearAllRfidsResponseCallback>(OnDoorLockClusterClearAllRfidsResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command ClearHolidaySchedule
  */
-class DoorLockClearHolidaySchedule : public ModelCommand
+class DoorLockClearHolidaySchedule: public ModelCommand
 {
 public:
-    DoorLockClearHolidaySchedule() : ModelCommand("clear-holiday-schedule")
+    DoorLockClearHolidaySchedule(): ModelCommand("clear-holiday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         ModelCommand::AddArguments();
@@ -3628,21 +3264,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearHolidayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearHolidayScheduleResponseCallback>(
-            OnDoorLockClusterClearHolidayScheduleResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearHolidayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearHolidayScheduleResponseCallback>(OnDoorLockClusterClearHolidayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
 };
 
 /*
  * Command ClearPin
  */
-class DoorLockClearPin : public ModelCommand
+class DoorLockClearPin: public ModelCommand
 {
 public:
-    DoorLockClearPin() : ModelCommand("clear-pin")
+    DoorLockClearPin(): ModelCommand("clear-pin")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         ModelCommand::AddArguments();
@@ -3658,20 +3291,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearPinResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearPinResponseCallback>(OnDoorLockClusterClearPinResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearPinResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearPinResponseCallback>(OnDoorLockClusterClearPinResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
 };
 
 /*
  * Command ClearRfid
  */
-class DoorLockClearRfid : public ModelCommand
+class DoorLockClearRfid: public ModelCommand
 {
 public:
-    DoorLockClearRfid() : ModelCommand("clear-rfid")
+    DoorLockClearRfid(): ModelCommand("clear-rfid")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         ModelCommand::AddArguments();
@@ -3687,20 +3318,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearRfidResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearRfidResponseCallback>(OnDoorLockClusterClearRfidResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearRfidResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearRfidResponseCallback>(OnDoorLockClusterClearRfidResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
 };
 
 /*
  * Command ClearWeekdaySchedule
  */
-class DoorLockClearWeekdaySchedule : public ModelCommand
+class DoorLockClearWeekdaySchedule: public ModelCommand
 {
 public:
-    DoorLockClearWeekdaySchedule() : ModelCommand("clear-weekday-schedule")
+    DoorLockClearWeekdaySchedule(): ModelCommand("clear-weekday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
@@ -3717,11 +3346,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearWeekdayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearWeekdayScheduleResponseCallback>(
-            OnDoorLockClusterClearWeekdayScheduleResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearWeekdayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearWeekdayScheduleResponseCallback>(OnDoorLockClusterClearWeekdayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint16_t mUserId;
 };
@@ -3729,10 +3355,10 @@ private:
 /*
  * Command ClearYeardaySchedule
  */
-class DoorLockClearYeardaySchedule : public ModelCommand
+class DoorLockClearYeardaySchedule: public ModelCommand
 {
 public:
-    DoorLockClearYeardaySchedule() : ModelCommand("clear-yearday-schedule")
+    DoorLockClearYeardaySchedule(): ModelCommand("clear-yearday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
@@ -3749,11 +3375,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterClearYeardayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterClearYeardayScheduleResponseCallback>(
-            OnDoorLockClusterClearYeardayScheduleResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterClearYeardayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterClearYeardayScheduleResponseCallback>(OnDoorLockClusterClearYeardayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint16_t mUserId;
 };
@@ -3761,10 +3384,10 @@ private:
 /*
  * Command GetHolidaySchedule
  */
-class DoorLockGetHolidaySchedule : public ModelCommand
+class DoorLockGetHolidaySchedule: public ModelCommand
 {
 public:
-    DoorLockGetHolidaySchedule() : ModelCommand("get-holiday-schedule")
+    DoorLockGetHolidaySchedule(): ModelCommand("get-holiday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         ModelCommand::AddArguments();
@@ -3780,21 +3403,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetHolidayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetHolidayScheduleResponseCallback>(OnDoorLockClusterGetHolidayScheduleResponse,
-                                                                                        this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetHolidayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetHolidayScheduleResponseCallback>(OnDoorLockClusterGetHolidayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
 };
 
 /*
  * Command GetLogRecord
  */
-class DoorLockGetLogRecord : public ModelCommand
+class DoorLockGetLogRecord: public ModelCommand
 {
 public:
-    DoorLockGetLogRecord() : ModelCommand("get-log-record")
+    DoorLockGetLogRecord(): ModelCommand("get-log-record")
     {
         AddArgument("logIndex", 0, UINT16_MAX, &mLogIndex);
         ModelCommand::AddArguments();
@@ -3810,20 +3430,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetLogRecordResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetLogRecordResponseCallback>(OnDoorLockClusterGetLogRecordResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetLogRecordResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetLogRecordResponseCallback>(OnDoorLockClusterGetLogRecordResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mLogIndex;
 };
 
 /*
  * Command GetPin
  */
-class DoorLockGetPin : public ModelCommand
+class DoorLockGetPin: public ModelCommand
 {
 public:
-    DoorLockGetPin() : ModelCommand("get-pin")
+    DoorLockGetPin(): ModelCommand("get-pin")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         ModelCommand::AddArguments();
@@ -3839,20 +3457,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetPinResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetPinResponseCallback>(OnDoorLockClusterGetPinResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetPinResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetPinResponseCallback>(OnDoorLockClusterGetPinResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
 };
 
 /*
  * Command GetRfid
  */
-class DoorLockGetRfid : public ModelCommand
+class DoorLockGetRfid: public ModelCommand
 {
 public:
-    DoorLockGetRfid() : ModelCommand("get-rfid")
+    DoorLockGetRfid(): ModelCommand("get-rfid")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         ModelCommand::AddArguments();
@@ -3868,20 +3484,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetRfidResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetRfidResponseCallback>(OnDoorLockClusterGetRfidResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetRfidResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetRfidResponseCallback>(OnDoorLockClusterGetRfidResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
 };
 
 /*
  * Command GetUserType
  */
-class DoorLockGetUserType : public ModelCommand
+class DoorLockGetUserType: public ModelCommand
 {
 public:
-    DoorLockGetUserType() : ModelCommand("get-user-type")
+    DoorLockGetUserType(): ModelCommand("get-user-type")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         ModelCommand::AddArguments();
@@ -3897,20 +3511,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetUserTypeResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetUserTypeResponseCallback>(OnDoorLockClusterGetUserTypeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetUserTypeResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetUserTypeResponseCallback>(OnDoorLockClusterGetUserTypeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
 };
 
 /*
  * Command GetWeekdaySchedule
  */
-class DoorLockGetWeekdaySchedule : public ModelCommand
+class DoorLockGetWeekdaySchedule: public ModelCommand
 {
 public:
-    DoorLockGetWeekdaySchedule() : ModelCommand("get-weekday-schedule")
+    DoorLockGetWeekdaySchedule(): ModelCommand("get-weekday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
@@ -3927,11 +3539,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetWeekdayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetWeekdayScheduleResponseCallback>(OnDoorLockClusterGetWeekdayScheduleResponse,
-                                                                                        this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetWeekdayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetWeekdayScheduleResponseCallback>(OnDoorLockClusterGetWeekdayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint16_t mUserId;
 };
@@ -3939,10 +3548,10 @@ private:
 /*
  * Command GetYeardaySchedule
  */
-class DoorLockGetYeardaySchedule : public ModelCommand
+class DoorLockGetYeardaySchedule: public ModelCommand
 {
 public:
-    DoorLockGetYeardaySchedule() : ModelCommand("get-yearday-schedule")
+    DoorLockGetYeardaySchedule(): ModelCommand("get-yearday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
@@ -3959,11 +3568,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterGetYeardayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterGetYeardayScheduleResponseCallback>(OnDoorLockClusterGetYeardayScheduleResponse,
-                                                                                        this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterGetYeardayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterGetYeardayScheduleResponseCallback>(OnDoorLockClusterGetYeardayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint16_t mUserId;
 };
@@ -3971,10 +3577,10 @@ private:
 /*
  * Command LockDoor
  */
-class DoorLockLockDoor : public ModelCommand
+class DoorLockLockDoor: public ModelCommand
 {
 public:
-    DoorLockLockDoor() : ModelCommand("lock-door")
+    DoorLockLockDoor(): ModelCommand("lock-door")
     {
         AddArgument("pin", &mPin);
         ModelCommand::AddArguments();
@@ -3990,20 +3596,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterLockDoorResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterLockDoorResponseCallback>(OnDoorLockClusterLockDoorResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterLockDoorResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterLockDoorResponseCallback>(OnDoorLockClusterLockDoorResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     char * mPin;
 };
 
 /*
  * Command SetHolidaySchedule
  */
-class DoorLockSetHolidaySchedule : public ModelCommand
+class DoorLockSetHolidaySchedule: public ModelCommand
 {
 public:
-    DoorLockSetHolidaySchedule() : ModelCommand("set-holiday-schedule")
+    DoorLockSetHolidaySchedule(): ModelCommand("set-holiday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("localStartTime", 0, UINT32_MAX, &mLocalStartTime);
@@ -4018,16 +3622,12 @@ public:
 
         chip::Controller::DoorLockCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.SetHolidaySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mScheduleId, mLocalStartTime,
-                                          mLocalEndTime, mOperatingModeDuringHoliday);
+        return cluster.SetHolidaySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mScheduleId, mLocalStartTime, mLocalEndTime, mOperatingModeDuringHoliday);
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterSetHolidayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterSetHolidayScheduleResponseCallback>(OnDoorLockClusterSetHolidayScheduleResponse,
-                                                                                        this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterSetHolidayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterSetHolidayScheduleResponseCallback>(OnDoorLockClusterSetHolidayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint32_t mLocalStartTime;
     uint32_t mLocalEndTime;
@@ -4037,10 +3637,10 @@ private:
 /*
  * Command SetPin
  */
-class DoorLockSetPin : public ModelCommand
+class DoorLockSetPin: public ModelCommand
 {
 public:
-    DoorLockSetPin() : ModelCommand("set-pin")
+    DoorLockSetPin(): ModelCommand("set-pin")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         AddArgument("userStatus", 0, UINT8_MAX, &mUserStatus);
@@ -4059,10 +3659,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterSetPinResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterSetPinResponseCallback>(OnDoorLockClusterSetPinResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterSetPinResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterSetPinResponseCallback>(OnDoorLockClusterSetPinResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
     uint8_t mUserStatus;
     uint8_t mUserType;
@@ -4072,10 +3670,10 @@ private:
 /*
  * Command SetRfid
  */
-class DoorLockSetRfid : public ModelCommand
+class DoorLockSetRfid: public ModelCommand
 {
 public:
-    DoorLockSetRfid() : ModelCommand("set-rfid")
+    DoorLockSetRfid(): ModelCommand("set-rfid")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         AddArgument("userStatus", 0, UINT8_MAX, &mUserStatus);
@@ -4094,10 +3692,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterSetRfidResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterSetRfidResponseCallback>(OnDoorLockClusterSetRfidResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterSetRfidResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterSetRfidResponseCallback>(OnDoorLockClusterSetRfidResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
     uint8_t mUserStatus;
     uint8_t mUserType;
@@ -4107,10 +3703,10 @@ private:
 /*
  * Command SetUserType
  */
-class DoorLockSetUserType : public ModelCommand
+class DoorLockSetUserType: public ModelCommand
 {
 public:
-    DoorLockSetUserType() : ModelCommand("set-user-type")
+    DoorLockSetUserType(): ModelCommand("set-user-type")
     {
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
         AddArgument("userType", 0, UINT8_MAX, &mUserType);
@@ -4127,10 +3723,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterSetUserTypeResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterSetUserTypeResponseCallback>(OnDoorLockClusterSetUserTypeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterSetUserTypeResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterSetUserTypeResponseCallback>(OnDoorLockClusterSetUserTypeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mUserId;
     uint8_t mUserType;
 };
@@ -4138,10 +3732,10 @@ private:
 /*
  * Command SetWeekdaySchedule
  */
-class DoorLockSetWeekdaySchedule : public ModelCommand
+class DoorLockSetWeekdaySchedule: public ModelCommand
 {
 public:
-    DoorLockSetWeekdaySchedule() : ModelCommand("set-weekday-schedule")
+    DoorLockSetWeekdaySchedule(): ModelCommand("set-weekday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
@@ -4159,16 +3753,12 @@ public:
 
         chip::Controller::DoorLockCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.SetWeekdaySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mScheduleId, mUserId, mDaysMask,
-                                          mStartHour, mStartMinute, mEndHour, mEndMinute);
+        return cluster.SetWeekdaySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mScheduleId, mUserId, mDaysMask, mStartHour, mStartMinute, mEndHour, mEndMinute);
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterSetWeekdayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterSetWeekdayScheduleResponseCallback>(OnDoorLockClusterSetWeekdayScheduleResponse,
-                                                                                        this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterSetWeekdayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterSetWeekdayScheduleResponseCallback>(OnDoorLockClusterSetWeekdayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint16_t mUserId;
     uint8_t mDaysMask;
@@ -4181,10 +3771,10 @@ private:
 /*
  * Command SetYeardaySchedule
  */
-class DoorLockSetYeardaySchedule : public ModelCommand
+class DoorLockSetYeardaySchedule: public ModelCommand
 {
 public:
-    DoorLockSetYeardaySchedule() : ModelCommand("set-yearday-schedule")
+    DoorLockSetYeardaySchedule(): ModelCommand("set-yearday-schedule")
     {
         AddArgument("scheduleId", 0, UINT8_MAX, &mScheduleId);
         AddArgument("userId", 0, UINT16_MAX, &mUserId);
@@ -4199,16 +3789,12 @@ public:
 
         chip::Controller::DoorLockCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.SetYeardaySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mScheduleId, mUserId,
-                                          mLocalStartTime, mLocalEndTime);
+        return cluster.SetYeardaySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mScheduleId, mUserId, mLocalStartTime, mLocalEndTime);
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterSetYeardayScheduleResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterSetYeardayScheduleResponseCallback>(OnDoorLockClusterSetYeardayScheduleResponse,
-                                                                                        this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterSetYeardayScheduleResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterSetYeardayScheduleResponseCallback>(OnDoorLockClusterSetYeardayScheduleResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mScheduleId;
     uint16_t mUserId;
     uint32_t mLocalStartTime;
@@ -4218,10 +3804,10 @@ private:
 /*
  * Command UnlockDoor
  */
-class DoorLockUnlockDoor : public ModelCommand
+class DoorLockUnlockDoor: public ModelCommand
 {
 public:
-    DoorLockUnlockDoor() : ModelCommand("unlock-door")
+    DoorLockUnlockDoor(): ModelCommand("unlock-door")
     {
         AddArgument("pin", &mPin);
         ModelCommand::AddArguments();
@@ -4237,20 +3823,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterUnlockDoorResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterUnlockDoorResponseCallback>(OnDoorLockClusterUnlockDoorResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterUnlockDoorResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterUnlockDoorResponseCallback>(OnDoorLockClusterUnlockDoorResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     char * mPin;
 };
 
 /*
  * Command UnlockWithTimeout
  */
-class DoorLockUnlockWithTimeout : public ModelCommand
+class DoorLockUnlockWithTimeout: public ModelCommand
 {
 public:
-    DoorLockUnlockWithTimeout() : ModelCommand("unlock-with-timeout")
+    DoorLockUnlockWithTimeout(): ModelCommand("unlock-with-timeout")
     {
         AddArgument("timeoutInSeconds", 0, UINT16_MAX, &mTimeoutInSeconds);
         AddArgument("pin", &mPin);
@@ -4267,22 +3851,23 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DoorLockClusterUnlockWithTimeoutResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DoorLockClusterUnlockWithTimeoutResponseCallback>(OnDoorLockClusterUnlockWithTimeoutResponse,
-                                                                                       this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DoorLockClusterUnlockWithTimeoutResponseCallback> * onSuccessCallback = new chip::Callback::Callback<DoorLockClusterUnlockWithTimeoutResponseCallback>(OnDoorLockClusterUnlockWithTimeoutResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mTimeoutInSeconds;
     char * mPin;
 };
 
+
 /*
  * Discover Attributes
  */
-class DiscoverDoorLockAttributes : public ModelCommand
+class DiscoverDoorLockAttributes: public ModelCommand
 {
 public:
-    DiscoverDoorLockAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverDoorLockAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -4294,19 +3879,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute LockState
  */
-class ReadDoorLockLockState : public ModelCommand
+class ReadDoorLockLockState: public ModelCommand
 {
 public:
-    ReadDoorLockLockState() : ModelCommand("read")
+    ReadDoorLockLockState(): ModelCommand("read")
     {
         AddArgument("attr-name", "lock-state");
         ModelCommand::AddArguments();
@@ -4322,16 +3905,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportDoorLockLockState : public ModelCommand
+class ReportDoorLockLockState: public ModelCommand
 {
 public:
-    ReportDoorLockLockState() : ModelCommand("report")
+    ReportDoorLockLockState(): ModelCommand("report")
     {
         AddArgument("attr-name", "lock-state");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -4352,17 +3933,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeLockState(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                   mMaxInterval);
+        return cluster.ConfigureAttributeLockState(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
 };
@@ -4370,10 +3947,10 @@ private:
 /*
  * Attribute LockType
  */
-class ReadDoorLockLockType : public ModelCommand
+class ReadDoorLockLockType: public ModelCommand
 {
 public:
-    ReadDoorLockLockType() : ModelCommand("read")
+    ReadDoorLockLockType(): ModelCommand("read")
     {
         AddArgument("attr-name", "lock-type");
         ModelCommand::AddArguments();
@@ -4389,19 +3966,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ActuatorEnabled
  */
-class ReadDoorLockActuatorEnabled : public ModelCommand
+class ReadDoorLockActuatorEnabled: public ModelCommand
 {
 public:
-    ReadDoorLockActuatorEnabled() : ModelCommand("read")
+    ReadDoorLockActuatorEnabled(): ModelCommand("read")
     {
         AddArgument("attr-name", "actuator-enabled");
         ModelCommand::AddArguments();
@@ -4417,19 +3992,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadDoorLockClusterRevision : public ModelCommand
+class ReadDoorLockClusterRevision: public ModelCommand
 {
 public:
-    ReadDoorLockClusterRevision() : ModelCommand("read")
+    ReadDoorLockClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -4445,10 +4018,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -4470,10 +4041,10 @@ private:
 /*
  * Command AddGroup
  */
-class GroupsAddGroup : public ModelCommand
+class GroupsAddGroup: public ModelCommand
 {
 public:
-    GroupsAddGroup() : ModelCommand("add-group")
+    GroupsAddGroup(): ModelCommand("add-group")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("groupName", &mGroupName);
@@ -4490,10 +4061,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<GroupsClusterAddGroupResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<GroupsClusterAddGroupResponseCallback>(OnGroupsClusterAddGroupResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<GroupsClusterAddGroupResponseCallback> * onSuccessCallback = new chip::Callback::Callback<GroupsClusterAddGroupResponseCallback>(OnGroupsClusterAddGroupResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     char * mGroupName;
 };
@@ -4501,10 +4070,10 @@ private:
 /*
  * Command AddGroupIfIdentifying
  */
-class GroupsAddGroupIfIdentifying : public ModelCommand
+class GroupsAddGroupIfIdentifying: public ModelCommand
 {
 public:
-    GroupsAddGroupIfIdentifying() : ModelCommand("add-group-if-identifying")
+    GroupsAddGroupIfIdentifying(): ModelCommand("add-group-if-identifying")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("groupName", &mGroupName);
@@ -4521,10 +4090,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     char * mGroupName;
 };
@@ -4532,10 +4099,10 @@ private:
 /*
  * Command GetGroupMembership
  */
-class GroupsGetGroupMembership : public ModelCommand
+class GroupsGetGroupMembership: public ModelCommand
 {
 public:
-    GroupsGetGroupMembership() : ModelCommand("get-group-membership")
+    GroupsGetGroupMembership(): ModelCommand("get-group-membership")
     {
         AddArgument("groupCount", 0, UINT8_MAX, &mGroupCount);
         AddArgument("groupList", 0, UINT16_MAX, &mGroupList);
@@ -4552,11 +4119,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<GroupsClusterGetGroupMembershipResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<GroupsClusterGetGroupMembershipResponseCallback>(OnGroupsClusterGetGroupMembershipResponse,
-                                                                                      this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<GroupsClusterGetGroupMembershipResponseCallback> * onSuccessCallback = new chip::Callback::Callback<GroupsClusterGetGroupMembershipResponseCallback>(OnGroupsClusterGetGroupMembershipResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mGroupCount;
     uint16_t mGroupList;
 };
@@ -4564,10 +4128,13 @@ private:
 /*
  * Command RemoveAllGroups
  */
-class GroupsRemoveAllGroups : public ModelCommand
+class GroupsRemoveAllGroups: public ModelCommand
 {
 public:
-    GroupsRemoveAllGroups() : ModelCommand("remove-all-groups") { ModelCommand::AddArguments(); }
+    GroupsRemoveAllGroups(): ModelCommand("remove-all-groups")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -4579,19 +4146,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command RemoveGroup
  */
-class GroupsRemoveGroup : public ModelCommand
+class GroupsRemoveGroup: public ModelCommand
 {
 public:
-    GroupsRemoveGroup() : ModelCommand("remove-group")
+    GroupsRemoveGroup(): ModelCommand("remove-group")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         ModelCommand::AddArguments();
@@ -4607,20 +4172,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<GroupsClusterRemoveGroupResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<GroupsClusterRemoveGroupResponseCallback>(OnGroupsClusterRemoveGroupResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<GroupsClusterRemoveGroupResponseCallback> * onSuccessCallback = new chip::Callback::Callback<GroupsClusterRemoveGroupResponseCallback>(OnGroupsClusterRemoveGroupResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
 };
 
 /*
  * Command ViewGroup
  */
-class GroupsViewGroup : public ModelCommand
+class GroupsViewGroup: public ModelCommand
 {
 public:
-    GroupsViewGroup() : ModelCommand("view-group")
+    GroupsViewGroup(): ModelCommand("view-group")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         ModelCommand::AddArguments();
@@ -4636,20 +4199,22 @@ public:
     }
 
 private:
-    chip::Callback::Callback<GroupsClusterViewGroupResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<GroupsClusterViewGroupResponseCallback>(OnGroupsClusterViewGroupResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<GroupsClusterViewGroupResponseCallback> * onSuccessCallback = new chip::Callback::Callback<GroupsClusterViewGroupResponseCallback>(OnGroupsClusterViewGroupResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
 };
+
 
 /*
  * Discover Attributes
  */
-class DiscoverGroupsAttributes : public ModelCommand
+class DiscoverGroupsAttributes: public ModelCommand
 {
 public:
-    DiscoverGroupsAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverGroupsAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -4661,19 +4226,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute NameSupport
  */
-class ReadGroupsNameSupport : public ModelCommand
+class ReadGroupsNameSupport: public ModelCommand
 {
 public:
-    ReadGroupsNameSupport() : ModelCommand("read")
+    ReadGroupsNameSupport(): ModelCommand("read")
     {
         AddArgument("attr-name", "name-support");
         ModelCommand::AddArguments();
@@ -4689,19 +4252,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadGroupsClusterRevision : public ModelCommand
+class ReadGroupsClusterRevision: public ModelCommand
 {
 public:
-    ReadGroupsClusterRevision() : ModelCommand("read")
+    ReadGroupsClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -4717,10 +4278,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -4738,10 +4297,10 @@ private:
 /*
  * Command Identify
  */
-class IdentifyIdentify : public ModelCommand
+class IdentifyIdentify: public ModelCommand
 {
 public:
-    IdentifyIdentify() : ModelCommand("identify")
+    IdentifyIdentify(): ModelCommand("identify")
     {
         AddArgument("identifyTime", 0, UINT16_MAX, &mIdentifyTime);
         ModelCommand::AddArguments();
@@ -4757,20 +4316,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mIdentifyTime;
 };
 
 /*
  * Command IdentifyQuery
  */
-class IdentifyIdentifyQuery : public ModelCommand
+class IdentifyIdentifyQuery: public ModelCommand
 {
 public:
-    IdentifyIdentifyQuery() : ModelCommand("identify-query") { ModelCommand::AddArguments(); }
+    IdentifyIdentifyQuery(): ModelCommand("identify-query")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -4782,19 +4342,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<IdentifyClusterIdentifyQueryResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<IdentifyClusterIdentifyQueryResponseCallback>(OnIdentifyClusterIdentifyQueryResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<IdentifyClusterIdentifyQueryResponseCallback> * onSuccessCallback = new chip::Callback::Callback<IdentifyClusterIdentifyQueryResponseCallback>(OnIdentifyClusterIdentifyQueryResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
 
 /*
  * Discover Attributes
  */
-class DiscoverIdentifyAttributes : public ModelCommand
+class DiscoverIdentifyAttributes: public ModelCommand
 {
 public:
-    DiscoverIdentifyAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverIdentifyAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -4806,19 +4368,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute IdentifyTime
  */
-class ReadIdentifyIdentifyTime : public ModelCommand
+class ReadIdentifyIdentifyTime: public ModelCommand
 {
 public:
-    ReadIdentifyIdentifyTime() : ModelCommand("read")
+    ReadIdentifyIdentifyTime(): ModelCommand("read")
     {
         AddArgument("attr-name", "identify-time");
         ModelCommand::AddArguments();
@@ -4834,16 +4394,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class WriteIdentifyIdentifyTime : public ModelCommand
+class WriteIdentifyIdentifyTime: public ModelCommand
 {
 public:
-    WriteIdentifyIdentifyTime() : ModelCommand("write")
+    WriteIdentifyIdentifyTime(): ModelCommand("write")
     {
         AddArgument("attr-name", "identify-time");
         AddArgument("attr-value", 0, UINT16_MAX, &mValue);
@@ -4860,20 +4418,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mValue;
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadIdentifyClusterRevision : public ModelCommand
+class ReadIdentifyClusterRevision: public ModelCommand
 {
 public:
-    ReadIdentifyClusterRevision() : ModelCommand("read")
+    ReadIdentifyClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -4889,10 +4445,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -4916,10 +4470,10 @@ private:
 /*
  * Command Move
  */
-class LevelControlMove : public ModelCommand
+class LevelControlMove: public ModelCommand
 {
 public:
-    LevelControlMove() : ModelCommand("move")
+    LevelControlMove(): ModelCommand("move")
     {
         AddArgument("moveMode", 0, UINT8_MAX, &mMoveMode);
         AddArgument("rate", 0, UINT8_MAX, &mRate);
@@ -4934,15 +4488,12 @@ public:
 
         chip::Controller::LevelControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.Move(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mOptionMask,
-                            mOptionOverride);
+        return cluster.Move(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMoveMode, mRate, mOptionMask, mOptionOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mMoveMode;
     uint8_t mRate;
     uint8_t mOptionMask;
@@ -4952,10 +4503,10 @@ private:
 /*
  * Command MoveToLevel
  */
-class LevelControlMoveToLevel : public ModelCommand
+class LevelControlMoveToLevel: public ModelCommand
 {
 public:
-    LevelControlMoveToLevel() : ModelCommand("move-to-level")
+    LevelControlMoveToLevel(): ModelCommand("move-to-level")
     {
         AddArgument("level", 0, UINT8_MAX, &mLevel);
         AddArgument("transitionTime", 0, UINT16_MAX, &mTransitionTime);
@@ -4970,15 +4521,12 @@ public:
 
         chip::Controller::LevelControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.MoveToLevel(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mLevel, mTransitionTime, mOptionMask,
-                                   mOptionOverride);
+        return cluster.MoveToLevel(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mLevel, mTransitionTime, mOptionMask, mOptionOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mLevel;
     uint16_t mTransitionTime;
     uint8_t mOptionMask;
@@ -4988,10 +4536,10 @@ private:
 /*
  * Command MoveToLevelWithOnOff
  */
-class LevelControlMoveToLevelWithOnOff : public ModelCommand
+class LevelControlMoveToLevelWithOnOff: public ModelCommand
 {
 public:
-    LevelControlMoveToLevelWithOnOff() : ModelCommand("move-to-level-with-on-off")
+    LevelControlMoveToLevelWithOnOff(): ModelCommand("move-to-level-with-on-off")
     {
         AddArgument("level", 0, UINT8_MAX, &mLevel);
         AddArgument("transitionTime", 0, UINT16_MAX, &mTransitionTime);
@@ -5008,10 +4556,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mLevel;
     uint16_t mTransitionTime;
 };
@@ -5019,10 +4565,10 @@ private:
 /*
  * Command MoveWithOnOff
  */
-class LevelControlMoveWithOnOff : public ModelCommand
+class LevelControlMoveWithOnOff: public ModelCommand
 {
 public:
-    LevelControlMoveWithOnOff() : ModelCommand("move-with-on-off")
+    LevelControlMoveWithOnOff(): ModelCommand("move-with-on-off")
     {
         AddArgument("moveMode", 0, UINT8_MAX, &mMoveMode);
         AddArgument("rate", 0, UINT8_MAX, &mRate);
@@ -5039,10 +4585,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mMoveMode;
     uint8_t mRate;
 };
@@ -5050,10 +4594,10 @@ private:
 /*
  * Command Step
  */
-class LevelControlStep : public ModelCommand
+class LevelControlStep: public ModelCommand
 {
 public:
-    LevelControlStep() : ModelCommand("step")
+    LevelControlStep(): ModelCommand("step")
     {
         AddArgument("stepMode", 0, UINT8_MAX, &mStepMode);
         AddArgument("stepSize", 0, UINT8_MAX, &mStepSize);
@@ -5069,15 +4613,12 @@ public:
 
         chip::Controller::LevelControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.Step(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime,
-                            mOptionMask, mOptionOverride);
+        return cluster.Step(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime, mOptionMask, mOptionOverride);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mStepMode;
     uint8_t mStepSize;
     uint16_t mTransitionTime;
@@ -5088,10 +4629,10 @@ private:
 /*
  * Command StepWithOnOff
  */
-class LevelControlStepWithOnOff : public ModelCommand
+class LevelControlStepWithOnOff: public ModelCommand
 {
 public:
-    LevelControlStepWithOnOff() : ModelCommand("step-with-on-off")
+    LevelControlStepWithOnOff(): ModelCommand("step-with-on-off")
     {
         AddArgument("stepMode", 0, UINT8_MAX, &mStepMode);
         AddArgument("stepSize", 0, UINT8_MAX, &mStepSize);
@@ -5105,15 +4646,12 @@ public:
 
         chip::Controller::LevelControlCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.StepWithOnOff(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize,
-                                     mTransitionTime);
+        return cluster.StepWithOnOff(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mStepMode, mStepSize, mTransitionTime);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mStepMode;
     uint8_t mStepSize;
     uint16_t mTransitionTime;
@@ -5122,10 +4660,10 @@ private:
 /*
  * Command Stop
  */
-class LevelControlStop : public ModelCommand
+class LevelControlStop: public ModelCommand
 {
 public:
-    LevelControlStop() : ModelCommand("stop")
+    LevelControlStop(): ModelCommand("stop")
     {
         AddArgument("optionMask", 0, UINT8_MAX, &mOptionMask);
         AddArgument("optionOverride", 0, UINT8_MAX, &mOptionOverride);
@@ -5142,10 +4680,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint8_t mOptionMask;
     uint8_t mOptionOverride;
 };
@@ -5153,10 +4689,13 @@ private:
 /*
  * Command StopWithOnOff
  */
-class LevelControlStopWithOnOff : public ModelCommand
+class LevelControlStopWithOnOff: public ModelCommand
 {
 public:
-    LevelControlStopWithOnOff() : ModelCommand("stop-with-on-off") { ModelCommand::AddArguments(); }
+    LevelControlStopWithOnOff(): ModelCommand("stop-with-on-off")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5168,19 +4707,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
 
 /*
  * Discover Attributes
  */
-class DiscoverLevelControlAttributes : public ModelCommand
+class DiscoverLevelControlAttributes: public ModelCommand
 {
 public:
-    DiscoverLevelControlAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverLevelControlAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5192,19 +4733,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CurrentLevel
  */
-class ReadLevelControlCurrentLevel : public ModelCommand
+class ReadLevelControlCurrentLevel: public ModelCommand
 {
 public:
-    ReadLevelControlCurrentLevel() : ModelCommand("read")
+    ReadLevelControlCurrentLevel(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-level");
         ModelCommand::AddArguments();
@@ -5220,16 +4759,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportLevelControlCurrentLevel : public ModelCommand
+class ReportLevelControlCurrentLevel: public ModelCommand
 {
 public:
-    ReportLevelControlCurrentLevel() : ModelCommand("report")
+    ReportLevelControlCurrentLevel(): ModelCommand("report")
     {
         AddArgument("attr-name", "current-level");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -5251,17 +4788,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeCurrentLevel(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                      mMaxInterval, mChange);
+        return cluster.ConfigureAttributeCurrentLevel(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     uint8_t mChange;
@@ -5270,10 +4803,10 @@ private:
 /*
  * Attribute ClusterRevision
  */
-class ReadLevelControlClusterRevision : public ModelCommand
+class ReadLevelControlClusterRevision: public ModelCommand
 {
 public:
-    ReadLevelControlClusterRevision() : ModelCommand("read")
+    ReadLevelControlClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -5289,10 +4822,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -5311,10 +4842,13 @@ private:
 /*
  * Command Off
  */
-class OnOffOff : public ModelCommand
+class OnOffOff: public ModelCommand
 {
 public:
-    OnOffOff() : ModelCommand("off") { ModelCommand::AddArguments(); }
+    OnOffOff(): ModelCommand("off")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5326,19 +4860,20 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command On
  */
-class OnOffOn : public ModelCommand
+class OnOffOn: public ModelCommand
 {
 public:
-    OnOffOn() : ModelCommand("on") { ModelCommand::AddArguments(); }
+    OnOffOn(): ModelCommand("on")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5350,19 +4885,20 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command Toggle
  */
-class OnOffToggle : public ModelCommand
+class OnOffToggle: public ModelCommand
 {
 public:
-    OnOffToggle() : ModelCommand("toggle") { ModelCommand::AddArguments(); }
+    OnOffToggle(): ModelCommand("toggle")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5374,19 +4910,21 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
 
 /*
  * Discover Attributes
  */
-class DiscoverOnOffAttributes : public ModelCommand
+class DiscoverOnOffAttributes: public ModelCommand
 {
 public:
-    DiscoverOnOffAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverOnOffAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5398,19 +4936,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute OnOff
  */
-class ReadOnOffOnOff : public ModelCommand
+class ReadOnOffOnOff: public ModelCommand
 {
 public:
-    ReadOnOffOnOff() : ModelCommand("read")
+    ReadOnOffOnOff(): ModelCommand("read")
     {
         AddArgument("attr-name", "on-off");
         ModelCommand::AddArguments();
@@ -5426,16 +4962,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportOnOffOnOff : public ModelCommand
+class ReportOnOffOnOff: public ModelCommand
 {
 public:
-    ReportOnOffOnOff() : ModelCommand("report")
+    ReportOnOffOnOff(): ModelCommand("report")
     {
         AddArgument("attr-name", "on-off");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -5456,17 +4990,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeOnOff(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                               mMaxInterval);
+        return cluster.ConfigureAttributeOnOff(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<BooleanAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<BooleanAttributeCallback> * onReportCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
 };
@@ -5474,10 +5004,10 @@ private:
 /*
  * Attribute ClusterRevision
  */
-class ReadOnOffClusterRevision : public ModelCommand
+class ReadOnOffClusterRevision: public ModelCommand
 {
 public:
-    ReadOnOffClusterRevision() : ModelCommand("read")
+    ReadOnOffClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -5493,10 +5023,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -5523,10 +5051,10 @@ private:
 /*
  * Command AddScene
  */
-class ScenesAddScene : public ModelCommand
+class ScenesAddScene: public ModelCommand
 {
 public:
-    ScenesAddScene() : ModelCommand("add-scene")
+    ScenesAddScene(): ModelCommand("add-scene")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("sceneId", 0, UINT8_MAX, &mSceneId);
@@ -5544,15 +5072,12 @@ public:
 
         chip::Controller::ScenesCluster cluster;
         cluster.Associate(device, endpointId);
-        return cluster.AddScene(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mGroupId, mSceneId, mTransitionTime,
-                                mSceneName, mClusterId, mLength, mValue);
+        return cluster.AddScene(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mGroupId, mSceneId, mTransitionTime, mSceneName, mClusterId, mLength, mValue);
     }
 
 private:
-    chip::Callback::Callback<ScenesClusterAddSceneResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<ScenesClusterAddSceneResponseCallback>(OnScenesClusterAddSceneResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<ScenesClusterAddSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterAddSceneResponseCallback>(OnScenesClusterAddSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     uint8_t mSceneId;
     uint16_t mTransitionTime;
@@ -5565,10 +5090,10 @@ private:
 /*
  * Command GetSceneMembership
  */
-class ScenesGetSceneMembership : public ModelCommand
+class ScenesGetSceneMembership: public ModelCommand
 {
 public:
-    ScenesGetSceneMembership() : ModelCommand("get-scene-membership")
+    ScenesGetSceneMembership(): ModelCommand("get-scene-membership")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         ModelCommand::AddArguments();
@@ -5584,21 +5109,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<ScenesClusterGetSceneMembershipResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<ScenesClusterGetSceneMembershipResponseCallback>(OnScenesClusterGetSceneMembershipResponse,
-                                                                                      this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<ScenesClusterGetSceneMembershipResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterGetSceneMembershipResponseCallback>(OnScenesClusterGetSceneMembershipResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
 };
 
 /*
  * Command RecallScene
  */
-class ScenesRecallScene : public ModelCommand
+class ScenesRecallScene: public ModelCommand
 {
 public:
-    ScenesRecallScene() : ModelCommand("recall-scene")
+    ScenesRecallScene(): ModelCommand("recall-scene")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("sceneId", 0, UINT8_MAX, &mSceneId);
@@ -5616,10 +5138,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     uint8_t mSceneId;
     uint16_t mTransitionTime;
@@ -5628,10 +5148,10 @@ private:
 /*
  * Command RemoveAllScenes
  */
-class ScenesRemoveAllScenes : public ModelCommand
+class ScenesRemoveAllScenes: public ModelCommand
 {
 public:
-    ScenesRemoveAllScenes() : ModelCommand("remove-all-scenes")
+    ScenesRemoveAllScenes(): ModelCommand("remove-all-scenes")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         ModelCommand::AddArguments();
@@ -5647,20 +5167,18 @@ public:
     }
 
 private:
-    chip::Callback::Callback<ScenesClusterRemoveAllScenesResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<ScenesClusterRemoveAllScenesResponseCallback>(OnScenesClusterRemoveAllScenesResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<ScenesClusterRemoveAllScenesResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterRemoveAllScenesResponseCallback>(OnScenesClusterRemoveAllScenesResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
 };
 
 /*
  * Command RemoveScene
  */
-class ScenesRemoveScene : public ModelCommand
+class ScenesRemoveScene: public ModelCommand
 {
 public:
-    ScenesRemoveScene() : ModelCommand("remove-scene")
+    ScenesRemoveScene(): ModelCommand("remove-scene")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("sceneId", 0, UINT8_MAX, &mSceneId);
@@ -5677,10 +5195,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<ScenesClusterRemoveSceneResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<ScenesClusterRemoveSceneResponseCallback>(OnScenesClusterRemoveSceneResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<ScenesClusterRemoveSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterRemoveSceneResponseCallback>(OnScenesClusterRemoveSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     uint8_t mSceneId;
 };
@@ -5688,10 +5204,10 @@ private:
 /*
  * Command StoreScene
  */
-class ScenesStoreScene : public ModelCommand
+class ScenesStoreScene: public ModelCommand
 {
 public:
-    ScenesStoreScene() : ModelCommand("store-scene")
+    ScenesStoreScene(): ModelCommand("store-scene")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("sceneId", 0, UINT8_MAX, &mSceneId);
@@ -5708,10 +5224,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<ScenesClusterStoreSceneResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<ScenesClusterStoreSceneResponseCallback>(OnScenesClusterStoreSceneResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<ScenesClusterStoreSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterStoreSceneResponseCallback>(OnScenesClusterStoreSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     uint8_t mSceneId;
 };
@@ -5719,10 +5233,10 @@ private:
 /*
  * Command ViewScene
  */
-class ScenesViewScene : public ModelCommand
+class ScenesViewScene: public ModelCommand
 {
 public:
-    ScenesViewScene() : ModelCommand("view-scene")
+    ScenesViewScene(): ModelCommand("view-scene")
     {
         AddArgument("groupId", 0, UINT16_MAX, &mGroupId);
         AddArgument("sceneId", 0, UINT8_MAX, &mSceneId);
@@ -5739,21 +5253,23 @@ public:
     }
 
 private:
-    chip::Callback::Callback<ScenesClusterViewSceneResponseCallback> * onSuccessCallback =
-        new chip::Callback::Callback<ScenesClusterViewSceneResponseCallback>(OnScenesClusterViewSceneResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<ScenesClusterViewSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterViewSceneResponseCallback>(OnScenesClusterViewSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
     uint16_t mGroupId;
     uint8_t mSceneId;
 };
 
+
 /*
  * Discover Attributes
  */
-class DiscoverScenesAttributes : public ModelCommand
+class DiscoverScenesAttributes: public ModelCommand
 {
 public:
-    DiscoverScenesAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverScenesAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5765,19 +5281,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute SceneCount
  */
-class ReadScenesSceneCount : public ModelCommand
+class ReadScenesSceneCount: public ModelCommand
 {
 public:
-    ReadScenesSceneCount() : ModelCommand("read")
+    ReadScenesSceneCount(): ModelCommand("read")
     {
         AddArgument("attr-name", "scene-count");
         ModelCommand::AddArguments();
@@ -5793,19 +5307,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CurrentScene
  */
-class ReadScenesCurrentScene : public ModelCommand
+class ReadScenesCurrentScene: public ModelCommand
 {
 public:
-    ReadScenesCurrentScene() : ModelCommand("read")
+    ReadScenesCurrentScene(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-scene");
         ModelCommand::AddArguments();
@@ -5821,19 +5333,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute CurrentGroup
  */
-class ReadScenesCurrentGroup : public ModelCommand
+class ReadScenesCurrentGroup: public ModelCommand
 {
 public:
-    ReadScenesCurrentGroup() : ModelCommand("read")
+    ReadScenesCurrentGroup(): ModelCommand("read")
     {
         AddArgument("attr-name", "current-group");
         ModelCommand::AddArguments();
@@ -5849,19 +5359,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute SceneValid
  */
-class ReadScenesSceneValid : public ModelCommand
+class ReadScenesSceneValid: public ModelCommand
 {
 public:
-    ReadScenesSceneValid() : ModelCommand("read")
+    ReadScenesSceneValid(): ModelCommand("read")
     {
         AddArgument("attr-name", "scene-valid");
         ModelCommand::AddArguments();
@@ -5877,19 +5385,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute NameSupport
  */
-class ReadScenesNameSupport : public ModelCommand
+class ReadScenesNameSupport: public ModelCommand
 {
 public:
-    ReadScenesNameSupport() : ModelCommand("read")
+    ReadScenesNameSupport(): ModelCommand("read")
     {
         AddArgument("attr-name", "name-support");
         ModelCommand::AddArguments();
@@ -5905,19 +5411,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadScenesClusterRevision : public ModelCommand
+class ReadScenesClusterRevision: public ModelCommand
 {
 public:
-    ReadScenesClusterRevision() : ModelCommand("read")
+    ReadScenesClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -5933,10 +5437,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -5951,13 +5453,17 @@ private:
 | * ClusterRevision                                                   | 0xFFFD |
 \*----------------------------------------------------------------------------*/
 
+
 /*
  * Discover Attributes
  */
-class DiscoverTemperatureMeasurementAttributes : public ModelCommand
+class DiscoverTemperatureMeasurementAttributes: public ModelCommand
 {
 public:
-    DiscoverTemperatureMeasurementAttributes() : ModelCommand("discover") { ModelCommand::AddArguments(); }
+    DiscoverTemperatureMeasurementAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5969,19 +5475,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute MeasuredValue
  */
-class ReadTemperatureMeasurementMeasuredValue : public ModelCommand
+class ReadTemperatureMeasurementMeasuredValue: public ModelCommand
 {
 public:
-    ReadTemperatureMeasurementMeasuredValue() : ModelCommand("read")
+    ReadTemperatureMeasurementMeasuredValue(): ModelCommand("read")
     {
         AddArgument("attr-name", "measured-value");
         ModelCommand::AddArguments();
@@ -5997,16 +5501,14 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
-class ReportTemperatureMeasurementMeasuredValue : public ModelCommand
+class ReportTemperatureMeasurementMeasuredValue: public ModelCommand
 {
 public:
-    ReportTemperatureMeasurementMeasuredValue() : ModelCommand("report")
+    ReportTemperatureMeasurementMeasuredValue(): ModelCommand("report")
     {
         AddArgument("attr-name", "measured-value");
         AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
@@ -6028,17 +5530,13 @@ public:
             return err;
         }
 
-        return cluster.ConfigureAttributeMeasuredValue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval,
-                                                       mMaxInterval, mChange);
+        return cluster.ConfigureAttributeMeasuredValue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
-    chip::Callback::Callback<Int16sAttributeCallback> * onReportCallback =
-        new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16sAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
     uint16_t mMinInterval;
     uint16_t mMaxInterval;
     int16_t mChange;
@@ -6047,10 +5545,10 @@ private:
 /*
  * Attribute MinMeasuredValue
  */
-class ReadTemperatureMeasurementMinMeasuredValue : public ModelCommand
+class ReadTemperatureMeasurementMinMeasuredValue: public ModelCommand
 {
 public:
-    ReadTemperatureMeasurementMinMeasuredValue() : ModelCommand("read")
+    ReadTemperatureMeasurementMinMeasuredValue(): ModelCommand("read")
     {
         AddArgument("attr-name", "min-measured-value");
         ModelCommand::AddArguments();
@@ -6066,19 +5564,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute MaxMeasuredValue
  */
-class ReadTemperatureMeasurementMaxMeasuredValue : public ModelCommand
+class ReadTemperatureMeasurementMaxMeasuredValue: public ModelCommand
 {
 public:
-    ReadTemperatureMeasurementMaxMeasuredValue() : ModelCommand("read")
+    ReadTemperatureMeasurementMaxMeasuredValue(): ModelCommand("read")
     {
         AddArgument("attr-name", "max-measured-value");
         ModelCommand::AddArguments();
@@ -6094,19 +5590,17 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Attribute ClusterRevision
  */
-class ReadTemperatureMeasurementClusterRevision : public ModelCommand
+class ReadTemperatureMeasurementClusterRevision: public ModelCommand
 {
 public:
-    ReadTemperatureMeasurementClusterRevision() : ModelCommand("read")
+    ReadTemperatureMeasurementClusterRevision(): ModelCommand("read")
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -6122,11 +5616,489 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
+/*----------------------------------------------------------------------------*\
+| Cluster Thermostat                                                  | 0x0201 |
+|------------------------------------------------------------------------------|
+| Commands:                                                           |        |
+| * ClearWeeklySchedule                                               |   0x03 |
+| * GetRelayStatusLog                                                 |   0x04 |
+| * GetWeeklySchedule                                                 |   0x02 |
+| * SetWeeklySchedule                                                 |   0x01 |
+| * SetpointRaiseLower                                                |   0x00 |
+|------------------------------------------------------------------------------|
+| Attributes:                                                         |        |
+| * LocalTemperature                                                  | 0x0000 |
+| * OccupiedCoolingSetpoint                                           | 0x0011 |
+| * OccupiedHeatingSetpoint                                           | 0x0012 |
+| * ControlSequenceOfOperation                                        | 0x001B |
+| * SystemMode                                                        | 0x001C |
+| * ClusterRevision                                                   | 0xFFFD |
+\*----------------------------------------------------------------------------*/
+
+/*
+ * Command ClearWeeklySchedule
+ */
+class ThermostatClearWeeklySchedule: public ModelCommand
+{
+public:
+    ThermostatClearWeeklySchedule(): ModelCommand("clear-weekly-schedule")
+    {
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x03) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ClearWeeklySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Command GetRelayStatusLog
+ */
+class ThermostatGetRelayStatusLog: public ModelCommand
+{
+public:
+    ThermostatGetRelayStatusLog(): ModelCommand("get-relay-status-log")
+    {
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x04) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.GetRelayStatusLog(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Command GetWeeklySchedule
+ */
+class ThermostatGetWeeklySchedule: public ModelCommand
+{
+public:
+    ThermostatGetWeeklySchedule(): ModelCommand("get-weekly-schedule")
+    {
+        AddArgument("daysToReturn", 0, UINT8_MAX, &mDaysToReturn);
+        AddArgument("modeToReturn", 0, UINT8_MAX, &mModeToReturn);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x02) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.GetWeeklySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mDaysToReturn, mModeToReturn);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mDaysToReturn;
+    uint8_t mModeToReturn;
+};
+
+/*
+ * Command SetWeeklySchedule
+ */
+class ThermostatSetWeeklySchedule: public ModelCommand
+{
+public:
+    ThermostatSetWeeklySchedule(): ModelCommand("set-weekly-schedule")
+    {
+        AddArgument("numberOfTransitionsForSequence", 0, UINT8_MAX, &mNumberOfTransitionsForSequence);
+        AddArgument("dayOfWeekForSequence", 0, UINT8_MAX, &mDayOfWeekForSequence);
+        AddArgument("modeForSequence", 0, UINT8_MAX, &mModeForSequence);
+        AddArgument("payload", 0, UINT8_MAX, &mPayload);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.SetWeeklySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mNumberOfTransitionsForSequence, mDayOfWeekForSequence, mModeForSequence, mPayload);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mNumberOfTransitionsForSequence;
+    uint8_t mDayOfWeekForSequence;
+    uint8_t mModeForSequence;
+    uint8_t mPayload;
+};
+
+/*
+ * Command SetpointRaiseLower
+ */
+class ThermostatSetpointRaiseLower: public ModelCommand
+{
+public:
+    ThermostatSetpointRaiseLower(): ModelCommand("setpoint-raise-lower")
+    {
+        AddArgument("mode", 0, UINT8_MAX, &mMode);
+        AddArgument("amount", INT8_MIN, INT8_MAX, &mAmount);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.SetpointRaiseLower(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMode, mAmount);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mMode;
+    int8_t mAmount;
+};
+
+
+/*
+ * Discover Attributes
+ */
+class DiscoverThermostatAttributes: public ModelCommand
+{
+public:
+    DiscoverThermostatAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0000) command (0x0C) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.DiscoverAttributes(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Attribute LocalTemperature
+ */
+class ReadThermostatLocalTemperature: public ModelCommand
+{
+public:
+    ReadThermostatLocalTemperature(): ModelCommand("read")
+    {
+        AddArgument("attr-name", "local-temperature");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeLocalTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class ReportThermostatLocalTemperature: public ModelCommand
+{
+public:
+    ReportThermostatLocalTemperature(): ModelCommand("report")
+    {
+        AddArgument("attr-name", "local-temperature");
+        AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
+        AddArgument("max-interval", 0, UINT16_MAX, &mMaxInterval);
+        AddArgument("change", INT16_MIN, INT16_MAX, &mChange);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x06) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+
+        CHIP_ERROR err = cluster.ReportAttributeLocalTemperature(onReportCallback->Cancel());
+        if (err != CHIP_NO_ERROR)
+        {
+            return err;
+        }
+
+        return cluster.ConfigureAttributeLocalTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16sAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    uint16_t mMinInterval;
+    uint16_t mMaxInterval;
+    int16_t mChange;
+};
+
+/*
+ * Attribute OccupiedCoolingSetpoint
+ */
+class ReadThermostatOccupiedCoolingSetpoint: public ModelCommand
+{
+public:
+    ReadThermostatOccupiedCoolingSetpoint(): ModelCommand("read")
+    {
+        AddArgument("attr-name", "occupied-cooling-setpoint");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeOccupiedCoolingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatOccupiedCoolingSetpoint: public ModelCommand
+{
+public:
+    WriteThermostatOccupiedCoolingSetpoint(): ModelCommand("write")
+    {
+        AddArgument("attr-name", "occupied-cooling-setpoint");
+        AddArgument("attr-value", INT16_MIN, INT16_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeOccupiedCoolingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    int16_t mValue;
+};
+
+/*
+ * Attribute OccupiedHeatingSetpoint
+ */
+class ReadThermostatOccupiedHeatingSetpoint: public ModelCommand
+{
+public:
+    ReadThermostatOccupiedHeatingSetpoint(): ModelCommand("read")
+    {
+        AddArgument("attr-name", "occupied-heating-setpoint");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeOccupiedHeatingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatOccupiedHeatingSetpoint: public ModelCommand
+{
+public:
+    WriteThermostatOccupiedHeatingSetpoint(): ModelCommand("write")
+    {
+        AddArgument("attr-name", "occupied-heating-setpoint");
+        AddArgument("attr-value", INT16_MIN, INT16_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeOccupiedHeatingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    int16_t mValue;
+};
+
+/*
+ * Attribute ControlSequenceOfOperation
+ */
+class ReadThermostatControlSequenceOfOperation: public ModelCommand
+{
+public:
+    ReadThermostatControlSequenceOfOperation(): ModelCommand("read")
+    {
+        AddArgument("attr-name", "control-sequence-of-operation");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeControlSequenceOfOperation(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatControlSequenceOfOperation: public ModelCommand
+{
+public:
+    WriteThermostatControlSequenceOfOperation(): ModelCommand("write")
+    {
+        AddArgument("attr-name", "control-sequence-of-operation");
+        AddArgument("attr-value", 0, UINT8_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeControlSequenceOfOperation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mValue;
+};
+
+/*
+ * Attribute SystemMode
+ */
+class ReadThermostatSystemMode: public ModelCommand
+{
+public:
+    ReadThermostatSystemMode(): ModelCommand("read")
+    {
+        AddArgument("attr-name", "system-mode");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeSystemMode(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatSystemMode: public ModelCommand
+{
+public:
+    WriteThermostatSystemMode(): ModelCommand("write")
+    {
+        AddArgument("attr-name", "system-mode");
+        AddArgument("attr-value", 0, UINT8_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeSystemMode(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mValue;
+};
+
+/*
+ * Attribute ClusterRevision
+ */
+class ReadThermostatClusterRevision: public ModelCommand
+{
+public:
+    ReadThermostatClusterRevision(): ModelCommand("read")
+    {
+        AddArgument("attr-name", "cluster-revision");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeClusterRevision(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
 
 /*----------------------------------------------------------------------------*\
 | Register all Clusters commands                                               |
@@ -6136,10 +6108,14 @@ void registerClusterBarrierControl(Commands & commands)
     const char * clusterName = "BarrierControl";
 
     commands_list clusterCommands = {
-        make_unique<BarrierControlBarrierControlGoToPercent>(), make_unique<BarrierControlBarrierControlStop>(),
-        make_unique<DiscoverBarrierControlAttributes>(),        make_unique<ReadBarrierControlBarrierMovingState>(),
-        make_unique<ReadBarrierControlBarrierSafetyStatus>(),   make_unique<ReadBarrierControlBarrierCapabilities>(),
-        make_unique<ReadBarrierControlBarrierPosition>(),       make_unique<ReadBarrierControlClusterRevision>(),
+        make_unique<BarrierControlBarrierControlGoToPercent>(),
+        make_unique<BarrierControlBarrierControlStop>(),
+        make_unique<DiscoverBarrierControlAttributes>(),
+        make_unique<ReadBarrierControlBarrierMovingState>(),
+        make_unique<ReadBarrierControlBarrierSafetyStatus>(),
+        make_unique<ReadBarrierControlBarrierCapabilities>(),
+        make_unique<ReadBarrierControlBarrierPosition>(),
+        make_unique<ReadBarrierControlClusterRevision>(),
     };
 
     commands.Register(clusterName, clusterCommands);
@@ -6149,21 +6125,11 @@ void registerClusterBasic(Commands & commands)
     const char * clusterName = "Basic";
 
     commands_list clusterCommands = {
-        make_unique<BasicMfgSpecificPing>(), make_unique<BasicResetToFactoryDefaults>(), make_unique<DiscoverBasicAttributes>(),
-        make_unique<ReadBasicZclVersion>(),  make_unique<ReadBasicPowerSource>(),        make_unique<ReadBasicClusterRevision>(),
-    };
-
-    commands.Register(clusterName, clusterCommands);
-}
-void registerClusterBinding(Commands & commands)
-{
-    const char * clusterName = "Binding";
-
-    commands_list clusterCommands = {
-        make_unique<BindingBind>(),
-        make_unique<BindingUnbind>(),
-        make_unique<DiscoverBindingAttributes>(),
-        make_unique<ReadBindingClusterRevision>(),
+        make_unique<BasicResetToFactoryDefaults>(),
+        make_unique<DiscoverBasicAttributes>(),
+        make_unique<ReadBasicZclVersion>(),
+        make_unique<ReadBasicPowerSource>(),
+        make_unique<ReadBasicClusterRevision>(),
     };
 
     commands.Register(clusterName, clusterCommands);
@@ -6322,9 +6288,12 @@ void registerClusterIdentify(Commands & commands)
     const char * clusterName = "Identify";
 
     commands_list clusterCommands = {
-        make_unique<IdentifyIdentify>(),           make_unique<IdentifyIdentifyQuery>(),
-        make_unique<DiscoverIdentifyAttributes>(), make_unique<ReadIdentifyIdentifyTime>(),
-        make_unique<WriteIdentifyIdentifyTime>(),  make_unique<ReadIdentifyClusterRevision>(),
+        make_unique<IdentifyIdentify>(),
+        make_unique<IdentifyIdentifyQuery>(),
+        make_unique<DiscoverIdentifyAttributes>(),
+        make_unique<ReadIdentifyIdentifyTime>(),
+        make_unique<WriteIdentifyIdentifyTime>(),
+        make_unique<ReadIdentifyClusterRevision>(),
     };
 
     commands.Register(clusterName, clusterCommands);
@@ -6371,11 +6340,20 @@ void registerClusterScenes(Commands & commands)
     const char * clusterName = "Scenes";
 
     commands_list clusterCommands = {
-        make_unique<ScenesAddScene>(),         make_unique<ScenesGetSceneMembership>(),  make_unique<ScenesRecallScene>(),
-        make_unique<ScenesRemoveAllScenes>(),  make_unique<ScenesRemoveScene>(),         make_unique<ScenesStoreScene>(),
-        make_unique<ScenesViewScene>(),        make_unique<DiscoverScenesAttributes>(),  make_unique<ReadScenesSceneCount>(),
-        make_unique<ReadScenesCurrentScene>(), make_unique<ReadScenesCurrentGroup>(),    make_unique<ReadScenesSceneValid>(),
-        make_unique<ReadScenesNameSupport>(),  make_unique<ReadScenesClusterRevision>(),
+        make_unique<ScenesAddScene>(),
+        make_unique<ScenesGetSceneMembership>(),
+        make_unique<ScenesRecallScene>(),
+        make_unique<ScenesRemoveAllScenes>(),
+        make_unique<ScenesRemoveScene>(),
+        make_unique<ScenesStoreScene>(),
+        make_unique<ScenesViewScene>(),
+        make_unique<DiscoverScenesAttributes>(),
+        make_unique<ReadScenesSceneCount>(),
+        make_unique<ReadScenesCurrentScene>(),
+        make_unique<ReadScenesCurrentGroup>(),
+        make_unique<ReadScenesSceneValid>(),
+        make_unique<ReadScenesNameSupport>(),
+        make_unique<ReadScenesClusterRevision>(),
     };
 
     commands.Register(clusterName, clusterCommands);
@@ -6385,9 +6363,38 @@ void registerClusterTemperatureMeasurement(Commands & commands)
     const char * clusterName = "TemperatureMeasurement";
 
     commands_list clusterCommands = {
-        make_unique<DiscoverTemperatureMeasurementAttributes>(),   make_unique<ReadTemperatureMeasurementMeasuredValue>(),
-        make_unique<ReportTemperatureMeasurementMeasuredValue>(),  make_unique<ReadTemperatureMeasurementMinMeasuredValue>(),
-        make_unique<ReadTemperatureMeasurementMaxMeasuredValue>(), make_unique<ReadTemperatureMeasurementClusterRevision>(),
+        make_unique<DiscoverTemperatureMeasurementAttributes>(),
+        make_unique<ReadTemperatureMeasurementMeasuredValue>(),
+        make_unique<ReportTemperatureMeasurementMeasuredValue>(),
+        make_unique<ReadTemperatureMeasurementMinMeasuredValue>(),
+        make_unique<ReadTemperatureMeasurementMaxMeasuredValue>(),
+        make_unique<ReadTemperatureMeasurementClusterRevision>(),
+    };
+
+    commands.Register(clusterName, clusterCommands);
+}
+void registerClusterThermostat(Commands & commands)
+{
+    const char * clusterName = "Thermostat";
+
+    commands_list clusterCommands = {
+        make_unique<ThermostatClearWeeklySchedule>(),
+        make_unique<ThermostatGetRelayStatusLog>(),
+        make_unique<ThermostatGetWeeklySchedule>(),
+        make_unique<ThermostatSetWeeklySchedule>(),
+        make_unique<ThermostatSetpointRaiseLower>(),
+        make_unique<DiscoverThermostatAttributes>(),
+        make_unique<ReadThermostatLocalTemperature>(),
+        make_unique<ReportThermostatLocalTemperature>(),
+        make_unique<ReadThermostatOccupiedCoolingSetpoint>(),
+        make_unique<WriteThermostatOccupiedCoolingSetpoint>(),
+        make_unique<ReadThermostatOccupiedHeatingSetpoint>(),
+        make_unique<WriteThermostatOccupiedHeatingSetpoint>(),
+        make_unique<ReadThermostatControlSequenceOfOperation>(),
+        make_unique<WriteThermostatControlSequenceOfOperation>(),
+        make_unique<ReadThermostatSystemMode>(),
+        make_unique<WriteThermostatSystemMode>(),
+        make_unique<ReadThermostatClusterRevision>(),
     };
 
     commands.Register(clusterName, clusterCommands);
@@ -6397,7 +6404,6 @@ void registerClusters(Commands & commands)
 {
     registerClusterBarrierControl(commands);
     registerClusterBasic(commands);
-    registerClusterBinding(commands);
     registerClusterColorControl(commands);
     registerClusterDoorLock(commands);
     registerClusterGroups(commands);
@@ -6406,4 +6412,5 @@ void registerClusters(Commands & commands)
     registerClusterOnOff(commands);
     registerClusterScenes(commands);
     registerClusterTemperatureMeasurement(commands);
+    registerClusterThermostat(commands);
 }
