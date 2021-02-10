@@ -82,6 +82,12 @@
   { 0x0002, ZAP_TYPE(BITMAP16), 2, 0, { (uint8_t *) 0 } }, /* Barrier Control (server): barrier safety status */  \
   { 0x0003, ZAP_TYPE(BITMAP8), 1, 0, { (uint8_t *) 0 } }, /* Barrier Control (server): barrier capabilities */  \
   { 0x000A, ZAP_TYPE(INT8U), 1, 0, { (uint8_t *) 0 } }, /* Barrier Control (server): barrier position */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 3 } }, /* Thermostat (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(INT16S), 2, 0, { (uint8_t *) 0 } }, /* Thermostat (server): local temperature */  \
+  { 0x0011, ZAP_TYPE(INT16S), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0A28 } }, /* Thermostat (server): occupied cooling setpoint */  \
+  { 0x0012, ZAP_TYPE(INT16S), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x07D0 } }, /* Thermostat (server): occupied heating setpoint */  \
+  { 0x001B, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x04 } }, /* Thermostat (server): control sequence of operation */  \
+  { 0x001C, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x01 } }, /* Thermostat (server): system mode */  \
   { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 3 } }, /* Color Control (server): cluster revision */  \
   { 0x0000, ZAP_TYPE(INT8U), 1, 0, { (uint8_t *) 0x00 } }, /* Color Control (server): current hue */  \
   { 0x0001, ZAP_TYPE(INT8U), 1, 0, { (uint8_t *) 0x00 } }, /* Color Control (server): current saturation */  \
@@ -149,12 +155,6 @@
   { 0x0007, ZAP_TYPE(ENUM8), 1, 0, { (uint8_t *) 0x00 } }, /* Basic (server): power source */  \
   { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 2 } }, /* On/off (server): cluster revision */  \
   { 0x0000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x00 } }, /* On/off (server): on/off */  \
-  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 0x0001 } }, /* Thermostat (server): cluster revision */  \
-  { 0x0000, ZAP_TYPE(INT16S), 2, 0, { (uint8_t *) 0 } }, /* Thermostat (server): local temperature */  \
-  { 0x0011, ZAP_TYPE(INT16S), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0A28 } }, /* Thermostat (server): occupied cooling setpoint */  \
-  { 0x0012, ZAP_TYPE(INT16S), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x07D0 } }, /* Thermostat (server): occupied heating setpoint */  \
-  { 0x001B, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x04 } }, /* Thermostat (server): control sequence of operation */  \
-  { 0x001C, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x01 } }, /* Thermostat (server): system mode */  \
 }
 
 
@@ -204,13 +204,13 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { 0x0008, ZAP_ATTRIBUTE_INDEX(15), 2, 3, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayLevelControlServer }, /* Endpoint: 1, Cluster: Level Control (server) */ \
   { 0x0101, ZAP_ATTRIBUTE_INDEX(17), 4, 5, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(ATTRIBUTE_CHANGED_FUNCTION), chipFuncArrayDoorLockServer }, /* Endpoint: 1, Cluster: Door Lock (server) */ \
   { 0x0103, ZAP_ATTRIBUTE_INDEX(21), 5, 7, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Barrier Control (server) */ \
-  { 0x0300, ZAP_ATTRIBUTE_INDEX(26), 51, 336, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayColorControlServer }, /* Endpoint: 1, Cluster: Color Control (server) */ \
-  { 0x0402, ZAP_ATTRIBUTE_INDEX(77), 4, 8, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Temperature Measurement (server) */ \
-  { 0x0500, ZAP_ATTRIBUTE_INDEX(81), 6, 16, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION) | ZAP_CLUSTER_MASK(PRE_ATTRIBUTE_CHANGED_FUNCTION) | ZAP_CLUSTER_MASK(MESSAGE_SENT_FUNCTION), chipFuncArrayIasZoneServer }, /* Endpoint: 1, Cluster: IAS Zone (server) */ \
-  { 0xF000, ZAP_ATTRIBUTE_INDEX(87), 1, 2, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Binding (server) */ \
-  { 0x0000, ZAP_ATTRIBUTE_INDEX(88), 3, 4, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 2, Cluster: Basic (server) */ \
-  { 0x0006, ZAP_ATTRIBUTE_INDEX(91), 2, 3, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayOnOffServer }, /* Endpoint: 2, Cluster: On/off (server) */ \
-  { 0x0201, ZAP_ATTRIBUTE_INDEX(93), 6, 10, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 2, Cluster: Thermostat (server) */ \
+  { 0x0201, ZAP_ATTRIBUTE_INDEX(26), 6, 10, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Thermostat (server) */ \
+  { 0x0300, ZAP_ATTRIBUTE_INDEX(32), 51, 336, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayColorControlServer }, /* Endpoint: 1, Cluster: Color Control (server) */ \
+  { 0x0402, ZAP_ATTRIBUTE_INDEX(83), 4, 8, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Temperature Measurement (server) */ \
+  { 0x0500, ZAP_ATTRIBUTE_INDEX(87), 6, 16, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION) | ZAP_CLUSTER_MASK(PRE_ATTRIBUTE_CHANGED_FUNCTION) | ZAP_CLUSTER_MASK(MESSAGE_SENT_FUNCTION), chipFuncArrayIasZoneServer }, /* Endpoint: 1, Cluster: IAS Zone (server) */ \
+  { 0xF000, ZAP_ATTRIBUTE_INDEX(93), 1, 2, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Binding (server) */ \
+  { 0x0000, ZAP_ATTRIBUTE_INDEX(94), 3, 4, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 2, Cluster: Basic (server) */ \
+  { 0x0006, ZAP_ATTRIBUTE_INDEX(97), 2, 3, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayOnOffServer }, /* Endpoint: 2, Cluster: On/off (server) */ \
 }
 
 
@@ -219,8 +219,8 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
 
 // This is an array of EmberAfEndpointType structures.
 #define GENERATED_ENDPOINT_TYPES { \
-  { ZAP_CLUSTER_INDEX(0), 12, 399 }, \
-  { ZAP_CLUSTER_INDEX(12), 3, 17 }, \
+  { ZAP_CLUSTER_INDEX(0), 13, 409 }, \
+  { ZAP_CLUSTER_INDEX(13), 2, 7 }, \
 }
 
 
@@ -396,6 +396,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0008, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Level Control", attribute: "current level". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0101, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Door Lock", attribute: "lock state". side: server */ \
+  { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0201, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Thermostat", attribute: "local temperature". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0300, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Color Control", attribute: "current hue". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0300, 0x0001, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Color Control", attribute: "current saturation". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0300, 0x0003, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Color Control", attribute: "current x". side: server */ \
@@ -403,7 +404,6 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0300, 0x0007, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Color Control", attribute: "color temperature". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0402, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Temperature Measurement", attribute: "measured value". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0002, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */ \
-  { ZAP_REPORT_DIRECTION(REPORTED), 0x0002, 0x0201, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Thermostat", attribute: "local temperature". side: server */ \
 }
 
 
