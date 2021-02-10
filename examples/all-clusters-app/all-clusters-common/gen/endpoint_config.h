@@ -332,6 +332,12 @@
   { 0x0007, ZAP_TYPE(ENUM8), 1, 0, { (uint8_t *) 0x00 } }, /* Basic (server): power source */  \
   { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 2 } }, /* On/off (server): cluster revision */  \
   { 0x0000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x00 } }, /* On/off (server): on/off */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 0x0001 } }, /* Thermostat (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(INT16S), 2, 0, { (uint8_t *) 0 } }, /* Thermostat (server): local temperature */  \
+  { 0x0011, ZAP_TYPE(INT16S), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0A28 } }, /* Thermostat (server): occupied cooling setpoint */  \
+  { 0x0012, ZAP_TYPE(INT16S), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x07D0 } }, /* Thermostat (server): occupied heating setpoint */  \
+  { 0x001B, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x04 } }, /* Thermostat (server): control sequence of operation */  \
+  { 0x001C, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x01 } }, /* Thermostat (server): system mode */  \
 }
 
 >>>>>>> before adding thermostat server to all clusters app
@@ -452,7 +458,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
 
 
 #define ZAP_CLUSTER_MASK(mask) CLUSTER_MASK_ ## mask
-#define GENERATED_CLUSTER_COUNT 14
+#define GENERATED_CLUSTER_COUNT 15
 #define GENERATED_CLUSTERS { \
   { 0x0000, ZAP_ATTRIBUTE_INDEX(0), 3, 4, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Basic (server) */ \
   { 0x0003, ZAP_ATTRIBUTE_INDEX(3), 2, 4, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION) | ZAP_CLUSTER_MASK(ATTRIBUTE_CHANGED_FUNCTION), chipFuncArrayIdentifyServer }, /* Endpoint: 1, Cluster: Identify (server) */ \
@@ -468,6 +474,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { 0xF000, ZAP_ATTRIBUTE_INDEX(87), 1, 2, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 1, Cluster: Binding (server) */ \
   { 0x0000, ZAP_ATTRIBUTE_INDEX(88), 3, 4, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 2, Cluster: Basic (server) */ \
   { 0x0006, ZAP_ATTRIBUTE_INDEX(91), 2, 3, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayOnOffServer }, /* Endpoint: 2, Cluster: On/off (server) */ \
+  { 0x0201, ZAP_ATTRIBUTE_INDEX(93), 6, 10, ZAP_CLUSTER_MASK(SERVER), NULL }, /* Endpoint: 2, Cluster: Thermostat (server) */ \
 }
 >>>>>>> before adding thermostat server to all clusters app
 
@@ -484,7 +491,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
 =======
 #define GENERATED_ENDPOINT_TYPES { \
   { ZAP_CLUSTER_INDEX(0), 12, 399 }, \
-  { ZAP_CLUSTER_INDEX(12), 2, 7 }, \
+  { ZAP_CLUSTER_INDEX(12), 3, 17 }, \
 }
 
 
@@ -689,7 +696,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
     }
 =======
 #define ZAP_COMMAND_MASK(mask) COMMAND_MASK_ ## mask
-#define EMBER_AF_GENERATED_COMMAND_COUNT (89)
+#define EMBER_AF_GENERATED_COMMAND_COUNT (96)
 #define GENERATED_COMMANDS { \
   { 0x0000, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) | ZAP_COMMAND_MASK(OUTGOING_SERVER) }, /* Basic (server): MfgSpecificPing */ \
   { 0x0000, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) | ZAP_COMMAND_MASK(OUTGOING_SERVER) }, /* Basic (server): ResetToFactoryDefaults */ \
@@ -761,6 +768,13 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { 0x0101, 0x19, ZAP_COMMAND_MASK(INCOMING_SERVER) | ZAP_COMMAND_MASK(OUTGOING_SERVER) }, /* Door Lock (server): ClearAllRfids */ \
   { 0x0103, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Barrier Control (server): BarrierControlGoToPercent */ \
   { 0x0103, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Barrier Control (server): BarrierControlStop */ \
+  { 0x0201, 0x00, ZAP_COMMAND_MASK(INCOMING_CLIENT) }, /* Thermostat (server): CurrentWeeklySchedule */ \
+  { 0x0201, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Thermostat (server): SetpointRaiseLower */ \
+  { 0x0201, 0x01, ZAP_COMMAND_MASK(INCOMING_CLIENT) }, /* Thermostat (server): RelayStatusLog */ \
+  { 0x0201, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Thermostat (server): SetWeeklySchedule */ \
+  { 0x0201, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Thermostat (server): GetWeeklySchedule */ \
+  { 0x0201, 0x03, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Thermostat (server): ClearWeeklySchedule */ \
+  { 0x0201, 0x04, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Thermostat (server): GetRelayStatusLog */ \
   { 0x0300, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) | ZAP_COMMAND_MASK(OUTGOING_SERVER) }, /* Color Control (server): MoveToHue */ \
   { 0x0300, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) | ZAP_COMMAND_MASK(OUTGOING_SERVER) }, /* Color Control (server): MoveHue */ \
   { 0x0300, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) | ZAP_COMMAND_MASK(OUTGOING_SERVER) }, /* Color Control (server): StepHue */ \
@@ -844,6 +858,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0300, 0x0007, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Color Control", attribute: "color temperature". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0402, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Temperature Measurement", attribute: "measured value". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0002, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */ \
+  { ZAP_REPORT_DIRECTION(REPORTED), 0x0002, 0x0201, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Thermostat", attribute: "local temperature". side: server */ \
 }
 
 
