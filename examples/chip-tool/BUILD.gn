@@ -42,6 +42,7 @@ executable("chip-tool") {
     "${chip_root}/src/app/util/process-cluster-message.cpp",
     "${chip_root}/src/app/util/process-global-message.cpp",
     "${chip_root}/src/app/util/util.cpp",
+    "${chip_root}/src/app/clusters/thermostat-client/thermostat.cpp",
     "commands/clusters/ModelCommand.cpp",
     "commands/common/Command.cpp",
     "commands/common/Commands.cpp",
