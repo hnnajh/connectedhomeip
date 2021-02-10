@@ -570,10 +570,10 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
 // Use this macro to check if Reporting plugin is included
 #define EMBER_AF_PLUGIN_REPORTING
 // User options for plugin Reporting
-#define EMBER_AF_PLUGIN_REPORTING_TABLE_SIZE (10)
+#define EMBER_AF_PLUGIN_REPORTING_TABLE_SIZE (11)
 #define EMBER_AF_PLUGIN_REPORTING_ENABLE_GROUP_BOUND_REPORTS
 
-#define EMBER_AF_GENERATED_REPORTING_CONFIG_DEFAULTS_TABLE_SIZE (10)
+#define EMBER_AF_GENERATED_REPORTING_CONFIG_DEFAULTS_TABLE_SIZE (11)
 #define EMBER_AF_GENERATED_REPORTING_CONFIG_DEFAULTS { \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0008, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Level Control", attribute: "current level". side: server */ \
@@ -585,6 +585,7 @@ const EmberAfGenericClusterFunction chipFuncArrayIasZoneServer[] = {\
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0300, 0x0007, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Color Control", attribute: "color temperature". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0402, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Temperature Measurement", attribute: "measured value". side: server */ \
   { ZAP_REPORT_DIRECTION(REPORTED), 0x0002, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */ \
+  { ZAP_REPORT_DIRECTION(REPORTED), 0x0002, 0x0201, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Thermostat", attribute: "local temperature". side: server */ \
 }
 
 

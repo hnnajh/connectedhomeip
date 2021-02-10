@@ -733,5 +733,48 @@ CHIP_ERROR chip_ime_AppendCommand_Scenes_ViewScene(chip::Controller::Device * de
 // Cluster TemperatureMeasurement
 // End of Cluster TemperatureMeasurement
 
+// Cluster Thermostat
+CHIP_ERROR chip_ime_AppendCommand_Thermostat_ClearWeeklySchedule(chip::Controller::Device * device, chip::EndpointId ZCLendpointId, chip::GroupId ZCLgroupId)
+{
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    chip::Controller::ThermostatCluster clusterThermostat;
+    (void) ZCLgroupId;
+    clusterThermostat.Associate(device, ZCLendpointId);
+    return clusterThermostat.ClearWeeklySchedule(nullptr, nullptr);
+}
+CHIP_ERROR chip_ime_AppendCommand_Thermostat_GetRelayStatusLog(chip::Controller::Device * device, chip::EndpointId ZCLendpointId, chip::GroupId ZCLgroupId)
+{
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    chip::Controller::ThermostatCluster clusterThermostat;
+    (void) ZCLgroupId;
+    clusterThermostat.Associate(device, ZCLendpointId);
+    return clusterThermostat.GetRelayStatusLog(nullptr, nullptr);
+}
+CHIP_ERROR chip_ime_AppendCommand_Thermostat_GetWeeklySchedule(chip::Controller::Device * device, chip::EndpointId ZCLendpointId, chip::GroupId ZCLgroupId, uint8_t daysToReturn, uint8_t modeToReturn)
+{
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    chip::Controller::ThermostatCluster clusterThermostat;
+    (void) ZCLgroupId;
+    clusterThermostat.Associate(device, ZCLendpointId);
+    return clusterThermostat.GetWeeklySchedule(nullptr, nullptr, daysToReturn, modeToReturn);
+}
+CHIP_ERROR chip_ime_AppendCommand_Thermostat_SetWeeklySchedule(chip::Controller::Device * device, chip::EndpointId ZCLendpointId, chip::GroupId ZCLgroupId, uint8_t numberOfTransitionsForSequence, uint8_t dayOfWeekForSequence, uint8_t modeForSequence, uint8_t payload)
+{
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    chip::Controller::ThermostatCluster clusterThermostat;
+    (void) ZCLgroupId;
+    clusterThermostat.Associate(device, ZCLendpointId);
+    return clusterThermostat.SetWeeklySchedule(nullptr, nullptr, numberOfTransitionsForSequence, dayOfWeekForSequence, modeForSequence, payload);
+}
+CHIP_ERROR chip_ime_AppendCommand_Thermostat_SetpointRaiseLower(chip::Controller::Device * device, chip::EndpointId ZCLendpointId, chip::GroupId ZCLgroupId, uint8_t mode, int8_t amount)
+{
+    VerifyOrReturnError(device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    chip::Controller::ThermostatCluster clusterThermostat;
+    (void) ZCLgroupId;
+    clusterThermostat.Associate(device, ZCLendpointId);
+    return clusterThermostat.SetpointRaiseLower(nullptr, nullptr, mode, amount);
+}
+// End of Cluster Thermostat
+
 
 }
