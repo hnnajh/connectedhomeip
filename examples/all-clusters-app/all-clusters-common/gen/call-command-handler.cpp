@@ -40,6 +40,7 @@ EmberAfStatus emberAfLevelControlClusterServerCommandParse(EmberAfClusterCommand
 EmberAfStatus emberAfOnOffClusterServerCommandParse(EmberAfClusterCommand * cmd);
 EmberAfStatus emberAfScenesClusterServerCommandParse(EmberAfClusterCommand * cmd);
 EmberAfStatus emberAfTemperatureMeasurementClusterServerCommandParse(EmberAfClusterCommand * cmd);
+EmberAfStatus emberAfThermostatClusterServerCommandParse(EmberAfClusterCommand * cmd);
 
 
 static EmberAfStatus status(bool wasHandled, bool clusterExists, bool mfgSpecific)
@@ -118,6 +119,9 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
         case ZCL_TEMP_MEASUREMENT_CLUSTER_ID :
             // No commands are enabled for cluster Temperature Measurement
             result = status(false, true, cmd->mfgSpecific);
+            break;
+        case ZCL_THERMOSTAT_CLUSTER_ID :
+            result = emberAfThermostatClusterServerCommandParse(cmd);
             break;
         default:
             // Unrecognized cluster ID, error status will apply.
@@ -1864,6 +1868,100 @@ uint8_t sceneId;
   sceneId = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
 
 wasHandled = emberAfScenesClusterViewSceneCallback(groupId, sceneId);
+            break;
+        }
+        default: {
+            // Unrecognized command ID, error status will apply.
+            break;
+        }
+        }
+    }
+    return status(wasHandled, true, cmd->mfgSpecific);
+}
+EmberAfStatus emberAfThermostatClusterServerCommandParse(EmberAfClusterCommand * cmd)
+{
+    bool wasHandled = false;
+
+    if (!cmd->mfgSpecific)
+    {
+        switch (cmd->commandId)
+        {
+        case ZCL_CLEAR_WEEKLY_SCHEDULE_COMMAND_ID: {
+        wasHandled = emberAfThermostatClusterClearWeeklyScheduleCallback();
+            break;
+        }
+        case ZCL_GET_RELAY_STATUS_LOG_COMMAND_ID: {
+        wasHandled = emberAfThermostatClusterGetRelayStatusLogCallback();
+            break;
+        }
+        case ZCL_GET_WEEKLY_SCHEDULE_COMMAND_ID: {
+        uint16_t payloadOffset = cmd->payloadStartIndex;
+uint8_t daysToReturn;
+uint8_t modeToReturn;
+
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  daysToReturn = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+  payloadOffset = static_cast<uint16_t>(payloadOffset + 1);
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  modeToReturn = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+
+wasHandled = emberAfThermostatClusterGetWeeklyScheduleCallback(daysToReturn, modeToReturn);
+            break;
+        }
+        case ZCL_SET_WEEKLY_SCHEDULE_COMMAND_ID: {
+        uint16_t payloadOffset = cmd->payloadStartIndex;
+uint8_t numberOfTransitionsForSequence;
+uint8_t dayOfWeekForSequence;
+uint8_t modeForSequence;
+/* TYPE WARNING: array array defaults to */ uint8_t *  payload;
+
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  numberOfTransitionsForSequence = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+  payloadOffset = static_cast<uint16_t>(payloadOffset + 1);
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  dayOfWeekForSequence = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+  payloadOffset = static_cast<uint16_t>(payloadOffset + 1);
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  modeForSequence = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+  payloadOffset = static_cast<uint16_t>(payloadOffset + 1);
+  payload = cmd->buffer + payloadOffset;
+
+wasHandled = emberAfThermostatClusterSetWeeklyScheduleCallback(numberOfTransitionsForSequence, dayOfWeekForSequence, modeForSequence, payload);
+            break;
+        }
+        case ZCL_SETPOINT_RAISE_LOWER_COMMAND_ID: {
+        uint16_t payloadOffset = cmd->payloadStartIndex;
+uint8_t mode;
+int8_t amount;
+
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  mode = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+  payloadOffset = static_cast<uint16_t>(payloadOffset + 1);
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  amount = static_cast<int8_t>(emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen));
+
+wasHandled = emberAfThermostatClusterSetpointRaiseLowerCallback(mode, amount);
             break;
         }
         default: {
