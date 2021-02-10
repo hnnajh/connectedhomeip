@@ -385,4 +385,35 @@ NS_ASSUME_NONNULL_BEGIN
 
 NS_ASSUME_NONNULL_END
 
+NS_ASSUME_NONNULL_BEGIN
+
+@interface CHIPThermostat : NSObject
+
+- (nullable instancetype)initWithDevice:(CHIPDevice *)device endpoint:(uint8_t)endpoint queue:(dispatch_queue_t)queue;
+- (BOOL)clearWeeklySchedule:(ResponseHandler)completionHandler;
+- (BOOL)getRelayStatusLog:(ResponseHandler)completionHandler;
+- (BOOL)getWeeklySchedule:(uint8_t)daysToReturn modeToReturn:(uint8_t)modeToReturn completionHandler:(ResponseHandler)completionHandler;
+- (BOOL)setWeeklySchedule:(uint8_t)numberOfTransitionsForSequence dayOfWeekForSequence:(uint8_t)dayOfWeekForSequence modeForSequence:(uint8_t)modeForSequence payload:(uint8_t)payload completionHandler:(ResponseHandler)completionHandler;
+- (BOOL)setpointRaiseLower:(uint8_t)mode amount:(int8_t)amount completionHandler:(ResponseHandler)completionHandler;
+
+- (BOOL)readAttributeLocalTemperature:(ResponseHandler)completionHandler;
+- (BOOL) configureAttributeLocalTemperature:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(int16_t)change completionHandler:(ResponseHandler)completionHandler;
+- (BOOL) reportAttributeLocalTemperature:(ResponseHandler)reportHandler;
+- (BOOL)readAttributeOccupiedCoolingSetpoint:(ResponseHandler)completionHandler;
+- (BOOL)writeAttributeOccupiedCoolingSetpoint:(int16_t)value completionHandler:(ResponseHandler)completionHandler;
+- (BOOL)readAttributeOccupiedHeatingSetpoint:(ResponseHandler)completionHandler;
+- (BOOL)writeAttributeOccupiedHeatingSetpoint:(int16_t)value completionHandler:(ResponseHandler)completionHandler;
+- (BOOL)readAttributeControlSequenceOfOperation:(ResponseHandler)completionHandler;
+- (BOOL)writeAttributeControlSequenceOfOperation:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
+- (BOOL)readAttributeSystemMode:(ResponseHandler)completionHandler;
+- (BOOL)writeAttributeSystemMode:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
+- (BOOL)readAttributeClusterRevision:(ResponseHandler)completionHandler;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+@end
+
+NS_ASSUME_NONNULL_END
+
 #endif /* CHIP_CLUSTERS_H */
