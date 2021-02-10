@@ -768,6 +768,7 @@ chip::System::PacketBufferHandle encodeColorControlClusterWriteStartUpColorTempe
  *    Encode a Color Control server read command for the cluster revision attribute into buffer including the APS frame
  */
 chip::System::PacketBufferHandle encodeColorControlClusterReadClusterRevisionAttribute(uint8_t seqNum, chip::EndpointId destinationEndpoint);
+<<<<<<< master
 
 /*----------------------------------------------------------------------------*\
 | Cluster ContentLaunch                                               | 0xF002 |
@@ -805,6 +806,8 @@ chip::System::PacketBufferHandle encodeContentLaunchClusterDiscoverAttributes(ui
  */
 chip::System::PacketBufferHandle encodeContentLaunchClusterReadClusterRevisionAttribute(uint8_t seqNum,
                                                                                         chip::EndpointId destinationEndpoint);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /*----------------------------------------------------------------------------*\
 | Cluster DoorLock                                                    | 0x0101 |
@@ -1284,6 +1287,7 @@ chip::System::PacketBufferHandle encodeLevelControlClusterConfigureCurrentLevelA
  *    Encode a Level Control server read command for the cluster revision attribute into buffer including the APS frame
  */
 chip::System::PacketBufferHandle encodeLevelControlClusterReadClusterRevisionAttribute(uint8_t seqNum, chip::EndpointId destinationEndpoint);
+<<<<<<< master
 
 /*----------------------------------------------------------------------------*\
 | Cluster MediaPlayback                                               | 0xF001 |
@@ -1391,6 +1395,8 @@ chip::System::PacketBufferHandle encodeMediaPlaybackClusterReadCurrentStateAttri
  */
 chip::System::PacketBufferHandle encodeMediaPlaybackClusterReadClusterRevisionAttribute(uint8_t seqNum,
                                                                                         chip::EndpointId destinationEndpoint);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /*----------------------------------------------------------------------------*\
 | Cluster OnOff                                                       | 0x0006 |
@@ -1600,6 +1606,7 @@ chip::System::PacketBufferHandle encodeTemperatureMeasurementClusterReadMaxMeasu
  */
 chip::System::PacketBufferHandle encodeTemperatureMeasurementClusterReadClusterRevisionAttribute(uint8_t seqNum, chip::EndpointId destinationEndpoint);
 
+<<<<<<< master
 /*----------------------------------------------------------------------------*\
 | Cluster Thermostat                                                  | 0x0201 |
 |------------------------------------------------------------------------------|
@@ -1721,3 +1728,5 @@ chip::System::PacketBufferHandle encodeThermostatClusterWriteSystemModeAttribute
  */
 chip::System::PacketBufferHandle encodeThermostatClusterReadClusterRevisionAttribute(uint8_t seqNum, chip::EndpointId destinationEndpoint);
 
+=======
+>>>>>>> before adding thermostat server to all clusters app

@@ -733,6 +733,7 @@ CHIP_ERROR chip_ime_AppendCommand_Scenes_ViewScene(chip::Controller::Device * de
 // Cluster TemperatureMeasurement
 // End of Cluster TemperatureMeasurement
 
+<<<<<<< master
 // Cluster Thermostat
 CHIP_ERROR chip_ime_AppendCommand_Thermostat_ClearWeeklySchedule(chip::Controller::Device * device, chip::EndpointId ZCLendpointId, chip::GroupId ZCLgroupId)
 {
@@ -776,5 +777,7 @@ CHIP_ERROR chip_ime_AppendCommand_Thermostat_SetpointRaiseLower(chip::Controller
 }
 // End of Cluster Thermostat
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 }

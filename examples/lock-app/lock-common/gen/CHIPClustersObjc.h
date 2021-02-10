@@ -24,7 +24,10 @@
 
 @class CHIPDevice;
 
+<<<<<<< master
 typedef void (^ResponseHandler)(NSError * _Nullable error, NSDictionary * _Nullable values);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -52,12 +55,22 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)on:(ResponseHandler)completionHandler;
 - (void)toggle:(ResponseHandler)completionHandler;
 
+<<<<<<< master
 - (void)readAttributeOnOff:(ResponseHandler)completionHandler;
 - (void)configureAttributeOnOff:(uint16_t)minInterval
                     maxInterval:(uint16_t)maxInterval
               completionHandler:(ResponseHandler)completionHandler;
 - (void)reportAttributeOnOff:(ResponseHandler)reportHandler;
 - (void)readAttributeClusterRevision:(ResponseHandler)completionHandler;
+=======
+- (BOOL)readAttributeOnOff:(ResponseHandler)completionHandler;
+- (BOOL) configureAttributeOnOff:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler;
+- (BOOL) reportAttributeOnOff:(ResponseHandler)reportHandler;
+- (BOOL)readAttributeClusterRevision:(ResponseHandler)completionHandler;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+>>>>>>> before adding thermostat server to all clusters app
 
 @end
 

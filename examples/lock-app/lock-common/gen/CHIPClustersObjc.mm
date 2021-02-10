@@ -21,7 +21,11 @@
 
 #import "CHIPDevice.h"
 #import "CHIPDevice_Internal.h"
+<<<<<<< master
 #import "ChipError.h"
+=======
+#import "gen/CHIPClustersObjc.h"
+>>>>>>> before adding thermostat server to all clusters app
 #import "gen/CHIPClientCallbacks.h"
 
 #include <controller/CHIPClusters.h>
@@ -72,9 +76,13 @@ public:
         CHIPDefaultFailureCallbackBridge * callback = reinterpret_cast<CHIPDefaultFailureCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
+<<<<<<< master
                 NSError * error = [NSError errorWithDomain:CHIPErrorDomain
                                                       code:status
                                                   userInfo:@ { NSLocalizedDescriptionKey : @"" }];
+=======
+                NSError* error = [NSError errorWithDomain:@"ZCL" code:status userInfo:@{NSLocalizedDescriptionKey:@""}];
+>>>>>>> before adding thermostat server to all clusters app
                 callback->mHandler(error, nil);
                 callback->Cancel();
                 delete callback;
@@ -101,9 +109,13 @@ public:
         CHIPUnsupportedAttributeCallbackBridge * callback = reinterpret_cast<CHIPUnsupportedAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
+<<<<<<< master
                 NSError * error = [NSError errorWithDomain:CHIPErrorDomain
                                                       code:CHIPErrorCodeUndefinedError
                                                   userInfo:@ { NSLocalizedDescriptionKey : @"Unsupported attribute type" }];
+=======
+                NSError* error = [NSError errorWithDomain:@"ZCL" code:0 userInfo:@{NSLocalizedDescriptionKey:@"Unsuported attribute type"}];
+>>>>>>> before adding thermostat server to all clusters app
                 callback->mHandler(error, nil);
                 callback->Cancel();
                 delete callback;
@@ -281,7 +293,15 @@ private:
     bool mKeepAlive;
 };
 
+<<<<<<< master
 @interface CHIPCluster ()
+=======
+
+
+@interface CHIPOnOff ()
+
+@property (readonly) Controller::OnOffCluster cppCluster;
+>>>>>>> before adding thermostat server to all clusters app
 @property (readonly, nonatomic) dispatch_queue_t callbackQueue;
 - (Controller::ClusterBase *)getCluster;
 @end
@@ -413,9 +433,13 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeOnOff:(uint16_t)minInterval
                     maxInterval:(uint16_t)maxInterval
               completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeOnOff:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -439,7 +463,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeOnOff:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeOnOff:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPBooleanAttributeCallbackBridge * onReport
         = new CHIPBooleanAttributeCallbackBridge(reportHandler, [self callbackQueue], true);

@@ -397,6 +397,7 @@ typedef enum {
   EMBER_ZCL_COMMODITY_TYPE_ELECTRIC_METERING_ELEMENT2 = 14,
   EMBER_ZCL_COMMODITY_TYPE_ELECTRIC_METERING_ELEMENT3 = 15,
 } EmberAfCommodityType;
+<<<<<<< master
 
 // Enum for ContentLaunchStatus
 typedef enum
@@ -422,6 +423,9 @@ typedef enum
     EMBER_ZCL_CONTENT_LAUNCH_TYPE_VIDEO       = 10,
 } EmberAfContentLaunchType;
 
+=======
+
+>>>>>>> before adding thermostat server to all clusters app
 // Enum for CppEventResponseCppAuth
 typedef enum {
   EMBER_ZCL_CPP_EVENT_RESPONSE_CPP_AUTH_ACCEPTED = 1,
@@ -1510,6 +1514,7 @@ typedef enum {
   EMBER_ZCL_MEASUREMENT_LIGHT_SENSOR_TYPE_CMOS = 1,
 } EmberAfMeasurementLightSensorType;
 
+<<<<<<< master
 // Enum for MediaPlaybackStatus
 typedef enum
 {
@@ -1519,6 +1524,8 @@ typedef enum
     EMBER_ZCL_MEDIA_PLAYBACK_STATUS_NOT_ACTIVE                = 3,
 } EmberAfMediaPlaybackStatus;
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 // Enum for MessagingControlConfirmation
 typedef enum {
   EMBER_ZCL_MESSAGING_CONTROL_CONFIRMATION_NOT_REQUIRED = 0,

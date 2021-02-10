@@ -24,7 +24,14 @@
 
 @class CHIPDevice;
 
+<<<<<<< master
 typedef void (^ResponseHandler)(NSError * _Nullable error, NSDictionary * _Nullable values);
+=======
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface CHIPBasic : NSObject
+>>>>>>> before adding thermostat server to all clusters app
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -56,6 +63,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+<<<<<<< master
 /**
  * Cluster Temperature Measurement
  *
@@ -71,6 +79,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)readAttributeMinMeasuredValue:(ResponseHandler)completionHandler;
 - (void)readAttributeMaxMeasuredValue:(ResponseHandler)completionHandler;
 - (void)readAttributeClusterRevision:(ResponseHandler)completionHandler;
+=======
+- (BOOL)readAttributeMeasuredValue:(ResponseHandler)completionHandler;
+- (BOOL) configureAttributeMeasuredValue:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(int16_t)change completionHandler:(ResponseHandler)completionHandler;
+- (BOOL) reportAttributeMeasuredValue:(ResponseHandler)reportHandler;
+- (BOOL)readAttributeMinMeasuredValue:(ResponseHandler)completionHandler;
+- (BOOL)readAttributeMaxMeasuredValue:(ResponseHandler)completionHandler;
+- (BOOL)readAttributeClusterRevision:(ResponseHandler)completionHandler;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+>>>>>>> before adding thermostat server to all clusters app
 
 @end
 

@@ -384,6 +384,7 @@ static void OnScenesClusterViewSceneResponse(void * context, uint16_t groupId, u
 | Thermostat                                                          | 0x0201 |
 \*----------------------------------------------------------------------------*/
 
+<<<<<<< master
 constexpr chip::ClusterId kBarrierControlClusterId         = 0x0103;
 constexpr chip::ClusterId kBasicClusterId                  = 0x0000;
 constexpr chip::ClusterId kBindingClusterId                = 0xF000;
@@ -396,6 +397,17 @@ constexpr chip::ClusterId kLevelControlClusterId           = 0x0008;
 constexpr chip::ClusterId kMediaPlaybackClusterId          = 0xF001;
 constexpr chip::ClusterId kOnOffClusterId                  = 0x0006;
 constexpr chip::ClusterId kScenesClusterId                 = 0x0005;
+=======
+constexpr chip::ClusterId kBarrierControlClusterId = 0x0103;
+constexpr chip::ClusterId kBasicClusterId = 0x0000;
+constexpr chip::ClusterId kColorControlClusterId = 0x0300;
+constexpr chip::ClusterId kDoorLockClusterId = 0x0101;
+constexpr chip::ClusterId kGroupsClusterId = 0x0004;
+constexpr chip::ClusterId kIdentifyClusterId = 0x0003;
+constexpr chip::ClusterId kLevelControlClusterId = 0x0008;
+constexpr chip::ClusterId kOnOffClusterId = 0x0006;
+constexpr chip::ClusterId kScenesClusterId = 0x0005;
+>>>>>>> before adding thermostat server to all clusters app
 constexpr chip::ClusterId kTemperatureMeasurementClusterId = 0x0402;
 constexpr chip::ClusterId kThermostatClusterId = 0x0201;
 
@@ -4982,10 +4994,20 @@ private:
 /*
  * Command FastForwardRequest
  */
+<<<<<<< master
 class MediaPlaybackFastForwardRequest : public ModelCommand
 {
 public:
     MediaPlaybackFastForwardRequest() : ModelCommand("fast-forward-request") { ModelCommand::AddArguments(); }
+=======
+class OnOffOff: public ModelCommand
+{
+public:
+    OnOffOff(): ModelCommand("off")
+    {
+        ModelCommand::AddArguments();
+    }
+>>>>>>> before adding thermostat server to all clusters app
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -4997,19 +5019,27 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command NextRequest
  */
+<<<<<<< master
 class MediaPlaybackNextRequest : public ModelCommand
 {
 public:
     MediaPlaybackNextRequest() : ModelCommand("next-request") { ModelCommand::AddArguments(); }
+=======
+class OnOffOn: public ModelCommand
+{
+public:
+    OnOffOn(): ModelCommand("on")
+    {
+        ModelCommand::AddArguments();
+    }
+>>>>>>> before adding thermostat server to all clusters app
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5021,19 +5051,27 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command PauseRequest
  */
+<<<<<<< master
 class MediaPlaybackPauseRequest : public ModelCommand
 {
 public:
     MediaPlaybackPauseRequest() : ModelCommand("pause-request") { ModelCommand::AddArguments(); }
+=======
+class OnOffToggle: public ModelCommand
+{
+public:
+    OnOffToggle(): ModelCommand("toggle")
+    {
+        ModelCommand::AddArguments();
+    }
+>>>>>>> before adding thermostat server to all clusters app
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5045,19 +5083,28 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
 
 /*
  * Command PlayRequest
  */
+<<<<<<< master
 class MediaPlaybackPlayRequest : public ModelCommand
 {
 public:
     MediaPlaybackPlayRequest() : ModelCommand("play-request") { ModelCommand::AddArguments(); }
+=======
+class DiscoverOnOffAttributes: public ModelCommand
+{
+public:
+    DiscoverOnOffAttributes(): ModelCommand("discover")
+    {
+        ModelCommand::AddArguments();
+    }
+>>>>>>> before adding thermostat server to all clusters app
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
     {
@@ -5069,21 +5116,26 @@ public:
     }
 
 private:
-    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
-        new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*
  * Command PreviousRequest
  */
+<<<<<<< master
 class MediaPlaybackPreviousRequest : public ModelCommand
 {
 public:
     MediaPlaybackPreviousRequest() : ModelCommand("previous-request") { ModelCommand::AddArguments(); }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+=======
+class ReadOnOffOnOff: public ModelCommand
+{
+public:
+    ReadOnOffOnOff(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
     {
         ChipLogProgress(chipTool, "Sending cluster (0xF001) command (0x04) on endpoint %" PRIu16, endpointId);
 
@@ -5117,6 +5169,7 @@ public:
     }
 
 private:
+<<<<<<< master
     chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback =
         new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
     chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
@@ -5132,6 +5185,16 @@ public:
     MediaPlaybackSkipBackwardRequest() : ModelCommand("skip-backward-request") { ModelCommand::AddArguments(); }
 
     CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+=======
+    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class ReportOnOffOnOff: public ModelCommand
+{
+public:
+    ReportOnOffOnOff(): ModelCommand("report")
+>>>>>>> before adding thermostat server to all clusters app
     {
         ChipLogProgress(chipTool, "Sending cluster (0xF001) command (0x09) on endpoint %" PRIu16, endpointId);
 
@@ -5183,6 +5246,7 @@ public:
     {
         ChipLogProgress(chipTool, "Sending cluster (0xF001) command (0x03) on endpoint %" PRIu16, endpointId);
 
+<<<<<<< master
         chip::Controller::MediaPlaybackCluster cluster;
         cluster.Associate(device, endpointId);
         return cluster.StartOverRequest(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
@@ -5269,15 +5333,33 @@ private:
         new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
     chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
         new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+=======
+        return cluster.ConfigureAttributeOnOff(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<BooleanAttributeCallback> * onReportCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    uint16_t mMinInterval;
+    uint16_t mMaxInterval;
+>>>>>>> before adding thermostat server to all clusters app
 };
 
 /*
  * Attribute ClusterRevision
  */
+<<<<<<< master
 class ReadMediaPlaybackClusterRevision : public ModelCommand
 {
 public:
     ReadMediaPlaybackClusterRevision() : ModelCommand("read")
+=======
+class ReadOnOffClusterRevision: public ModelCommand
+{
+public:
+    ReadOnOffClusterRevision(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -5293,10 +5375,8 @@ public:
     }
 
 private:
-    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback =
-        new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
-    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback =
-        new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
 
 /*----------------------------------------------------------------------------*\
@@ -5315,10 +5395,17 @@ private:
 /*
  * Command Off
  */
+<<<<<<< master
 class OnOffOff: public ModelCommand
 {
 public:
     OnOffOff(): ModelCommand("off")
+=======
+class ScenesAddScene: public ModelCommand
+{
+public:
+    ScenesAddScene(): ModelCommand("add-scene")
+>>>>>>> before adding thermostat server to all clusters app
     {
         ModelCommand::AddArguments();
     }
@@ -5329,21 +5416,44 @@ public:
 
         chip::Controller::OnOffCluster cluster;
         cluster.Associate(device, endpointId);
+<<<<<<< master
         return cluster.Off(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
     }
 
 private:
     chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
     chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+=======
+        return cluster.AddScene(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mGroupId, mSceneId, mTransitionTime, mSceneName, mClusterId, mLength, mValue);
+    }
+
+private:
+    chip::Callback::Callback<ScenesClusterAddSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterAddSceneResponseCallback>(OnScenesClusterAddSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+    uint8_t mSceneId;
+    uint16_t mTransitionTime;
+    char * mSceneName;
+    chip::ClusterId mClusterId;
+    uint8_t mLength;
+    uint8_t mValue;
+>>>>>>> before adding thermostat server to all clusters app
 };
 
 /*
  * Command On
  */
+<<<<<<< master
 class OnOffOn: public ModelCommand
 {
 public:
     OnOffOn(): ModelCommand("on")
+=======
+class ScenesGetSceneMembership: public ModelCommand
+{
+public:
+    ScenesGetSceneMembership(): ModelCommand("get-scene-membership")
+>>>>>>> before adding thermostat server to all clusters app
     {
         ModelCommand::AddArguments();
     }
@@ -6063,17 +6173,30 @@ public:
     }
 
 private:
+<<<<<<< master
     chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
     chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+=======
+    chip::Callback::Callback<ScenesClusterGetSceneMembershipResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterGetSceneMembershipResponseCallback>(OnScenesClusterGetSceneMembershipResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+>>>>>>> before adding thermostat server to all clusters app
 };
 
 /*
  * Attribute ClusterRevision
  */
+<<<<<<< master
 class ReadTemperatureMeasurementClusterRevision: public ModelCommand
 {
 public:
     ReadTemperatureMeasurementClusterRevision(): ModelCommand("read")
+=======
+class ScenesRecallScene: public ModelCommand
+{
+public:
+    ScenesRecallScene(): ModelCommand("recall-scene")
+>>>>>>> before adding thermostat server to all clusters app
     {
         AddArgument("attr-name", "cluster-revision");
         ModelCommand::AddArguments();
@@ -6089,9 +6212,734 @@ public:
     }
 
 private:
+<<<<<<< master
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+=======
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+    uint8_t mSceneId;
+    uint16_t mTransitionTime;
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*----------------------------------------------------------------------------*\
+| Cluster Thermostat                                                  | 0x0201 |
+|------------------------------------------------------------------------------|
+| Commands:                                                           |        |
+| * ClearWeeklySchedule                                               |   0x03 |
+| * GetRelayStatusLog                                                 |   0x04 |
+| * GetWeeklySchedule                                                 |   0x02 |
+| * SetWeeklySchedule                                                 |   0x01 |
+| * SetpointRaiseLower                                                |   0x00 |
+|------------------------------------------------------------------------------|
+| Attributes:                                                         |        |
+| * LocalTemperature                                                  | 0x0000 |
+| * OccupiedCoolingSetpoint                                           | 0x0011 |
+| * OccupiedHeatingSetpoint                                           | 0x0012 |
+| * ControlSequenceOfOperation                                        | 0x001B |
+| * SystemMode                                                        | 0x001C |
+| * ClusterRevision                                                   | 0xFFFD |
+\*----------------------------------------------------------------------------*/
+
+/*
+ * Command ClearWeeklySchedule
+ */
+<<<<<<< master
+class ThermostatClearWeeklySchedule: public ModelCommand
+{
+public:
+    ThermostatClearWeeklySchedule(): ModelCommand("clear-weekly-schedule")
+=======
+class ScenesRemoveAllScenes: public ModelCommand
+{
+public:
+    ScenesRemoveAllScenes(): ModelCommand("remove-all-scenes")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x03) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ClearWeeklySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+=======
+    chip::Callback::Callback<ScenesClusterRemoveAllScenesResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterRemoveAllScenesResponseCallback>(OnScenesClusterRemoveAllScenesResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Command GetRelayStatusLog
+ */
+<<<<<<< master
+class ThermostatGetRelayStatusLog: public ModelCommand
+{
+public:
+    ThermostatGetRelayStatusLog(): ModelCommand("get-relay-status-log")
+=======
+class ScenesRemoveScene: public ModelCommand
+{
+public:
+    ScenesRemoveScene(): ModelCommand("remove-scene")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x04) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.GetRelayStatusLog(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+=======
+    chip::Callback::Callback<ScenesClusterRemoveSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterRemoveSceneResponseCallback>(OnScenesClusterRemoveSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+    uint8_t mSceneId;
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Command GetWeeklySchedule
+ */
+<<<<<<< master
+class ThermostatGetWeeklySchedule: public ModelCommand
+{
+public:
+    ThermostatGetWeeklySchedule(): ModelCommand("get-weekly-schedule")
+=======
+class ScenesStoreScene: public ModelCommand
+{
+public:
+    ScenesStoreScene(): ModelCommand("store-scene")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("daysToReturn", 0, UINT8_MAX, &mDaysToReturn);
+        AddArgument("modeToReturn", 0, UINT8_MAX, &mModeToReturn);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x02) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.GetWeeklySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mDaysToReturn, mModeToReturn);
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mDaysToReturn;
+    uint8_t mModeToReturn;
+=======
+    chip::Callback::Callback<ScenesClusterStoreSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterStoreSceneResponseCallback>(OnScenesClusterStoreSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+    uint8_t mSceneId;
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Command SetWeeklySchedule
+ */
+<<<<<<< master
+class ThermostatSetWeeklySchedule: public ModelCommand
+{
+public:
+    ThermostatSetWeeklySchedule(): ModelCommand("set-weekly-schedule")
+=======
+class ScenesViewScene: public ModelCommand
+{
+public:
+    ScenesViewScene(): ModelCommand("view-scene")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("numberOfTransitionsForSequence", 0, UINT8_MAX, &mNumberOfTransitionsForSequence);
+        AddArgument("dayOfWeekForSequence", 0, UINT8_MAX, &mDayOfWeekForSequence);
+        AddArgument("modeForSequence", 0, UINT8_MAX, &mModeForSequence);
+        AddArgument("payload", 0, UINT8_MAX, &mPayload);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.SetWeeklySchedule(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mNumberOfTransitionsForSequence, mDayOfWeekForSequence, mModeForSequence, mPayload);
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mNumberOfTransitionsForSequence;
+    uint8_t mDayOfWeekForSequence;
+    uint8_t mModeForSequence;
+    uint8_t mPayload;
+=======
+    chip::Callback::Callback<ScenesClusterViewSceneResponseCallback> * onSuccessCallback = new chip::Callback::Callback<ScenesClusterViewSceneResponseCallback>(OnScenesClusterViewSceneResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint16_t mGroupId;
+    uint8_t mSceneId;
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+
+/*
+ * Command SetpointRaiseLower
+ */
+<<<<<<< master
+class ThermostatSetpointRaiseLower: public ModelCommand
+{
+public:
+    ThermostatSetpointRaiseLower(): ModelCommand("setpoint-raise-lower")
+    {
+        AddArgument("mode", 0, UINT8_MAX, &mMode);
+        AddArgument("amount", INT8_MIN, INT8_MAX, &mAmount);
+=======
+class DiscoverScenesAttributes: public ModelCommand
+{
+public:
+    DiscoverScenesAttributes(): ModelCommand("discover")
+    {
+>>>>>>> before adding thermostat server to all clusters app
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.SetpointRaiseLower(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMode, mAmount);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+<<<<<<< master
+    uint8_t mMode;
+    int8_t mAmount;
+=======
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+
+/*
+ * Discover Attributes
+ */
+<<<<<<< master
+class DiscoverThermostatAttributes: public ModelCommand
+{
+public:
+    DiscoverThermostatAttributes(): ModelCommand("discover")
+=======
+class ReadScenesSceneCount: public ModelCommand
+{
+public:
+    ReadScenesSceneCount(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0000) command (0x0C) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.DiscoverAttributes(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+=======
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+>>>>>>> before adding thermostat server to all clusters app
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Attribute LocalTemperature
+ */
+<<<<<<< master
+class ReadThermostatLocalTemperature: public ModelCommand
+{
+public:
+    ReadThermostatLocalTemperature(): ModelCommand("read")
+=======
+class ReadScenesCurrentScene: public ModelCommand
+{
+public:
+    ReadScenesCurrentScene(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "local-temperature");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeLocalTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class ReportThermostatLocalTemperature: public ModelCommand
+{
+public:
+    ReportThermostatLocalTemperature(): ModelCommand("report")
+=======
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Attribute CurrentGroup
+ */
+class ReadScenesCurrentGroup: public ModelCommand
+{
+public:
+    ReadScenesCurrentGroup(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "local-temperature");
+        AddArgument("min-interval", 0, UINT16_MAX, &mMinInterval);
+        AddArgument("max-interval", 0, UINT16_MAX, &mMaxInterval);
+        AddArgument("change", INT16_MIN, INT16_MAX, &mChange);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x06) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+
+        CHIP_ERROR err = cluster.ReportAttributeLocalTemperature(onReportCallback->Cancel());
+        if (err != CHIP_NO_ERROR)
+        {
+            return err;
+        }
+
+        return cluster.ConfigureAttributeLocalTemperature(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    chip::Callback::Callback<Int16sAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    uint16_t mMinInterval;
+    uint16_t mMaxInterval;
+    int16_t mChange;
+=======
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Attribute OccupiedCoolingSetpoint
+ */
+<<<<<<< master
+class ReadThermostatOccupiedCoolingSetpoint: public ModelCommand
+{
+public:
+    ReadThermostatOccupiedCoolingSetpoint(): ModelCommand("read")
+=======
+class ReadScenesSceneValid: public ModelCommand
+{
+public:
+    ReadScenesSceneValid(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "occupied-cooling-setpoint");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeOccupiedCoolingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatOccupiedCoolingSetpoint: public ModelCommand
+{
+public:
+    WriteThermostatOccupiedCoolingSetpoint(): ModelCommand("write")
+=======
+    chip::Callback::Callback<BooleanAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<BooleanAttributeCallback>(OnBooleanAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Attribute NameSupport
+ */
+class ReadScenesNameSupport: public ModelCommand
+{
+public:
+    ReadScenesNameSupport(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "occupied-cooling-setpoint");
+        AddArgument("attr-value", INT16_MIN, INT16_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeOccupiedCoolingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    int16_t mValue;
+=======
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Attribute OccupiedHeatingSetpoint
+ */
+<<<<<<< master
+class ReadThermostatOccupiedHeatingSetpoint: public ModelCommand
+{
+public:
+    ReadThermostatOccupiedHeatingSetpoint(): ModelCommand("read")
+=======
+class ReadScenesClusterRevision: public ModelCommand
+{
+public:
+    ReadScenesClusterRevision(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "occupied-heating-setpoint");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeOccupiedHeatingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatOccupiedHeatingSetpoint: public ModelCommand
+{
+public:
+    WriteThermostatOccupiedHeatingSetpoint(): ModelCommand("write")
+    {
+        AddArgument("attr-name", "occupied-heating-setpoint");
+        AddArgument("attr-value", INT16_MIN, INT16_MAX, &mValue);
+=======
     chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
     chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
 };
+
+/*----------------------------------------------------------------------------*\
+| Cluster TemperatureMeasurement                                      | 0x0402 |
+|------------------------------------------------------------------------------|
+| Commands:                                                           |        |
+|------------------------------------------------------------------------------|
+| Attributes:                                                         |        |
+| * MeasuredValue                                                     | 0x0000 |
+| * MinMeasuredValue                                                  | 0x0001 |
+| * MaxMeasuredValue                                                  | 0x0002 |
+| * ClusterRevision                                                   | 0xFFFD |
+\*----------------------------------------------------------------------------*/
+
+
+/*
+ * Discover Attributes
+ */
+class DiscoverTemperatureMeasurementAttributes: public ModelCommand
+{
+public:
+    DiscoverTemperatureMeasurementAttributes(): ModelCommand("discover")
+    {
+>>>>>>> before adding thermostat server to all clusters app
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeOccupiedHeatingSetpoint(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+<<<<<<< master
+    int16_t mValue;
+=======
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Attribute ControlSequenceOfOperation
+ */
+<<<<<<< master
+class ReadThermostatControlSequenceOfOperation: public ModelCommand
+{
+public:
+    ReadThermostatControlSequenceOfOperation(): ModelCommand("read")
+=======
+class ReadTemperatureMeasurementMeasuredValue: public ModelCommand
+{
+public:
+    ReadTemperatureMeasurementMeasuredValue(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "control-sequence-of-operation");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeControlSequenceOfOperation(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatControlSequenceOfOperation: public ModelCommand
+{
+public:
+    WriteThermostatControlSequenceOfOperation(): ModelCommand("write")
+=======
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class ReportTemperatureMeasurementMeasuredValue: public ModelCommand
+{
+public:
+    ReportTemperatureMeasurementMeasuredValue(): ModelCommand("report")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "control-sequence-of-operation");
+        AddArgument("attr-value", 0, UINT8_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+<<<<<<< master
+        return cluster.WriteAttributeControlSequenceOfOperation(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+=======
+
+        CHIP_ERROR err = cluster.ReportAttributeMeasuredValue(onReportCallback->Cancel());
+        if (err != CHIP_NO_ERROR)
+        {
+            return err;
+        }
+
+        return cluster.ConfigureAttributeMeasuredValue(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mMinInterval, mMaxInterval, mChange);
+>>>>>>> before adding thermostat server to all clusters app
+    }
+
+private:
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+<<<<<<< master
+    uint8_t mValue;
+=======
+    chip::Callback::Callback<Int16sAttributeCallback> * onReportCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    uint16_t mMinInterval;
+    uint16_t mMaxInterval;
+    int16_t mChange;
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Attribute SystemMode
+ */
+<<<<<<< master
+class ReadThermostatSystemMode: public ModelCommand
+{
+public:
+    ReadThermostatSystemMode(): ModelCommand("read")
+=======
+class ReadTemperatureMeasurementMinMeasuredValue: public ModelCommand
+{
+public:
+    ReadTemperatureMeasurementMinMeasuredValue(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "system-mode");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeSystemMode(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<Int8uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int8uAttributeCallback>(OnInt8uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+class WriteThermostatSystemMode: public ModelCommand
+{
+public:
+    WriteThermostatSystemMode(): ModelCommand("write")
+=======
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
+/*
+ * Attribute MaxMeasuredValue
+ */
+class ReadTemperatureMeasurementMaxMeasuredValue: public ModelCommand
+{
+public:
+    ReadTemperatureMeasurementMaxMeasuredValue(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "system-mode");
+        AddArgument("attr-value", 0, UINT8_MAX, &mValue);
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x01) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.WriteAttributeSystemMode(onSuccessCallback->Cancel(), onFailureCallback->Cancel(), mValue);
+    }
+
+private:
+<<<<<<< master
+    chip::Callback::Callback<DefaultSuccessCallback> * onSuccessCallback = new chip::Callback::Callback<DefaultSuccessCallback>(OnDefaultSuccessResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+    uint8_t mValue;
+=======
+    chip::Callback::Callback<Int16sAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16sAttributeCallback>(OnInt16sAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+>>>>>>> before adding thermostat server to all clusters app
+};
+
+/*
+ * Attribute ClusterRevision
+ */
+<<<<<<< master
+class ReadThermostatClusterRevision: public ModelCommand
+{
+public:
+    ReadThermostatClusterRevision(): ModelCommand("read")
+=======
+class ReadTemperatureMeasurementClusterRevision: public ModelCommand
+{
+public:
+    ReadTemperatureMeasurementClusterRevision(): ModelCommand("read")
+>>>>>>> before adding thermostat server to all clusters app
+    {
+        AddArgument("attr-name", "cluster-revision");
+        ModelCommand::AddArguments();
+    }
+
+    CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endpointId) override
+    {
+        ChipLogProgress(chipTool, "Sending cluster (0x0201) command (0x00) on endpoint %" PRIu16, endpointId);
+
+        chip::Controller::ThermostatCluster cluster;
+        cluster.Associate(device, endpointId);
+        return cluster.ReadAttributeClusterRevision(onSuccessCallback->Cancel(), onFailureCallback->Cancel());
+    }
+
+private:
+    chip::Callback::Callback<Int16uAttributeCallback> * onSuccessCallback = new chip::Callback::Callback<Int16uAttributeCallback>(OnInt16uAttributeResponse, this);
+    chip::Callback::Callback<DefaultFailureCallback> * onFailureCallback = new chip::Callback::Callback<DefaultFailureCallback>(OnDefaultFailureResponse, this);
+};
+
 
 /*----------------------------------------------------------------------------*\
 | Cluster Thermostat                                                  | 0x0201 |

@@ -85,10 +85,14 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
             // No commands are enabled for cluster Color Control
             result = status(false, true, cmd->mfgSpecific);
             break;
+<<<<<<< master
         case ZCL_CONTENT_LAUNCH_CLUSTER_ID:
             result = emberAfContentLaunchClusterClientCommandParse(cmd);
             break;
         case ZCL_DOOR_LOCK_CLUSTER_ID:
+=======
+        case ZCL_DOOR_LOCK_CLUSTER_ID :
+>>>>>>> before adding thermostat server to all clusters app
             result = emberAfDoorLockClusterClientCommandParse(cmd);
             break;
         case ZCL_GROUPS_CLUSTER_ID :
@@ -101,10 +105,14 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
             // No commands are enabled for cluster Level Control
             result = status(false, true, cmd->mfgSpecific);
             break;
+<<<<<<< master
         case ZCL_MEDIA_PLAYBACK_CLUSTER_ID:
             result = emberAfMediaPlaybackClusterClientCommandParse(cmd);
             break;
         case ZCL_ON_OFF_CLUSTER_ID:
+=======
+        case ZCL_ON_OFF_CLUSTER_ID :
+>>>>>>> before adding thermostat server to all clusters app
             // No commands are enabled for cluster On/off
             result = status(false, true, cmd->mfgSpecific);
             break;
@@ -146,6 +154,7 @@ EmberAfStatus emberAfContentLaunchClusterClientCommandParse(EmberAfClusterComman
     {
         switch (cmd->commandId)
         {
+<<<<<<< master
         case ZCL_LAUNCH_CONTENT_RESPONSE_COMMAND_ID: {
             uint16_t payloadOffset = cmd->payloadStartIndex;
             uint8_t contentLaunchStatus;
@@ -211,6 +220,31 @@ uint8_t status;
   }
   status = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
 
+=======
+        case ZCL_CLEAR_ALL_PINS_RESPONSE_COMMAND_ID: {
+        uint16_t payloadOffset = cmd->payloadStartIndex;
+uint8_t status;
+
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  status = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+
+wasHandled = emberAfDoorLockClusterClearAllPinsResponseCallback(status);
+            break;
+        }
+        case ZCL_CLEAR_ALL_RFIDS_RESPONSE_COMMAND_ID: {
+        uint16_t payloadOffset = cmd->payloadStartIndex;
+uint8_t status;
+
+  if (cmd->bufLen < payloadOffset + 1)
+  {
+    return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
+  }
+  status = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
+
+>>>>>>> before adding thermostat server to all clusters app
 wasHandled = emberAfDoorLockClusterClearAllRfidsResponseCallback(status);
             break;
         }
@@ -814,6 +848,7 @@ uint16_t timeout;
     return EMBER_ZCL_STATUS_MALFORMED_COMMAND;
   }
   timeout = emberAfGetInt16u(cmd->buffer, payloadOffset, cmd->bufLen);
+<<<<<<< master
 
 wasHandled = emberAfIdentifyClusterIdentifyQueryResponseCallback(timeout);
             break;
@@ -836,6 +871,10 @@ EmberAfStatus emberAfMediaPlaybackClusterClientCommandParse(EmberAfClusterComman
         {
         case ZCL_PLAYBACK_COMMAND_ID: {
             wasHandled = emberAfMediaPlaybackClusterPlaybackCallback();
+=======
+
+wasHandled = emberAfIdentifyClusterIdentifyQueryResponseCallback(timeout);
+>>>>>>> before adding thermostat server to all clusters app
             break;
         }
         default: {

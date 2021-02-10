@@ -646,16 +646,20 @@
     #define CHIP_PRINTCLUSTER_ZLL_COMMISSIONING_CLUSTER {ZCL_ZLL_COMMISSIONING_CLUSTER_ID, 4096, "ZLL Commissioning" },
 #else
     #define CHIP_PRINTCLUSTER_ZLL_COMMISSIONING_CLUSTER
+<<<<<<< master
 #endif
 
 #if defined(ZCL_USING_NETWORK_COMMISSIONING_CLUSTER_SERVER) || defined(ZCL_USING_NETWORK_COMMISSIONING_CLUSTER_CLIENT)
 #define CHIP_PRINTCLUSTER_NETWORK_COMMISSIONING_CLUSTER { ZCL_NETWORK_COMMISSIONING_CLUSTER_ID, 43690, "Network Commissioning" },
 #else
 #define CHIP_PRINTCLUSTER_NETWORK_COMMISSIONING_CLUSTER
+=======
+>>>>>>> before adding thermostat server to all clusters app
 #endif
 
 #if defined(ZCL_USING_BINDING_CLUSTER_SERVER) || defined(ZCL_USING_BINDING_CLUSTER_CLIENT)
     #define CHIP_PRINTCLUSTER_BINDING_CLUSTER {ZCL_BINDING_CLUSTER_ID, 61440, "Binding" },
+<<<<<<< master
 #else
     #define CHIP_PRINTCLUSTER_BINDING_CLUSTER
 #endif
@@ -670,6 +674,10 @@
 #define CHIP_PRINTCLUSTER_CONTENT_LAUNCH_CLUSTER { ZCL_CONTENT_LAUNCH_CLUSTER_ID, 61442, "Content Launch" },
 #else
 #define CHIP_PRINTCLUSTER_CONTENT_LAUNCH_CLUSTER
+=======
+#else
+    #define CHIP_PRINTCLUSTER_BINDING_CLUSTER
+>>>>>>> before adding thermostat server to all clusters app
 #endif
 
 #if defined(ZCL_USING_SAMPLE_MFG_SPECIFIC_CLUSTER_SERVER) || defined(ZCL_USING_SAMPLE_MFG_SPECIFIC_CLUSTER_CLIENT)
@@ -702,6 +710,7 @@
     #define CHIP_PRINTCLUSTER_SL_WWAH_CLUSTER
 #endif
 
+<<<<<<< master
 #define CLUSTER_IDS_TO_NAMES                                                                                                       \
     CHIP_PRINTCLUSTER_BASIC_CLUSTER                                                                                                \
     CHIP_PRINTCLUSTER_POWER_CONFIG_CLUSTER                                                                                         \
@@ -816,6 +825,8 @@
     CHIP_PRINTCLUSTER_OTA_CONFIGURATION_CLUSTER                                                                                    \
     CHIP_PRINTCLUSTER_MFGLIB_CLUSTER                                                                                               \
     CHIP_PRINTCLUSTER_SL_WWAH_CLUSTER
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 #define CLUSTER_IDS_TO_NAMES \
     CHIP_PRINTCLUSTER_BASIC_CLUSTER \

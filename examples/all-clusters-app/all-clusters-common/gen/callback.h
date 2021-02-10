@@ -73,6 +73,7 @@ void emberAfBindingClusterInitCallback(chip::EndpointId endpoint);
  */
 void emberAfColorControlClusterInitCallback(chip::EndpointId endpoint);
 
+<<<<<<< master
 /** @brief Content Launch Cluster Init
  *
  * Cluster Init
@@ -80,6 +81,8 @@ void emberAfColorControlClusterInitCallback(chip::EndpointId endpoint);
  * @param endpoint    Endpoint that is being initialized
  */
 void emberAfContentLaunchClusterInitCallback(chip::EndpointId endpoint);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Door Lock Cluster Init
  *
@@ -125,6 +128,7 @@ void emberAfIdentifyClusterInitCallback(chip::EndpointId endpoint);
  */
 void emberAfLevelControlClusterInitCallback(chip::EndpointId endpoint);
 
+<<<<<<< master
 /** @brief Media Playback Cluster Init
  *
  * Cluster Init
@@ -132,6 +136,8 @@ void emberAfLevelControlClusterInitCallback(chip::EndpointId endpoint);
  * @param endpoint    Endpoint that is being initialized
  */
 void emberAfMediaPlaybackClusterInitCallback(chip::EndpointId endpoint);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief On/off Cluster Init
  *
@@ -160,6 +166,7 @@ void emberAfScenesClusterInitCallback(chip::EndpointId endpoint);
 void emberAfTemperatureMeasurementClusterInitCallback(chip::EndpointId endpoint);
 
 
+<<<<<<< master
 /** @brief Thermostat Cluster Init
  *
  * Cluster Init
@@ -169,6 +176,8 @@ void emberAfTemperatureMeasurementClusterInitCallback(chip::EndpointId endpoint)
 void emberAfThermostatClusterInitCallback(chip::EndpointId endpoint);
 
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 // Cluster Server/Client Init Functions
 
 
@@ -1318,6 +1327,7 @@ bool emberAfColorControlClusterStepColorTemperatureCallback(uint8_t stepMode, ui
 * @param optionsMask
 * @param optionsOverride
 */
+<<<<<<< master
 
 bool emberAfColorControlClusterStepHueCallback(uint8_t stepMode, uint8_t stepSize, uint8_t transitionTime, uint8_t optionsMask, uint8_t optionsOverride);
 
@@ -1349,12 +1359,33 @@ bool emberAfContentLaunchClusterLaunchContentCallback();
 /**
  * @brief Content Launch Cluster LaunchURL Command callback
  */
+=======
+
+bool emberAfColorControlClusterStepHueCallback(uint8_t stepMode, uint8_t stepSize, uint8_t transitionTime, uint8_t optionsMask, uint8_t optionsOverride);
+
+/**
+* @brief Color Control Cluster StepSaturation Command callback
+* @param stepMode
+* @param stepSize
+* @param transitionTime
+* @param optionsMask
+* @param optionsOverride
+*/
+
+bool emberAfColorControlClusterStepSaturationCallback(uint8_t stepMode, uint8_t stepSize, uint8_t transitionTime, uint8_t optionsMask, uint8_t optionsOverride);
+
+/**
+* @brief Color Control Cluster StopMoveStep Command callback
+* @param optionsMask
+* @param optionsOverride
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfContentLaunchClusterLaunchURLCallback();
 
 /**
- * @brief Door Lock Cluster ClearAllPins Command callback
- */
+* @brief Door Lock Cluster ClearAllPins Command callback
+*/
 
 bool emberAfDoorLockClusterClearAllPinsCallback();
 
@@ -1617,6 +1648,7 @@ bool emberAfLevelControlClusterMoveCallback(uint8_t moveMode, uint8_t rate, uint
 * @param optionMask
 * @param optionOverride
 */
+<<<<<<< master
 
 bool emberAfLevelControlClusterMoveToLevelCallback(uint8_t level, uint16_t transitionTime, uint8_t optionMask, uint8_t optionOverride);
 
@@ -1679,16 +1711,34 @@ bool emberAfMediaPlaybackClusterFastForwardRequestCallback();
 /**
  * @brief Media Playback Cluster NextRequest Command callback
  */
+=======
+
+bool emberAfLevelControlClusterMoveToLevelCallback(uint8_t level, uint16_t transitionTime, uint8_t optionMask, uint8_t optionOverride);
+
+/**
+* @brief Level Control Cluster MoveToLevelWithOnOff Command callback
+* @param level
+* @param transitionTime
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfMediaPlaybackClusterNextRequestCallback();
 
 /**
+<<<<<<< master
  * @brief Media Playback Cluster PauseRequest Command callback
  */
+=======
+* @brief Level Control Cluster MoveWithOnOff Command callback
+* @param moveMode
+* @param rate
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfMediaPlaybackClusterPauseRequestCallback();
 
 /**
+<<<<<<< master
  * @brief Media Playback Cluster PlayRequest Command callback
  */
 
@@ -1697,18 +1747,48 @@ bool emberAfMediaPlaybackClusterPlayRequestCallback();
 /**
  * @brief Media Playback Cluster PreviousRequest Command callback
  */
+=======
+* @brief Level Control Cluster Step Command callback
+* @param stepMode
+* @param stepSize
+* @param transitionTime
+* @param optionMask
+* @param optionOverride
+*/
+
+bool emberAfLevelControlClusterStepCallback(uint8_t stepMode, uint8_t stepSize, uint16_t transitionTime, uint8_t optionMask, uint8_t optionOverride);
+
+/**
+* @brief Level Control Cluster StepWithOnOff Command callback
+* @param stepMode
+* @param stepSize
+* @param transitionTime
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfMediaPlaybackClusterPreviousRequestCallback();
 
 /**
+<<<<<<< master
  * @brief Media Playback Cluster RewindRequest Command callback
  */
+=======
+* @brief Level Control Cluster Stop Command callback
+* @param optionMask
+* @param optionOverride
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfMediaPlaybackClusterRewindRequestCallback();
 
 /**
+<<<<<<< master
  * @brief Media Playback Cluster SkipBackwardRequest Command callback
  */
+=======
+* @brief Level Control Cluster StopWithOnOff Command callback
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfMediaPlaybackClusterSkipBackwardRequestCallback();
 
@@ -1731,8 +1811,8 @@ bool emberAfMediaPlaybackClusterStartOverRequestCallback();
 bool emberAfMediaPlaybackClusterStopRequestCallback();
 
 /**
- * @brief On/off Cluster Off Command callback
- */
+* @brief On/off Cluster Off Command callback
+*/
 
 bool emberAfOnOffClusterOffCallback();
 
@@ -1806,6 +1886,7 @@ bool emberAfScenesClusterStoreSceneCallback(uint16_t groupId, uint8_t sceneId);
 
 bool emberAfScenesClusterViewSceneCallback(uint16_t groupId, uint8_t sceneId);
 
+<<<<<<< master
 /**
 * @brief Thermostat Cluster ClearWeeklySchedule Command callback
 */
@@ -1844,6 +1925,8 @@ bool emberAfThermostatClusterSetWeeklyScheduleCallback(uint8_t numberOfTransitio
 
 bool emberAfThermostatClusterSetpointRaiseLowerCallback(uint8_t mode, int8_t amount);
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 //
 // Non-Cluster Related Callbacks

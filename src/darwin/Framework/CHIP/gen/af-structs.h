@@ -71,6 +71,7 @@ typedef struct _ConfigureReportingStatusRecord {
   chip::AttributeId attributeId;
 } EmberAfConfigureReportingStatusRecord;
 
+<<<<<<< master
 // Struct for ContentLaunchAdditionalInfo
 typedef struct _ContentLaunchAdditionalInfo
 {
@@ -86,6 +87,8 @@ typedef struct _ContentLaunchSearch
     uint8_t * searchWindowEnd;
 } EmberAfContentLaunchSearch;
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 // Struct for DebtPayload
 typedef struct _DebtPayload {
   uint32_t collectionTime;
@@ -341,12 +344,15 @@ typedef struct _SpecialDay {
   uint8_t dayIdRef;
 } EmberAfSpecialDay;
 
+<<<<<<< master
 // Struct for ThreadInterfaceScanResult
 typedef struct _ThreadInterfaceScanResult
 {
     uint8_t * DiscoveryResponse;
 } EmberAfThreadInterfaceScanResult;
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 // Struct for TierLabelsPayload
 typedef struct _TierLabelsPayload {
   uint8_t tierId;
@@ -370,6 +376,7 @@ typedef struct _TransferredPhase {
   uint16_t maxActivationDelay;
 } EmberAfTransferredPhase;
 
+<<<<<<< master
 // Struct for WiFiInterfaceScanResult
 typedef struct _WiFiInterfaceScanResult
 {
@@ -380,6 +387,8 @@ typedef struct _WiFiInterfaceScanResult
     uint32_t FrequencyBand;
 } EmberAfWiFiInterfaceScanResult;
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 // Struct for WriteAttributeRecord
 typedef struct _WriteAttributeRecord {
   chip::AttributeId attributeId;

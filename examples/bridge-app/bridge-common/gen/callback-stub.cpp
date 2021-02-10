@@ -27,10 +27,14 @@ void emberAfClusterInitCallback(EndpointId endpoint, ClusterId clusterId)
 {
     switch (clusterId)
     {
+<<<<<<< master
     case ZCL_BASIC_CLUSTER_ID:
         emberAfBasicClusterInitCallback(endpoint);
         break;
     case ZCL_LEVEL_CONTROL_CLUSTER_ID:
+=======
+     case ZCL_LEVEL_CONTROL_CLUSTER_ID :
+>>>>>>> before adding thermostat server to all clusters app
         emberAfLevelControlClusterInitCallback(endpoint);
         break;
      case ZCL_ON_OFF_CLUSTER_ID :

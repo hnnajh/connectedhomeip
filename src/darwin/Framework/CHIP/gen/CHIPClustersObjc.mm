@@ -21,8 +21,11 @@
 
 #import "CHIPDevice.h"
 #import "CHIPDevice_Internal.h"
+<<<<<<< master
 #import "ChipError.h"
 #import "gen/CHIPClientCallbacks.h"
+=======
+>>>>>>> before adding thermostat server to all clusters app
 #import "gen/CHIPClustersObjc.h"
 #import "gen/CHIPClientCallbacks.h"
 
@@ -74,9 +77,13 @@ public:
         CHIPDefaultFailureCallbackBridge * callback = reinterpret_cast<CHIPDefaultFailureCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
+<<<<<<< master
                 NSError * error = [NSError errorWithDomain:CHIPErrorDomain
                                                       code:status
                                                   userInfo:@ { NSLocalizedDescriptionKey : @"" }];
+=======
+                NSError* error = [NSError errorWithDomain:@"ZCL" code:status userInfo:@{NSLocalizedDescriptionKey:@""}];
+>>>>>>> before adding thermostat server to all clusters app
                 callback->mHandler(error, nil);
                 callback->Cancel();
                 delete callback;
@@ -103,9 +110,13 @@ public:
         CHIPUnsupportedAttributeCallbackBridge * callback = reinterpret_cast<CHIPUnsupportedAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
+<<<<<<< master
                 NSError * error = [NSError errorWithDomain:CHIPErrorDomain
                                                       code:CHIPErrorCodeUndefinedError
                                                   userInfo:@ { NSLocalizedDescriptionKey : @"Unsupported attribute type" }];
+=======
+                NSError* error = [NSError errorWithDomain:@"ZCL" code:0 userInfo:@{NSLocalizedDescriptionKey:@"Unsuported attribute type"}];
+>>>>>>> before adding thermostat server to all clusters app
                 callback->mHandler(error, nil);
                 callback->Cancel();
                 delete callback;
@@ -1226,7 +1237,15 @@ private:
     dispatch_queue_t mQueue;
 };
 
+<<<<<<< master
 @interface CHIPCluster ()
+=======
+
+
+@interface CHIPBarrierControl ()
+
+@property (readonly) Controller::BarrierControlCluster cppCluster;
+>>>>>>> before adding thermostat server to all clusters app
 @property (readonly, nonatomic) dispatch_queue_t callbackQueue;
 - (Controller::ClusterBase *)getCluster;
 @end
@@ -1430,6 +1449,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPBasic ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPBasic ()
 @property (readonly) Controller::BasicCluster cppCluster;
@@ -1559,6 +1583,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPBinding ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPBinding ()
 @property (readonly) Controller::BindingCluster cppCluster;
@@ -1571,11 +1600,15 @@ private:
     return &_cppCluster;
 }
 
+<<<<<<< master
 - (void)bind:(uint64_t)nodeId
               groupId:(uint16_t)groupId
            endpointId:(uint8_t)endpointId
             clusterId:(uint16_t)clusterId
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)bind:(uint64_t)nodeId groupId:(uint16_t)groupId endpointId:(uint8_t)endpointId clusterId:(uint16_t)clusterId completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1597,11 +1630,15 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)unbind:(uint64_t)nodeId
               groupId:(uint16_t)groupId
            endpointId:(uint8_t)endpointId
             clusterId:(uint16_t)clusterId
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)unbind:(uint64_t)nodeId groupId:(uint16_t)groupId endpointId:(uint8_t)endpointId clusterId:(uint16_t)clusterId completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1650,6 +1687,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPColorControl ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPColorControl ()
 @property (readonly) Controller::ColorControlCluster cppCluster;
@@ -1662,11 +1704,15 @@ private:
     return &_cppCluster;
 }
 
+<<<<<<< master
 - (void)moveColor:(int16_t)rateX
                 rateY:(int16_t)rateY
           optionsMask:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveColor:(int16_t)rateX rateY:(int16_t)rateY optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1688,6 +1734,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveColorTemperature:(uint8_t)moveMode
                         rate:(uint16_t)rate
      colorTemperatureMinimum:(uint16_t)colorTemperatureMinimum
@@ -1695,6 +1742,9 @@ private:
                  optionsMask:(uint8_t)optionsMask
              optionsOverride:(uint8_t)optionsOverride
            completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveColorTemperature:(uint8_t)moveMode rate:(uint16_t)rate colorTemperatureMinimum:(uint16_t)colorTemperatureMinimum colorTemperatureMaximum:(uint16_t)colorTemperatureMaximum optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1716,11 +1766,15 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveHue:(uint8_t)moveMode
                  rate:(uint8_t)rate
           optionsMask:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveHue:(uint8_t)moveMode rate:(uint8_t)rate optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1742,11 +1796,15 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveSaturation:(uint8_t)moveMode
                   rate:(uint8_t)rate
            optionsMask:(uint8_t)optionsMask
        optionsOverride:(uint8_t)optionsOverride
      completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveSaturation:(uint8_t)moveMode rate:(uint8_t)rate optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1768,12 +1826,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToColor:(uint16_t)colorX
                colorY:(uint16_t)colorY
        transitionTime:(uint16_t)transitionTime
           optionsMask:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToColor:(uint16_t)colorX colorY:(uint16_t)colorY transitionTime:(uint16_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1795,11 +1857,15 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToColorTemperature:(uint16_t)colorTemperature
                 transitionTime:(uint16_t)transitionTime
                    optionsMask:(uint8_t)optionsMask
                optionsOverride:(uint8_t)optionsOverride
              completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToColorTemperature:(uint16_t)colorTemperature transitionTime:(uint16_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1821,12 +1887,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToHue:(uint8_t)hue
             direction:(uint8_t)direction
        transitionTime:(uint16_t)transitionTime
           optionsMask:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToHue:(uint8_t)hue direction:(uint8_t)direction transitionTime:(uint16_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1848,12 +1918,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToHueAndSaturation:(uint8_t)hue
                     saturation:(uint8_t)saturation
                 transitionTime:(uint16_t)transitionTime
                    optionsMask:(uint8_t)optionsMask
                optionsOverride:(uint8_t)optionsOverride
              completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToHueAndSaturation:(uint8_t)hue saturation:(uint8_t)saturation transitionTime:(uint16_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1875,11 +1949,15 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToSaturation:(uint8_t)saturation
           transitionTime:(uint16_t)transitionTime
              optionsMask:(uint8_t)optionsMask
          optionsOverride:(uint8_t)optionsOverride
        completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToSaturation:(uint8_t)saturation transitionTime:(uint16_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1901,12 +1979,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)stepColor:(int16_t)stepX
                 stepY:(int16_t)stepY
        transitionTime:(uint16_t)transitionTime
           optionsMask:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)stepColor:(int16_t)stepX stepY:(int16_t)stepY transitionTime:(uint16_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1928,6 +2010,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)stepColorTemperature:(uint8_t)stepMode
                     stepSize:(uint16_t)stepSize
               transitionTime:(uint16_t)transitionTime
@@ -1936,6 +2019,9 @@ private:
                  optionsMask:(uint8_t)optionsMask
              optionsOverride:(uint8_t)optionsOverride
            completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)stepColorTemperature:(uint8_t)stepMode stepSize:(uint16_t)stepSize transitionTime:(uint16_t)transitionTime colorTemperatureMinimum:(uint16_t)colorTemperatureMinimum colorTemperatureMaximum:(uint16_t)colorTemperatureMaximum optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1957,12 +2043,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)stepHue:(uint8_t)stepMode
              stepSize:(uint8_t)stepSize
        transitionTime:(uint8_t)transitionTime
           optionsMask:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)stepHue:(uint8_t)stepMode stepSize:(uint8_t)stepSize transitionTime:(uint8_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -1984,12 +2074,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)stepSaturation:(uint8_t)stepMode
               stepSize:(uint8_t)stepSize
         transitionTime:(uint8_t)transitionTime
            optionsMask:(uint8_t)optionsMask
        optionsOverride:(uint8_t)optionsOverride
      completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)stepSaturation:(uint8_t)stepMode stepSize:(uint8_t)stepSize transitionTime:(uint8_t)transitionTime optionsMask:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2011,9 +2105,13 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)stopMoveStep:(uint8_t)optionsMask
       optionsOverride:(uint8_t)optionsOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)stopMoveStep:(uint8_t)optionsMask optionsOverride:(uint8_t)optionsOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2059,10 +2157,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeCurrentHue:(uint16_t)minInterval
                          maxInterval:(uint16_t)maxInterval
                               change:(uint8_t)change
                    completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeCurrentHue:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint8_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2086,7 +2188,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeCurrentHue:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeCurrentHue:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt8uAttributeCallbackBridge * onReport = new CHIPInt8uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -2124,10 +2230,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeCurrentSaturation:(uint16_t)minInterval
                                 maxInterval:(uint16_t)maxInterval
                                      change:(uint8_t)change
                           completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeCurrentSaturation:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint8_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2151,7 +2261,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeCurrentSaturation:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeCurrentSaturation:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt8uAttributeCallbackBridge * onReport = new CHIPInt8uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -2212,10 +2326,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeCurrentX:(uint16_t)minInterval
                        maxInterval:(uint16_t)maxInterval
                             change:(uint16_t)change
                  completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeCurrentX:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint16_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2239,7 +2357,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeCurrentX:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeCurrentX:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16uAttributeCallbackBridge * onReport = new CHIPInt16uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -2277,10 +2399,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeCurrentY:(uint16_t)minInterval
                        maxInterval:(uint16_t)maxInterval
                             change:(uint16_t)change
                  completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeCurrentY:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint16_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2304,7 +2430,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeCurrentY:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeCurrentY:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16uAttributeCallbackBridge * onReport = new CHIPInt16uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -2344,8 +2474,12 @@ private:
 
 - (void)readAttributeCompensationText:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPUnsupportedAttributeCallbackBridge * onSuccess
         = new CHIPUnsupportedAttributeCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPUnsupportedAttributeCallbackBridge * onSuccess = new CHIPUnsupportedAttributeCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -2389,10 +2523,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeColorTemperature:(uint16_t)minInterval
                                maxInterval:(uint16_t)maxInterval
                                     change:(uint16_t)change
                          completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeColorTemperature:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint16_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -2416,7 +2554,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeColorTemperature:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeColorTemperature:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16uAttributeCallbackBridge * onReport = new CHIPInt16uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -3722,6 +3864,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPDoorLock ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPDoorLock ()
 @property (readonly) Controller::DoorLockCluster cppCluster;
@@ -3736,8 +3883,12 @@ private:
 
 - (void)clearAllPins:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearAllPinsResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearAllPinsResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearAllPinsResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearAllPinsResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3759,8 +3910,12 @@ private:
 }
 - (void)clearAllRfids:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearAllRfidsResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearAllRfidsResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearAllRfidsResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearAllRfidsResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3782,8 +3937,12 @@ private:
 }
 - (void)clearHolidaySchedule:(uint8_t)scheduleId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearHolidayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearHolidayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearHolidayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearHolidayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3805,8 +3964,12 @@ private:
 }
 - (void)clearPin:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearPinResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearPinResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearPinResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearPinResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3828,8 +3991,12 @@ private:
 }
 - (void)clearRfid:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearRfidResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearRfidResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearRfidResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearRfidResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3851,8 +4018,12 @@ private:
 }
 - (void)clearWeekdaySchedule:(uint8_t)scheduleId userId:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearWeekdayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearWeekdayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearWeekdayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearWeekdayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3874,8 +4045,12 @@ private:
 }
 - (void)clearYeardaySchedule:(uint8_t)scheduleId userId:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterClearYeardayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterClearYeardayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterClearYeardayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterClearYeardayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3897,8 +4072,12 @@ private:
 }
 - (void)getHolidaySchedule:(uint8_t)scheduleId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetHolidayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetHolidayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetHolidayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetHolidayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3920,8 +4099,12 @@ private:
 }
 - (void)getLogRecord:(uint16_t)logIndex completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetLogRecordResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetLogRecordResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetLogRecordResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetLogRecordResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3943,8 +4126,12 @@ private:
 }
 - (void)getPin:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetPinResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetPinResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetPinResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetPinResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3966,8 +4153,12 @@ private:
 }
 - (void)getRfid:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetRfidResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetRfidResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetRfidResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetRfidResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -3989,8 +4180,12 @@ private:
 }
 - (void)getUserType:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetUserTypeResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetUserTypeResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetUserTypeResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetUserTypeResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4012,8 +4207,12 @@ private:
 }
 - (void)getWeekdaySchedule:(uint8_t)scheduleId userId:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetWeekdayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetWeekdayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetWeekdayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetWeekdayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4035,8 +4234,12 @@ private:
 }
 - (void)getYeardaySchedule:(uint8_t)scheduleId userId:(uint16_t)userId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterGetYeardayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterGetYeardayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterGetYeardayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterGetYeardayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4058,8 +4261,12 @@ private:
 }
 - (void)lockDoor:(char *)pin completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterLockDoorResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterLockDoorResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterLockDoorResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterLockDoorResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4079,6 +4286,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)setHolidaySchedule:(uint8_t)scheduleId
                 localStartTime:(uint32_t)localStartTime
                   localEndTime:(uint32_t)localEndTime
@@ -4087,6 +4295,11 @@ private:
 {
     CHIPDoorLockClusterSetHolidayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterSetHolidayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+- (BOOL)setHolidaySchedule:(uint8_t)scheduleId localStartTime:(uint32_t)localStartTime localEndTime:(uint32_t)localEndTime operatingModeDuringHoliday:(uint8_t)operatingModeDuringHoliday completionHandler:(ResponseHandler)completionHandler
+{
+    CHIPDoorLockClusterSetHolidayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterSetHolidayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4106,6 +4319,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)setPin:(uint16_t)userId
            userStatus:(uint8_t)userStatus
              userType:(uint8_t)userType
@@ -4114,6 +4328,11 @@ private:
 {
     CHIPDoorLockClusterSetPinResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterSetPinResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+- (BOOL)setPin:(uint16_t)userId userStatus:(uint8_t)userStatus userType:(uint8_t)userType pin:(char *)pin completionHandler:(ResponseHandler)completionHandler
+{
+    CHIPDoorLockClusterSetPinResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterSetPinResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4133,6 +4352,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)setRfid:(uint16_t)userId
            userStatus:(uint8_t)userStatus
              userType:(uint8_t)userType
@@ -4141,6 +4361,11 @@ private:
 {
     CHIPDoorLockClusterSetRfidResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterSetRfidResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+- (BOOL)setRfid:(uint16_t)userId userStatus:(uint8_t)userStatus userType:(uint8_t)userType id:(char *)id completionHandler:(ResponseHandler)completionHandler
+{
+    CHIPDoorLockClusterSetRfidResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterSetRfidResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4162,8 +4387,12 @@ private:
 }
 - (void)setUserType:(uint16_t)userId userType:(uint8_t)userType completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterSetUserTypeResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterSetUserTypeResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterSetUserTypeResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterSetUserTypeResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4183,6 +4412,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)setWeekdaySchedule:(uint8_t)scheduleId
                     userId:(uint16_t)userId
                   daysMask:(uint8_t)daysMask
@@ -4194,6 +4424,11 @@ private:
 {
     CHIPDoorLockClusterSetWeekdayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterSetWeekdayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+- (BOOL)setWeekdaySchedule:(uint8_t)scheduleId userId:(uint16_t)userId daysMask:(uint8_t)daysMask startHour:(uint8_t)startHour startMinute:(uint8_t)startMinute endHour:(uint8_t)endHour endMinute:(uint8_t)endMinute completionHandler:(ResponseHandler)completionHandler
+{
+    CHIPDoorLockClusterSetWeekdayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterSetWeekdayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4213,6 +4448,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)setYeardaySchedule:(uint8_t)scheduleId
                     userId:(uint16_t)userId
             localStartTime:(uint32_t)localStartTime
@@ -4221,6 +4457,11 @@ private:
 {
     CHIPDoorLockClusterSetYeardayScheduleResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterSetYeardayScheduleResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+- (BOOL)setYeardaySchedule:(uint8_t)scheduleId userId:(uint16_t)userId localStartTime:(uint32_t)localStartTime localEndTime:(uint32_t)localEndTime completionHandler:(ResponseHandler)completionHandler
+{
+    CHIPDoorLockClusterSetYeardayScheduleResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterSetYeardayScheduleResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4242,8 +4483,12 @@ private:
 }
 - (void)unlockDoor:(char *)pin completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterUnlockDoorResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterUnlockDoorResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterUnlockDoorResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterUnlockDoorResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4265,8 +4510,12 @@ private:
 }
 - (void)unlockWithTimeout:(uint16_t)timeoutInSeconds pin:(char *)pin completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPDoorLockClusterUnlockWithTimeoutResponseCallbackBridge * onSuccess
         = new CHIPDoorLockClusterUnlockWithTimeoutResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPDoorLockClusterUnlockWithTimeoutResponseCallbackBridge * onSuccess = new CHIPDoorLockClusterUnlockWithTimeoutResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4310,9 +4559,13 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeLockState:(uint16_t)minInterval
                         maxInterval:(uint16_t)maxInterval
                   completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeLockState:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -4336,7 +4589,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeLockState:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeLockState:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt8uAttributeCallbackBridge * onReport = new CHIPInt8uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -4424,6 +4681,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPGroups ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPGroups ()
 @property (readonly) Controller::GroupsCluster cppCluster;
@@ -4438,8 +4700,12 @@ private:
 
 - (void)addGroup:(uint16_t)groupId groupName:(char *)groupName completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPGroupsClusterAddGroupResponseCallbackBridge * onSuccess
         = new CHIPGroupsClusterAddGroupResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPGroupsClusterAddGroupResponseCallbackBridge * onSuccess = new CHIPGroupsClusterAddGroupResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4483,8 +4749,12 @@ private:
 }
 - (void)getGroupMembership:(uint8_t)groupCount groupList:(uint16_t)groupList completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPGroupsClusterGetGroupMembershipResponseCallbackBridge * onSuccess
         = new CHIPGroupsClusterGetGroupMembershipResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPGroupsClusterGetGroupMembershipResponseCallbackBridge * onSuccess = new CHIPGroupsClusterGetGroupMembershipResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4528,8 +4798,12 @@ private:
 }
 - (void)removeGroup:(uint16_t)groupId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPGroupsClusterRemoveGroupResponseCallbackBridge * onSuccess
         = new CHIPGroupsClusterRemoveGroupResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPGroupsClusterRemoveGroupResponseCallbackBridge * onSuccess = new CHIPGroupsClusterRemoveGroupResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4551,8 +4825,12 @@ private:
 }
 - (void)viewGroup:(uint16_t)groupId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPGroupsClusterViewGroupResponseCallbackBridge * onSuccess
         = new CHIPGroupsClusterViewGroupResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPGroupsClusterViewGroupResponseCallbackBridge * onSuccess = new CHIPGroupsClusterViewGroupResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4622,6 +4900,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPIdentify ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPIdentify ()
 @property (readonly) Controller::IdentifyCluster cppCluster;
@@ -4658,8 +4941,12 @@ private:
 }
 - (void)identifyQuery:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPIdentifyClusterIdentifyQueryResponseCallbackBridge * onSuccess
         = new CHIPIdentifyClusterIdentifyQueryResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPIdentifyClusterIdentifyQueryResponseCallbackBridge * onSuccess = new CHIPIdentifyClusterIdentifyQueryResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -4752,6 +5039,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPLevelControl ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPLevelControl ()
 @property (readonly) Controller::LevelControlCluster cppCluster;
@@ -4764,11 +5056,15 @@ private:
     return &_cppCluster;
 }
 
+<<<<<<< master
 - (void)move:(uint8_t)moveMode
                  rate:(uint8_t)rate
            optionMask:(uint8_t)optionMask
        optionOverride:(uint8_t)optionOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)move:(uint8_t)moveMode rate:(uint8_t)rate optionMask:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -4790,11 +5086,15 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToLevel:(uint8_t)level
        transitionTime:(uint16_t)transitionTime
            optionMask:(uint8_t)optionMask
        optionOverride:(uint8_t)optionOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToLevel:(uint8_t)level transitionTime:(uint16_t)transitionTime optionMask:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -4816,9 +5116,13 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)moveToLevelWithOnOff:(uint8_t)level
               transitionTime:(uint16_t)transitionTime
            completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)moveToLevelWithOnOff:(uint8_t)level transitionTime:(uint16_t)transitionTime completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -4862,12 +5166,16 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)step:(uint8_t)stepMode
              stepSize:(uint8_t)stepSize
        transitionTime:(uint16_t)transitionTime
            optionMask:(uint8_t)optionMask
        optionOverride:(uint8_t)optionOverride
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)step:(uint8_t)stepMode stepSize:(uint8_t)stepSize transitionTime:(uint16_t)transitionTime optionMask:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -4889,10 +5197,14 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)stepWithOnOff:(uint8_t)stepMode
              stepSize:(uint8_t)stepSize
        transitionTime:(uint16_t)transitionTime
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)stepWithOnOff:(uint8_t)stepMode stepSize:(uint8_t)stepSize transitionTime:(uint16_t)transitionTime completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -4982,10 +5294,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeCurrentLevel:(uint16_t)minInterval
                            maxInterval:(uint16_t)maxInterval
                                 change:(uint8_t)change
                      completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeCurrentLevel:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint8_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -5009,7 +5325,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeCurrentLevel:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeCurrentLevel:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt8uAttributeCallbackBridge * onReport = new CHIPInt8uAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {
@@ -5050,6 +5370,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPOnOff ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPOnOff ()
 @property (readonly) Controller::OnOffCluster cppCluster;
@@ -5153,9 +5478,13 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeOnOff:(uint16_t)minInterval
                     maxInterval:(uint16_t)maxInterval
               completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeOnOff:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -5179,7 +5508,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeOnOff:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeOnOff:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPBooleanAttributeCallbackBridge * onReport
         = new CHIPBooleanAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
@@ -5221,6 +5554,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPScenes ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPScenes ()
 @property (readonly) Controller::ScenesCluster cppCluster;
@@ -5233,6 +5571,7 @@ private:
     return &_cppCluster;
 }
 
+<<<<<<< master
 - (void)addScene:(uint16_t)groupId
               sceneId:(uint8_t)sceneId
        transitionTime:(uint16_t)transitionTime
@@ -5244,6 +5583,11 @@ private:
 {
     CHIPScenesClusterAddSceneResponseCallbackBridge * onSuccess
         = new CHIPScenesClusterAddSceneResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+- (BOOL)addScene:(uint16_t)groupId sceneId:(uint8_t)sceneId transitionTime:(uint16_t)transitionTime sceneName:(char *)sceneName clusterId:(uint16_t)clusterId length:(uint8_t)length value:(uint8_t)value completionHandler:(ResponseHandler)completionHandler
+{
+    CHIPScenesClusterAddSceneResponseCallbackBridge * onSuccess = new CHIPScenesClusterAddSceneResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -5265,8 +5609,12 @@ private:
 }
 - (void)getSceneMembership:(uint16_t)groupId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPScenesClusterGetSceneMembershipResponseCallbackBridge * onSuccess
         = new CHIPScenesClusterGetSceneMembershipResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPScenesClusterGetSceneMembershipResponseCallbackBridge * onSuccess = new CHIPScenesClusterGetSceneMembershipResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -5286,10 +5634,14 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+<<<<<<< master
 - (void)recallScene:(uint16_t)groupId
               sceneId:(uint8_t)sceneId
        transitionTime:(uint16_t)transitionTime
     completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL)recallScene:(uint16_t)groupId sceneId:(uint8_t)sceneId transitionTime:(uint16_t)transitionTime completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -5313,8 +5665,12 @@ private:
 }
 - (void)removeAllScenes:(uint16_t)groupId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPScenesClusterRemoveAllScenesResponseCallbackBridge * onSuccess
         = new CHIPScenesClusterRemoveAllScenesResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPScenesClusterRemoveAllScenesResponseCallbackBridge * onSuccess = new CHIPScenesClusterRemoveAllScenesResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -5336,8 +5692,12 @@ private:
 }
 - (void)removeScene:(uint16_t)groupId sceneId:(uint8_t)sceneId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPScenesClusterRemoveSceneResponseCallbackBridge * onSuccess
         = new CHIPScenesClusterRemoveSceneResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPScenesClusterRemoveSceneResponseCallbackBridge * onSuccess = new CHIPScenesClusterRemoveSceneResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -5359,8 +5719,12 @@ private:
 }
 - (void)storeScene:(uint16_t)groupId sceneId:(uint8_t)sceneId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPScenesClusterStoreSceneResponseCallbackBridge * onSuccess
         = new CHIPScenesClusterStoreSceneResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPScenesClusterStoreSceneResponseCallbackBridge * onSuccess = new CHIPScenesClusterStoreSceneResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -5382,8 +5746,12 @@ private:
 }
 - (void)viewScene:(uint16_t)groupId sceneId:(uint8_t)sceneId completionHandler:(ResponseHandler)completionHandler
 {
+<<<<<<< master
     CHIPScenesClusterViewSceneResponseCallbackBridge * onSuccess
         = new CHIPScenesClusterViewSceneResponseCallbackBridge(completionHandler, [self callbackQueue]);
+=======
+    CHIPScenesClusterViewSceneResponseCallbackBridge * onSuccess = new CHIPScenesClusterViewSceneResponseCallbackBridge(completionHandler, _callbackQueue);
+>>>>>>> before adding thermostat server to all clusters app
     if (!onSuccess) {
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
@@ -5546,6 +5914,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPTemperatureMeasurement ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPTemperatureMeasurement ()
 @property (readonly) Controller::TemperatureMeasurementCluster cppCluster;
@@ -5558,7 +5931,12 @@ private:
     return &_cppCluster;
 }
 
+<<<<<<< master
 - (void)readAttributeMeasuredValue:(ResponseHandler)completionHandler
+=======
+
+- (BOOL)readAttributeMeasuredValue:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16sAttributeCallbackBridge * onSuccess = new CHIPInt16sAttributeCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -5581,10 +5959,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeMeasuredValue:(uint16_t)minInterval
                             maxInterval:(uint16_t)maxInterval
                                  change:(int16_t)change
                       completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeMeasuredValue:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(int16_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -5608,7 +5990,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeMeasuredValue:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeMeasuredValue:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16sAttributeCallbackBridge * onReport = new CHIPInt16sAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {

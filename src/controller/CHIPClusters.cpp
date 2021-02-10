@@ -1363,18 +1363,30 @@ CHIP_ERROR ColorControlCluster::ReadAttributeClusterRevision(Callback::Cancelabl
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
 }
 
+<<<<<<< master
 // ContentLaunch Cluster Commands
 CHIP_ERROR ContentLaunchCluster::LaunchContent(Callback::Cancelable * onSuccessCallback, Callback::Cancelable * onFailureCallback)
+=======
+
+// DoorLock Cluster Commands
+CHIP_ERROR DoorLockCluster::ClearAllPins(Callback::Cancelable * onSuccessCallback, Callback::Cancelable * onFailureCallback)
+>>>>>>> before adding thermostat server to all clusters app
 {
 #ifdef CHIP_APP_USE_INTERACTION_MODEL
     VerifyOrReturnError(mDevice != nullptr, CHIP_ERROR_INCORRECT_STATE);
     (void) onCompletion;
 
+<<<<<<< master
     app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kLaunchContentCommandId,
                                               (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
     app::Command * ZCLcommand             = mDevice->GetCommandSender();
+=======
+    app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kClearAllPinsCommandId,
+                                         (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
+    app::Command * ZCLcommand = mDevice->GetCommandSender();
+>>>>>>> before adding thermostat server to all clusters app
 
-    TLV::TLVWriter writer = ZCLcommand->CreateCommandDataElementTLVWriter();
+    TLV::TLVWriter writer  = ZCLcommand->CreateCommandDataElementTLVWriter();
 
     TLV::TLVType dummyType = TLV::kTLVType_NotSpecified;
     ReturnErrorOnFailure(writer.StartContainer(TLV::AnonymousTag, TLV::kTLVType_Structure, dummyType));
@@ -1387,8 +1399,13 @@ CHIP_ERROR ContentLaunchCluster::LaunchContent(Callback::Cancelable * onSuccessC
 
     return mDevice->SendCommands();
 #else
+<<<<<<< master
     uint8_t seqNum                            = mDevice->GetNextSequenceNumber();
     System::PacketBufferHandle encodedCommand = encodeContentLaunchClusterLaunchContentCommand(seqNum, mEndpoint);
+=======
+    uint8_t seqNum = mDevice->GetNextSequenceNumber();
+    System::PacketBufferHandle encodedCommand = encodeDoorLockClusterClearAllPinsCommand(seqNum, mEndpoint);
+>>>>>>> before adding thermostat server to all clusters app
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
 #endif
 }
@@ -1399,11 +1416,17 @@ CHIP_ERROR ContentLaunchCluster::LaunchURL(Callback::Cancelable * onSuccessCallb
     VerifyOrReturnError(mDevice != nullptr, CHIP_ERROR_INCORRECT_STATE);
     (void) onCompletion;
 
+<<<<<<< master
     app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kLaunchURLCommandId,
                                               (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
     app::Command * ZCLcommand             = mDevice->GetCommandSender();
+=======
+    app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kClearAllRfidsCommandId,
+                                         (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
+    app::Command * ZCLcommand = mDevice->GetCommandSender();
+>>>>>>> before adding thermostat server to all clusters app
 
-    TLV::TLVWriter writer = ZCLcommand->CreateCommandDataElementTLVWriter();
+    TLV::TLVWriter writer  = ZCLcommand->CreateCommandDataElementTLVWriter();
 
     TLV::TLVType dummyType = TLV::kTLVType_NotSpecified;
     ReturnErrorOnFailure(writer.StartContainer(TLV::AnonymousTag, TLV::kTLVType_Structure, dummyType));
@@ -1416,12 +1439,18 @@ CHIP_ERROR ContentLaunchCluster::LaunchURL(Callback::Cancelable * onSuccessCallb
 
     return mDevice->SendCommands();
 #else
+<<<<<<< master
     uint8_t seqNum                            = mDevice->GetNextSequenceNumber();
     System::PacketBufferHandle encodedCommand = encodeContentLaunchClusterLaunchURLCommand(seqNum, mEndpoint);
+=======
+    uint8_t seqNum = mDevice->GetNextSequenceNumber();
+    System::PacketBufferHandle encodedCommand = encodeDoorLockClusterClearAllRfidsCommand(seqNum, mEndpoint);
+>>>>>>> before adding thermostat server to all clusters app
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
 #endif
 }
 
+<<<<<<< master
 // ContentLaunch Cluster Attributes
 CHIP_ERROR ContentLaunchCluster::DiscoverAttributes(Callback::Cancelable * onSuccessCallback,
                                                     Callback::Cancelable * onFailureCallback)
@@ -1440,16 +1469,24 @@ CHIP_ERROR ContentLaunchCluster::ReadAttributeClusterRevision(Callback::Cancelab
 
 // DoorLock Cluster Commands
 CHIP_ERROR DoorLockCluster::ClearAllPins(Callback::Cancelable * onSuccessCallback, Callback::Cancelable * onFailureCallback)
+=======
+CHIP_ERROR DoorLockCluster::ClearHolidaySchedule(Callback::Cancelable * onSuccessCallback, Callback::Cancelable * onFailureCallback, uint8_t scheduleId)
+>>>>>>> before adding thermostat server to all clusters app
 {
 #ifdef CHIP_APP_USE_INTERACTION_MODEL
     VerifyOrReturnError(mDevice != nullptr, CHIP_ERROR_INCORRECT_STATE);
     (void) onCompletion;
 
+<<<<<<< master
     app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kClearAllPinsCommandId,
+=======
+    app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kClearHolidayScheduleCommandId,
+>>>>>>> before adding thermostat server to all clusters app
                                          (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
     app::Command * ZCLcommand = mDevice->GetCommandSender();
 
     TLV::TLVWriter writer  = ZCLcommand->CreateCommandDataElementTLVWriter();
+<<<<<<< master
 
     TLV::TLVType dummyType = TLV::kTLVType_NotSpecified;
     ReturnErrorOnFailure(writer.StartContainer(TLV::AnonymousTag, TLV::kTLVType_Structure, dummyType));
@@ -1508,6 +1545,8 @@ CHIP_ERROR DoorLockCluster::ClearHolidaySchedule(Callback::Cancelable * onSucces
     app::Command * ZCLcommand = mDevice->GetCommandSender();
 
     TLV::TLVWriter writer  = ZCLcommand->CreateCommandDataElementTLVWriter();
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
     TLV::TLVType dummyType = TLV::kTLVType_NotSpecified;
     ReturnErrorOnFailure(writer.StartContainer(TLV::AnonymousTag, TLV::kTLVType_Structure, dummyType));
@@ -2915,19 +2954,31 @@ CHIP_ERROR LevelControlCluster::ReadAttributeClusterRevision(Callback::Cancelabl
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
 }
 
+<<<<<<< master
 // MediaPlayback Cluster Commands
 CHIP_ERROR MediaPlaybackCluster::FastForwardRequest(Callback::Cancelable * onSuccessCallback,
                                                     Callback::Cancelable * onFailureCallback)
+=======
+
+// OnOff Cluster Commands
+CHIP_ERROR OnOffCluster::Off(Callback::Cancelable * onSuccessCallback, Callback::Cancelable * onFailureCallback)
+>>>>>>> before adding thermostat server to all clusters app
 {
 #ifdef CHIP_APP_USE_INTERACTION_MODEL
     VerifyOrReturnError(mDevice != nullptr, CHIP_ERROR_INCORRECT_STATE);
     (void) onCompletion;
 
+<<<<<<< master
     app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kFastForwardRequestCommandId,
                                               (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
     app::Command * ZCLcommand             = mDevice->GetCommandSender();
+=======
+    app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kOffCommandId,
+                                         (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
+    app::Command * ZCLcommand = mDevice->GetCommandSender();
+>>>>>>> before adding thermostat server to all clusters app
 
-    TLV::TLVWriter writer = ZCLcommand->CreateCommandDataElementTLVWriter();
+    TLV::TLVWriter writer  = ZCLcommand->CreateCommandDataElementTLVWriter();
 
     TLV::TLVType dummyType = TLV::kTLVType_NotSpecified;
     ReturnErrorOnFailure(writer.StartContainer(TLV::AnonymousTag, TLV::kTLVType_Structure, dummyType));
@@ -2940,8 +2991,13 @@ CHIP_ERROR MediaPlaybackCluster::FastForwardRequest(Callback::Cancelable * onSuc
 
     return mDevice->SendCommands();
 #else
+<<<<<<< master
     uint8_t seqNum                            = mDevice->GetNextSequenceNumber();
     System::PacketBufferHandle encodedCommand = encodeMediaPlaybackClusterFastForwardRequestCommand(seqNum, mEndpoint);
+=======
+    uint8_t seqNum = mDevice->GetNextSequenceNumber();
+    System::PacketBufferHandle encodedCommand = encodeOnOffClusterOffCommand(seqNum, mEndpoint);
+>>>>>>> before adding thermostat server to all clusters app
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
 #endif
 }
@@ -2952,6 +3008,7 @@ CHIP_ERROR MediaPlaybackCluster::NextRequest(Callback::Cancelable * onSuccessCal
     VerifyOrReturnError(mDevice != nullptr, CHIP_ERROR_INCORRECT_STATE);
     (void) onCompletion;
 
+<<<<<<< master
     app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kNextRequestCommandId,
                                               (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
     app::Command * ZCLcommand             = mDevice->GetCommandSender();
@@ -3190,8 +3247,13 @@ CHIP_ERROR MediaPlaybackCluster::StopRequest(Callback::Cancelable * onSuccessCal
     app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kStopRequestCommandId,
                                               (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
     app::Command * ZCLcommand             = mDevice->GetCommandSender();
+=======
+    app::Command::CommandParams cmdParams = { mEndpoint, /* group id */ 0, mClusterId, kOnCommandId,
+                                         (chip::app::Command::kCommandPathFlag_EndpointIdValid) };
+    app::Command * ZCLcommand = mDevice->GetCommandSender();
+>>>>>>> before adding thermostat server to all clusters app
 
-    TLV::TLVWriter writer = ZCLcommand->CreateCommandDataElementTLVWriter();
+    TLV::TLVWriter writer  = ZCLcommand->CreateCommandDataElementTLVWriter();
 
     TLV::TLVType dummyType = TLV::kTLVType_NotSpecified;
     ReturnErrorOnFailure(writer.StartContainer(TLV::AnonymousTag, TLV::kTLVType_Structure, dummyType));
@@ -3204,6 +3266,7 @@ CHIP_ERROR MediaPlaybackCluster::StopRequest(Callback::Cancelable * onSuccessCal
 
     return mDevice->SendCommands();
 #else
+<<<<<<< master
     uint8_t seqNum                            = mDevice->GetNextSequenceNumber();
     System::PacketBufferHandle encodedCommand = encodeMediaPlaybackClusterStopRequestCommand(seqNum, mEndpoint);
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
@@ -3287,6 +3350,8 @@ CHIP_ERROR OnOffCluster::On(Callback::Cancelable * onSuccessCallback, Callback::
 
     return mDevice->SendCommands();
 #else
+=======
+>>>>>>> before adding thermostat server to all clusters app
     uint8_t seqNum = mDevice->GetNextSequenceNumber();
     System::PacketBufferHandle encodedCommand = encodeOnOffClusterOnCommand(seqNum, mEndpoint);
     return SendCommand(seqNum, std::move(encodedCommand), onSuccessCallback, onFailureCallback);
@@ -3695,6 +3760,7 @@ CHIP_ERROR TemperatureMeasurementCluster::ReadAttributeClusterRevision(Callback:
 }
 
 
+<<<<<<< master
 // Thermostat Cluster Commands
 CHIP_ERROR ThermostatCluster::ClearWeeklySchedule(Callback::Cancelable * onSuccessCallback, Callback::Cancelable * onFailureCallback)
 {
@@ -3947,5 +4013,7 @@ CHIP_ERROR ThermostatCluster::ReadAttributeClusterRevision(Callback::Cancelable 
 }
 
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 } // namespace Controller
 } // namespace chip

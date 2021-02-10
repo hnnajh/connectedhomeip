@@ -21,7 +21,11 @@
 
 #import "CHIPDevice.h"
 #import "CHIPDevice_Internal.h"
+<<<<<<< master
 #import "ChipError.h"
+=======
+#import "gen/CHIPClustersObjc.h"
+>>>>>>> before adding thermostat server to all clusters app
 #import "gen/CHIPClientCallbacks.h"
 
 #include <controller/CHIPClusters.h>
@@ -72,9 +76,13 @@ public:
         CHIPDefaultFailureCallbackBridge * callback = reinterpret_cast<CHIPDefaultFailureCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
+<<<<<<< master
                 NSError * error = [NSError errorWithDomain:CHIPErrorDomain
                                                       code:status
                                                   userInfo:@ { NSLocalizedDescriptionKey : @"" }];
+=======
+                NSError* error = [NSError errorWithDomain:@"ZCL" code:status userInfo:@{NSLocalizedDescriptionKey:@""}];
+>>>>>>> before adding thermostat server to all clusters app
                 callback->mHandler(error, nil);
                 callback->Cancel();
                 delete callback;
@@ -101,9 +109,13 @@ public:
         CHIPUnsupportedAttributeCallbackBridge * callback = reinterpret_cast<CHIPUnsupportedAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
+<<<<<<< master
                 NSError * error = [NSError errorWithDomain:CHIPErrorDomain
                                                       code:CHIPErrorCodeUndefinedError
                                                   userInfo:@ { NSLocalizedDescriptionKey : @"Unsupported attribute type" }];
+=======
+                NSError* error = [NSError errorWithDomain:@"ZCL" code:0 userInfo:@{NSLocalizedDescriptionKey:@"Unsuported attribute type"}];
+>>>>>>> before adding thermostat server to all clusters app
                 callback->mHandler(error, nil);
                 callback->Cancel();
                 delete callback;
@@ -281,7 +293,15 @@ private:
     bool mKeepAlive;
 };
 
+<<<<<<< master
 @interface CHIPCluster ()
+=======
+
+
+@interface CHIPBasic ()
+
+@property (readonly) Controller::BasicCluster cppCluster;
+>>>>>>> before adding thermostat server to all clusters app
 @property (readonly, nonatomic) dispatch_queue_t callbackQueue;
 - (Controller::ClusterBase *)getCluster;
 @end
@@ -417,6 +437,11 @@ private:
 
 @end
 
+<<<<<<< master
+=======
+
+@interface CHIPTemperatureMeasurement ()
+>>>>>>> before adding thermostat server to all clusters app
 
 @interface CHIPTemperatureMeasurement ()
 @property (readonly) Controller::TemperatureMeasurementCluster cppCluster;
@@ -429,7 +454,12 @@ private:
     return &_cppCluster;
 }
 
+<<<<<<< master
 - (void)readAttributeMeasuredValue:(ResponseHandler)completionHandler
+=======
+
+- (BOOL)readAttributeMeasuredValue:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16sAttributeCallbackBridge * onSuccess = new CHIPInt16sAttributeCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -452,10 +482,14 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)configureAttributeMeasuredValue:(uint16_t)minInterval
                             maxInterval:(uint16_t)maxInterval
                                  change:(int16_t)change
                       completionHandler:(ResponseHandler)completionHandler
+=======
+- (BOOL) configureAttributeMeasuredValue:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(int16_t)change completionHandler:(ResponseHandler)completionHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPDefaultSuccessCallbackBridge * onSuccess = new CHIPDefaultSuccessCallbackBridge(completionHandler, [self callbackQueue]);
     if (!onSuccess) {
@@ -479,7 +513,11 @@ private:
     }
 }
 
+<<<<<<< master
 - (void)reportAttributeMeasuredValue:(ResponseHandler)reportHandler
+=======
+- (BOOL) reportAttributeMeasuredValue:(ResponseHandler)reportHandler
+>>>>>>> before adding thermostat server to all clusters app
 {
     CHIPInt16sAttributeCallbackBridge * onReport = new CHIPInt16sAttributeCallbackBridge(reportHandler, [self callbackQueue], true);
     if (!onReport) {

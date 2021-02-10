@@ -46,6 +46,7 @@
 #define GENERATED_MIN_MAX_DEFAULT_COUNT 0
 #define GENERATED_MIN_MAX_DEFAULTS { \
 }
+<<<<<<< master
 
 
 #define ZAP_ATTRIBUTE_MASK(mask) ATTRIBUTE_MASK_ ## mask
@@ -101,6 +102,42 @@
                 0x4000, ZAP_TYPE(INT8U), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0 }                                        \
             }, /* Level Control (server): start up current level */                                                                \
     }
+=======
+
+
+#define ZAP_ATTRIBUTE_MASK(mask) ATTRIBUTE_MASK_ ## mask
+// This is an array of EmberAfAttributeMetadata structures.
+#define GENERATED_ATTRIBUTE_COUNT 26
+#define GENERATED_ATTRIBUTES { \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 2 } }, /* On/off (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x00 } }, /* On/off (server): on/off */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 3 } }, /* Level Control (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(INT8U), 1, 0, { (uint8_t *) 0x00 } }, /* Level Control (server): current level */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 2 } }, /* On/off (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x00 } }, /* On/off (server): on/off */  \
+  { 0x4003, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0 } }, /* On/off (server): start up on off */  \
+  { 0x4000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x01 } }, /* On/off (server): global scene control */  \
+  { 0x4001, ZAP_TYPE(INT16U), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0000 } }, /* On/off (server): on time */  \
+  { 0x4002, ZAP_TYPE(INT16U), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0000 } }, /* On/off (server): off wait time */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 3 } }, /* Level Control (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(INT8U), 1, 0, { (uint8_t *) 0x00 } }, /* Level Control (server): current level */  \
+  { 0x0001, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 0x0000 } }, /* Level Control (server): remaining time */  \
+  { 0x000F, ZAP_TYPE(BITMAP8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x00 } }, /* Level Control (server): options */  \
+  { 0x4000, ZAP_TYPE(INT8U), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0 } }, /* Level Control (server): start up current level */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 2 } }, /* On/off (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x00 } }, /* On/off (server): on/off */  \
+  { 0x4003, ZAP_TYPE(ENUM8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0 } }, /* On/off (server): start up on off */  \
+  { 0x4000, ZAP_TYPE(BOOLEAN), 1, 0, { (uint8_t *) 0x01 } }, /* On/off (server): global scene control */  \
+  { 0x4001, ZAP_TYPE(INT16U), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0000 } }, /* On/off (server): on time */  \
+  { 0x4002, ZAP_TYPE(INT16U), 2, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x0000 } }, /* On/off (server): off wait time */  \
+  { 0xFFFD, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 3 } }, /* Level Control (server): cluster revision */  \
+  { 0x0000, ZAP_TYPE(INT8U), 1, 0, { (uint8_t *) 0x00 } }, /* Level Control (server): current level */  \
+  { 0x0001, ZAP_TYPE(INT16U), 2, 0, { (uint8_t *) 0x0000 } }, /* Level Control (server): remaining time */  \
+  { 0x000F, ZAP_TYPE(BITMAP8), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0x00 } }, /* Level Control (server): options */  \
+  { 0x4000, ZAP_TYPE(INT8U), 1, ZAP_ATTRIBUTE_MASK(WRITABLE), { (uint8_t *) 0 } }, /* Level Control (server): start up current level */  \
+}
+
+>>>>>>> before adding thermostat server to all clusters app
 
 
 // This is an array of EmberAfCluster structures.
@@ -115,6 +152,7 @@ const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {\
   (EmberAfGenericClusterFunction) emberAfLevelControlClusterServerInitCallback,\
 };\
 
+<<<<<<< master
 #define ZAP_CLUSTER_MASK(mask) CLUSTER_MASK_##mask
 #define GENERATED_CLUSTER_COUNT 7
 #define GENERATED_CLUSTERS                                                                                                         \
@@ -157,17 +195,41 @@ const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {\
               ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION),                                                          \
               chipFuncArrayLevelControlServer }, /* Endpoint: 3, Cluster: Level Control (server) */                                \
     }
+=======
+
+
+#define ZAP_CLUSTER_MASK(mask) CLUSTER_MASK_ ## mask
+#define GENERATED_CLUSTER_COUNT 6
+#define GENERATED_CLUSTERS { \
+  { 0x0006, ZAP_ATTRIBUTE_INDEX(0), 2, 3, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayOnOffServer }, /* Endpoint: 1, Cluster: On/off (server) */ \
+  { 0x0008, ZAP_ATTRIBUTE_INDEX(2), 2, 3, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayLevelControlServer }, /* Endpoint: 1, Cluster: Level Control (server) */ \
+  { 0x0006, ZAP_ATTRIBUTE_INDEX(4), 6, 9, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayOnOffServer }, /* Endpoint: 2, Cluster: On/off (server) */ \
+  { 0x0008, ZAP_ATTRIBUTE_INDEX(10), 5, 7, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayLevelControlServer }, /* Endpoint: 2, Cluster: Level Control (server) */ \
+  { 0x0006, ZAP_ATTRIBUTE_INDEX(15), 6, 9, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayOnOffServer }, /* Endpoint: 3, Cluster: On/off (server) */ \
+  { 0x0008, ZAP_ATTRIBUTE_INDEX(21), 5, 7, ZAP_CLUSTER_MASK(SERVER) | ZAP_CLUSTER_MASK(INIT_FUNCTION), chipFuncArrayLevelControlServer }, /* Endpoint: 3, Cluster: Level Control (server) */ \
+}
+>>>>>>> before adding thermostat server to all clusters app
 
 
 #define ZAP_CLUSTER_INDEX(index) ((EmberAfCluster*)(&generatedClusters[index]))
 
 
 // This is an array of EmberAfEndpointType structures.
+<<<<<<< master
 #define GENERATED_ENDPOINT_TYPES                                                                                                   \
     {                                                                                                                              \
         { ZAP_CLUSTER_INDEX(0), 1, 4 }, { ZAP_CLUSTER_INDEX(1), 2, 6 }, { ZAP_CLUSTER_INDEX(3), 2, 16 },                           \
             { ZAP_CLUSTER_INDEX(5), 2, 16 },                                                                                       \
     }
+=======
+#define GENERATED_ENDPOINT_TYPES { \
+  { ZAP_CLUSTER_INDEX(0), 2, 6 }, \
+  { ZAP_CLUSTER_INDEX(2), 2, 16 }, \
+  { ZAP_CLUSTER_INDEX(4), 2, 16 }, \
+}
+
+
+>>>>>>> before adding thermostat server to all clusters app
 
 
 
@@ -185,6 +247,7 @@ const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {\
 
 // Array of endpoints that are supported, the data inside
 // the array is the endpoint number.
+<<<<<<< master
 #define FIXED_ENDPOINT_ARRAY                                                                                                       \
     {                                                                                                                              \
         0x0000, 0x0001, 0x0002, 0x0003                                                                                             \
@@ -219,9 +282,29 @@ const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {\
     {                                                                                                                              \
         0, 0, 0, 0                                                                                                                 \
     }
+=======
+#define FIXED_ENDPOINT_ARRAY { 0x0001, 0x0002, 0x0003 }
+
+// Array of profile ids
+#define FIXED_PROFILE_IDS { 0x0104, 0x0104, 0x0104 }
+
+// Array of device ids
+#define FIXED_DEVICE_IDS { 0, 0, 0 }
+
+// Array of device versions
+#define FIXED_DEVICE_VERSIONS { 1, 1, 1 }
+
+// Array of endpoint types supported on each endpoint
+#define FIXED_ENDPOINT_TYPES { 0, 1, 2 }
+
+// Array of networks supported on each endpoint
+#define FIXED_NETWORKS { 0, 0, 0 }
+
+>>>>>>> before adding thermostat server to all clusters app
 
 
 // Array of EmberAfCommandMetadata structs.
+<<<<<<< master
 #define ZAP_COMMAND_MASK(mask) COMMAND_MASK_##mask
 #define EMBER_AF_GENERATED_COMMAND_COUNT (40)
 #define GENERATED_COMMANDS                                                                                                         \
@@ -267,6 +350,52 @@ const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {\
             { 0x0008, 0x07, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StopWithOnOff */                       \
             { 0x0008, 0x07, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StopWithOnOff */                       \
     }
+=======
+#define ZAP_COMMAND_MASK(mask) COMMAND_MASK_ ## mask
+#define EMBER_AF_GENERATED_COMMAND_COUNT (39)
+#define GENERATED_COMMANDS { \
+  { 0x0006, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): Off */ \
+  { 0x0006, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): Off */ \
+  { 0x0006, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): Off */ \
+  { 0x0006, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): On */ \
+  { 0x0006, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): On */ \
+  { 0x0006, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): On */ \
+  { 0x0006, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): Toggle */ \
+  { 0x0006, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): Toggle */ \
+  { 0x0006, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): Toggle */ \
+  { 0x0006, 0x40, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): OffWithEffect */ \
+  { 0x0006, 0x40, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): OffWithEffect */ \
+  { 0x0006, 0x41, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): OnWithRecallGlobalScene */ \
+  { 0x0006, 0x41, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): OnWithRecallGlobalScene */ \
+  { 0x0006, 0x42, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): OnWithTimedOff */ \
+  { 0x0006, 0x42, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* On/off (server): OnWithTimedOff */ \
+  { 0x0008, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveToLevel */ \
+  { 0x0008, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveToLevel */ \
+  { 0x0008, 0x00, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveToLevel */ \
+  { 0x0008, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Move */ \
+  { 0x0008, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Move */ \
+  { 0x0008, 0x01, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Move */ \
+  { 0x0008, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Step */ \
+  { 0x0008, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Step */ \
+  { 0x0008, 0x02, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Step */ \
+  { 0x0008, 0x03, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Stop */ \
+  { 0x0008, 0x03, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Stop */ \
+  { 0x0008, 0x03, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): Stop */ \
+  { 0x0008, 0x04, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveToLevelWithOnOff */ \
+  { 0x0008, 0x04, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveToLevelWithOnOff */ \
+  { 0x0008, 0x04, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveToLevelWithOnOff */ \
+  { 0x0008, 0x05, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveWithOnOff */ \
+  { 0x0008, 0x05, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveWithOnOff */ \
+  { 0x0008, 0x05, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): MoveWithOnOff */ \
+  { 0x0008, 0x06, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StepWithOnOff */ \
+  { 0x0008, 0x06, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StepWithOnOff */ \
+  { 0x0008, 0x06, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StepWithOnOff */ \
+  { 0x0008, 0x07, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StopWithOnOff */ \
+  { 0x0008, 0x07, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StopWithOnOff */ \
+  { 0x0008, 0x07, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StopWithOnOff */ \
+}
+
+>>>>>>> before adding thermostat server to all clusters app
 
 
 // Array of EmberAfManufacturerCodeEntry structures for commands.

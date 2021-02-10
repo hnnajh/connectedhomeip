@@ -55,6 +55,7 @@ void emberAfBarrierControlClusterInitCallback(chip::EndpointId endpoint);
  */
 void emberAfBasicClusterInitCallback(chip::EndpointId endpoint);
 
+<<<<<<< master
 
 /** @brief Color Control Cluster Init
  *
@@ -63,6 +64,8 @@ void emberAfBasicClusterInitCallback(chip::EndpointId endpoint);
  * @param endpoint    Endpoint that is being initialized
  */
 void emberAfColorControlClusterInitCallback(chip::EndpointId endpoint);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Content Launch Cluster Init
  *
@@ -71,6 +74,7 @@ void emberAfColorControlClusterInitCallback(chip::EndpointId endpoint);
  * @param endpoint    Endpoint that is being initialized
  */
 void emberAfContentLaunchClusterInitCallback(chip::EndpointId endpoint);
+
 
 /** @brief Door Lock Cluster Init
  *
@@ -107,6 +111,7 @@ void emberAfIdentifyClusterInitCallback(chip::EndpointId endpoint);
  */
 void emberAfLevelControlClusterInitCallback(chip::EndpointId endpoint);
 
+<<<<<<< master
 /** @brief Media Playback Cluster Init
  *
  * Cluster Init
@@ -114,6 +119,8 @@ void emberAfLevelControlClusterInitCallback(chip::EndpointId endpoint);
  * @param endpoint    Endpoint that is being initialized
  */
 void emberAfMediaPlaybackClusterInitCallback(chip::EndpointId endpoint);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief On/off Cluster Init
  *
@@ -284,6 +291,7 @@ void emberAfBasicClusterClientTickCallback(chip::EndpointId endpoint);
 
 //
 // Color Control Cluster client
+<<<<<<< master
 //
 
 /** @brief Color Control Cluster Client Init
@@ -348,6 +356,8 @@ void emberAfColorControlClusterClientTickCallback(chip::EndpointId endpoint);
 
 //
 // Content Launch Cluster client
+=======
+>>>>>>> before adding thermostat server to all clusters app
 //
 
 /** @brief Content Launch Cluster Client Init
@@ -375,9 +385,13 @@ void emberAfContentLaunchClusterClientAttributeChangedCallback(chip::EndpointId 
  * @param attributeId       Attribute that changed
  * @param manufacturerCode  Manufacturer Code of the attribute that changed
  */
+<<<<<<< master
 void emberAfContentLaunchClusterClientManufacturerSpecificAttributeChangedCallback(chip::EndpointId endpoint,
                                                                                    chip::AttributeId attributeId,
                                                                                    uint16_t manufacturerCode);
+=======
+void emberAfColorControlClusterClientManufacturerSpecificAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId, uint16_t manufacturerCode);
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Content Launch Cluster Client Message Sent
  *
@@ -390,9 +404,13 @@ void emberAfContentLaunchClusterClientManufacturerSpecificAttributeChangedCallba
  * @param message            The message that was sent
  * @param status             The status of the sent message
  */
+<<<<<<< master
 void emberAfContentLaunchClusterClientMessageSentCallback(EmberOutgoingMessageType type, uint64_t indexOrDestination,
                                                           EmberApsFrame * apsFrame, uint16_t msgLen, uint8_t * message,
                                                           EmberStatus status);
+=======
+void emberAfColorControlClusterClientMessageSentCallback(EmberOutgoingMessageType type, uint64_t indexOrDestination, EmberApsFrame * apsFrame, uint16_t msgLen, uint8_t * message, EmberStatus status);
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Content Launch Cluster Client Pre Attribute Changed
  *
@@ -404,9 +422,13 @@ void emberAfContentLaunchClusterClientMessageSentCallback(EmberOutgoingMessageTy
  * @param size          Attribute size
  * @param value         Attribute value
  */
+<<<<<<< master
 EmberAfStatus emberAfContentLaunchClusterClientPreAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId,
                                                                            EmberAfAttributeType attributeType, uint8_t size,
                                                                            uint8_t * value);
+=======
+EmberAfStatus emberAfColorControlClusterClientPreAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId, EmberAfAttributeType attributeType, uint8_t size, uint8_t * value);
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Content Launch Cluster Client Tick
  *
@@ -1001,6 +1023,7 @@ void emberAfThermostatClusterClientTickCallback(chip::EndpointId endpoint);
 // Cluster Commands Callback
 
 /**
+<<<<<<< master
  * @brief Content Launch Cluster LaunchContentResponse Command callback
  * @param contentLaunchStatus
  */
@@ -1018,6 +1041,11 @@ bool emberAfContentLaunchClusterLaunchURLResponseCallback(uint8_t contentLaunchS
  * @brief Door Lock Cluster ClearAllPinsResponse Command callback
  * @param status
  */
+=======
+* @brief Door Lock Cluster ClearAllPinsResponse Command callback
+* @param status
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfDoorLockClusterClearAllPinsResponseCallback(uint8_t status);
 
@@ -1245,6 +1273,7 @@ bool emberAfGroupsClusterViewGroupResponseCallback(uint8_t status, uint16_t grou
 bool emberAfIdentifyClusterIdentifyQueryResponseCallback(uint16_t timeout);
 
 /**
+<<<<<<< master
  * @brief Media Playback Cluster Playback Command callback
  */
 
@@ -1256,6 +1285,13 @@ bool emberAfMediaPlaybackClusterPlaybackCallback();
  * @param groupId
  * @param sceneId
  */
+=======
+* @brief Scenes Cluster AddSceneResponse Command callback
+* @param status
+* @param groupId
+* @param sceneId
+*/
+>>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfScenesClusterAddSceneResponseCallback(uint8_t status, uint16_t groupId, uint8_t sceneId);
 

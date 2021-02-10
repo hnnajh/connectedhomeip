@@ -26,6 +26,7 @@
 namespace chip {
 namespace Controller {
 
+<<<<<<< master
 constexpr ClusterId kBarrierControlClusterId         = 0x0103;
 constexpr ClusterId kBasicClusterId                  = 0x0000;
 constexpr ClusterId kBindingClusterId                = 0xF000;
@@ -39,6 +40,19 @@ constexpr ClusterId kLevelControlClusterId           = 0x0008;
 constexpr ClusterId kMediaPlaybackClusterId          = 0xF001;
 constexpr ClusterId kOnOffClusterId                  = 0x0006;
 constexpr ClusterId kScenesClusterId                 = 0x0005;
+=======
+constexpr ClusterId kBarrierControlClusterId = 0x0103;
+constexpr ClusterId kBasicClusterId = 0x0000;
+constexpr ClusterId kBindingClusterId = 0xF000;
+constexpr ClusterId kColorControlClusterId = 0x0300;
+constexpr ClusterId kDoorLockClusterId = 0x0101;
+constexpr ClusterId kGroupsClusterId = 0x0004;
+constexpr ClusterId kIasZoneClusterId = 0x0500;
+constexpr ClusterId kIdentifyClusterId = 0x0003;
+constexpr ClusterId kLevelControlClusterId = 0x0008;
+constexpr ClusterId kOnOffClusterId = 0x0006;
+constexpr ClusterId kScenesClusterId = 0x0005;
+>>>>>>> before adding thermostat server to all clusters app
 constexpr ClusterId kTemperatureMeasurementClusterId = 0x0402;
 constexpr ClusterId kThermostatClusterId = 0x0201;
 
@@ -219,6 +233,7 @@ private:
     static constexpr CommandId kStepHueCommandId = 0x02;
     static constexpr CommandId kStepSaturationCommandId = 0x05;
     static constexpr CommandId kStopMoveStepCommandId = 0x47;
+<<<<<<< master
 };
 
 class DLL_EXPORT ContentLaunchCluster : public ClusterBase
@@ -238,6 +253,8 @@ public:
 private:
     static constexpr CommandId kLaunchContentCommandId = 0x00;
     static constexpr CommandId kLaunchURLCommandId     = 0x01;
+=======
+>>>>>>> before adding thermostat server to all clusters app
 };
 
 class DLL_EXPORT DoorLockCluster : public ClusterBase
@@ -404,6 +421,7 @@ private:
     static constexpr CommandId kStepWithOnOffCommandId = 0x06;
     static constexpr CommandId kStopCommandId = 0x03;
     static constexpr CommandId kStopWithOnOffCommandId = 0x07;
+<<<<<<< master
 };
 
 class DLL_EXPORT MediaPlaybackCluster : public ClusterBase
@@ -440,6 +458,8 @@ private:
     static constexpr CommandId kSkipForwardRequestCommandId  = 0x08;
     static constexpr CommandId kStartOverRequestCommandId    = 0x03;
     static constexpr CommandId kStopRequestCommandId         = 0x02;
+=======
+>>>>>>> before adding thermostat server to all clusters app
 };
 
 class DLL_EXPORT OnOffCluster : public ClusterBase

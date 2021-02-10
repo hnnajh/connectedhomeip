@@ -5242,6 +5242,7 @@
 /** @brief Command description for PublishBlockPeriod
  *
  * Command: PublishBlockPeriod
+<<<<<<< master
  * @param providerId INT32U
  * @param startTime UTC_TIME
  * @param issuerEventId INT32U
@@ -5261,6 +5262,50 @@
                               ZCL_PUBLISH_BLOCK_PERIOD_COMMAND_ID, "uuuuuuuuuu", providerId, startTime, issuerEventId,             \
                               numberOfEvents, blockPeriodStartTime, blockPeriodDuration, blockPeriodControl,                       \
                               blockPeriodDurationType, tariffType, tariffResolutionPeriod);
+=======
+ * @param providerId INT32U 
+ * @param startTime UTC_TIME 
+ * @param issuerEventId INT32U 
+ * @param numberOfEvents INT8U 
+ * @param blockPeriodStartTime UTC_TIME 
+ * @param blockPeriodDuration INT24U 
+ * @param numberOfPriceTiersAndNumberOfBlockThresholds BITMAP8 
+ * @param blockPeriodControl BlockPeriodControl 
+ * @param blockPeriodDurationType BlockPeriodDurationType 
+ * @param tariffType TariffType 
+ * @param tariffResolutionPeriod TariffResolutionPeriod 
+ */
+#define emberAfFillCommandPriceClusterPublishBlockPeriod( \
+  providerId, \
+  startTime, \
+  issuerEventId, \
+  numberOfEvents, \
+  blockPeriodStartTime, \
+  blockPeriodDuration, \
+  numberOfPriceTiersAndNumberOfBlockThresholds, \
+  blockPeriodControl, \
+  blockPeriodDurationType, \
+  tariffType, \
+  tariffResolutionPeriod \
+) \
+  emberAfFillExternalBuffer( \
+    mask, \
+     \
+    ZCL_PUBLISH_BLOCK_PERIOD_COMMAND_ID, \
+    "uuuuuuuuuuu", \
+    providerId, \
+    startTime, \
+    issuerEventId, \
+    numberOfEvents, \
+    blockPeriodStartTime, \
+    blockPeriodDuration, \
+    numberOfPriceTiersAndNumberOfBlockThresholds, \
+    blockPeriodControl, \
+    blockPeriodDurationType, \
+    tariffType, \
+    tariffResolutionPeriod \
+  );
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Command description for PublishConversionFactor
  *
@@ -6777,6 +6822,7 @@
 /** @brief Command description for SelectAvailableEmergencyCredit
  *
  * Command: SelectAvailableEmergencyCredit
+<<<<<<< master
  * @param commandIssueDateTime UTC_TIME
  * @param originatingDevice OriginatingDevice
  */
@@ -6784,6 +6830,29 @@
     emberAfFillExternalBuffer(mask,                                                                                                \
                                                                                                                                    \
                               ZCL_SELECT_AVAILABLE_EMERGENCY_CREDIT_COMMAND_ID, "uu", commandIssueDateTime, originatingDevice);
+=======
+ * @param commandIssueDateTime UTC_TIME 
+ * @param originatingDevice OriginatingDevice 
+ * @param siteId OCTET_STRING 
+ * @param meterSerialNumber OCTET_STRING 
+ */
+#define emberAfFillCommandPrepaymentClusterSelectAvailableEmergencyCredit( \
+  commandIssueDateTime, \
+  originatingDevice, \
+  siteId, \
+  meterSerialNumber \
+) \
+  emberAfFillExternalBuffer( \
+    mask, \
+     \
+    ZCL_SELECT_AVAILABLE_EMERGENCY_CREDIT_COMMAND_ID, \
+    "uuuu", \
+    commandIssueDateTime, \
+    originatingDevice, \
+    siteId, \
+    meterSerialNumber \
+  );
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Command description for PublishPrepaySnapshot
  *
@@ -9855,6 +9924,7 @@
     count, \
     endpointInformationRecordList, endpointInformationRecordListLen \
   );
+<<<<<<< master
 
 /** @brief Command description for ScanNetworks
  *
@@ -9868,9 +9938,12 @@
         emberAfFillExternalBuffer(mask,                                                                                            \
                                                                                                                                    \
                                   ZCL_SCAN_NETWORKS_COMMAND_ID, "uuu", ssid, breadcrumb, timeoutMs);
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Command description for ScanNetworksResponse
  *
+<<<<<<< master
  * Command: ScanNetworksResponse
  * @param errorCode INT8U
  * @param debugText CHAR_STRING
@@ -10077,6 +10150,8 @@
 
 /** @brief Command description for Bind
  *
+=======
+>>>>>>> before adding thermostat server to all clusters app
  * Command: Bind
  * @param nodeId NODE_ID 
  * @param groupId GROUP_ID 
@@ -10124,6 +10199,7 @@
     endpointId, \
     clusterId \
   );
+<<<<<<< master
 
 /** @brief Command description for PlayRequest
  *
@@ -10133,18 +10209,40 @@
     PlaybackClusterPlayRequest() emberAfFillExternalBuffer(mask,                                                                   \
                                                                                                                                    \
                                                            ZCL_PLAY_REQUEST_COMMAND_ID, "", );
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Command description for PauseRequest
  *
+<<<<<<< master
  * Command: PauseRequest
  */
 #define emberAfFillCommandMedia                                                                                                    \
     PlaybackClusterPauseRequest() emberAfFillExternalBuffer(mask,                                                                  \
                                                                                                                                    \
                                                             ZCL_PAUSE_REQUEST_COMMAND_ID, "", );
+=======
+ * Command: CommandOne
+ * @param argOne INT8U 
+ * @param argOne INT8U 
+ */
+#define emberAfFillCommandSample Mfg Specific ClusterClusterCommandOne( \
+  argOne, \
+  argOne \
+) \
+  emberAfFillExternalBuffer( \
+    mask, \
+     \
+    ZCL_COMMAND_ONE_COMMAND_ID, \
+    "uu", \
+    argOne, \
+    argOne \
+  );
+>>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Command description for StopRequest
  *
+<<<<<<< master
  * Command: StopRequest
  */
 #define emberAfFillCommandMedia                                                                                                    \
@@ -10257,6 +10355,8 @@
 
 /** @brief Command description for SetToken
  *
+=======
+>>>>>>> before adding thermostat server to all clusters app
  * Command: SetToken
  * @param token INT16U 
  * @param token INT16U 

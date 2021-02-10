@@ -45,6 +45,7 @@ EmberAfStatus emberAfTemperatureMeasurementClusterServerCommandParse(EmberAfClus
 EmberAfStatus emberAfThermostatClusterServerCommandParse(EmberAfClusterCommand * cmd);
 
 
+
 static EmberAfStatus status(bool wasHandled, bool clusterExists, bool mfgSpecific)
 {
     if (wasHandled)
@@ -97,10 +98,14 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
         case ZCL_COLOR_CONTROL_CLUSTER_ID :
             result = emberAfColorControlClusterServerCommandParse(cmd);
             break;
+<<<<<<< master
         case ZCL_CONTENT_LAUNCH_CLUSTER_ID:
             result = emberAfContentLaunchClusterServerCommandParse(cmd);
             break;
         case ZCL_DOOR_LOCK_CLUSTER_ID:
+=======
+        case ZCL_DOOR_LOCK_CLUSTER_ID :
+>>>>>>> before adding thermostat server to all clusters app
             result = emberAfDoorLockClusterServerCommandParse(cmd);
             break;
         case ZCL_GROUPS_CLUSTER_ID :
@@ -115,10 +120,14 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
         case ZCL_LEVEL_CONTROL_CLUSTER_ID :
             result = emberAfLevelControlClusterServerCommandParse(cmd);
             break;
+<<<<<<< master
         case ZCL_MEDIA_PLAYBACK_CLUSTER_ID:
             result = emberAfMediaPlaybackClusterServerCommandParse(cmd);
             break;
         case ZCL_ON_OFF_CLUSTER_ID:
+=======
+        case ZCL_ON_OFF_CLUSTER_ID :
+>>>>>>> before adding thermostat server to all clusters app
             result = emberAfOnOffClusterServerCommandParse(cmd);
             break;
         case ZCL_SCENES_CLUSTER_ID :
@@ -830,6 +839,7 @@ uint8_t optionsOverride;
   optionsOverride = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
 
 wasHandled = emberAfColorControlClusterStopMoveStepCallback(optionsMask, optionsOverride);
+<<<<<<< master
             break;
         }
         default: {
@@ -854,6 +864,8 @@ EmberAfStatus emberAfContentLaunchClusterServerCommandParse(EmberAfClusterComman
         }
         case ZCL_LAUNCH_URL_COMMAND_ID: {
             wasHandled = emberAfContentLaunchClusterLaunchURLCallback();
+=======
+>>>>>>> before adding thermostat server to all clusters app
             break;
         }
         default: {
@@ -1706,6 +1718,7 @@ wasHandled = emberAfLevelControlClusterStopCallback(optionMask, optionOverride);
         }
         case ZCL_STOP_WITH_ON_OFF_COMMAND_ID: {
         wasHandled = emberAfLevelControlClusterStopWithOnOffCallback();
+<<<<<<< master
             break;
         }
         default: {
@@ -1762,6 +1775,8 @@ EmberAfStatus emberAfMediaPlaybackClusterServerCommandParse(EmberAfClusterComman
         }
         case ZCL_STOP_REQUEST_COMMAND_ID: {
             wasHandled = emberAfMediaPlaybackClusterStopRequestCallback();
+=======
+>>>>>>> before adding thermostat server to all clusters app
             break;
         }
         default: {
@@ -1956,6 +1971,7 @@ uint8_t sceneId;
   sceneId = emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen);
 
 wasHandled = emberAfScenesClusterViewSceneCallback(groupId, sceneId);
+<<<<<<< master
             break;
         }
         default: {
@@ -2050,6 +2066,8 @@ int8_t amount;
   amount = static_cast<int8_t>(emberAfGetInt8u(cmd->buffer, payloadOffset, cmd->bufLen));
 
 wasHandled = emberAfThermostatClusterSetpointRaiseLowerCallback(mode, amount);
+=======
+>>>>>>> before adding thermostat server to all clusters app
             break;
         }
         default: {

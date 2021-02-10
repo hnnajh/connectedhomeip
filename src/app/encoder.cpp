@@ -71,8 +71,13 @@ static uint16_t doEncodeApsFrame(BufferWriter & buf, ClusterId clusterId, Endpoi
 uint16_t encodeApsFrame(uint8_t * buffer, uint16_t buf_length, EmberApsFrame * apsFrame)
 {
     BufferWriter buf(buffer, buf_length);
+<<<<<<< master
     return doEncodeApsFrame(buf, apsFrame->clusterId, apsFrame->sourceEndpoint, apsFrame->destinationEndpoint, apsFrame->options,
                             apsFrame->groupId, apsFrame->sequence, apsFrame->radius, !buffer);
+=======
+    return doEncodeApsFrame(buf, apsFrame->clusterId, apsFrame->sourceEndpoint, apsFrame->destinationEndpoint,
+                            apsFrame->options, apsFrame->groupId, apsFrame->sequence, apsFrame->radius, !buffer);
+>>>>>>> before adding thermostat server to all clusters app
 }
 
 #define COMMAND_HEADER(name, clusterId)                                                                                            \
@@ -253,6 +258,7 @@ uint16_t encodeApsFrame(uint8_t * buffer, uint16_t buf_length, EmberApsFrame * a
 
 #define TEMP_MEASUREMENT_CLUSTER_ID 0x0402
 
+<<<<<<< master
 #define THERMOSTAT_CLUSTER_ID 0x0201
 #define ZCL_CLEAR_WEEKLY_SCHEDULE_COMMAND_ID (0x03)
 #define ZCL_GET_RELAY_STATUS_LOG_COMMAND_ID (0x04)
@@ -260,6 +266,8 @@ uint16_t encodeApsFrame(uint8_t * buffer, uint16_t buf_length, EmberApsFrame * a
 #define ZCL_SET_WEEKLY_SCHEDULE_COMMAND_ID (0x01)
 #define ZCL_SETPOINT_RAISE_LOWER_COMMAND_ID (0x00)
 
+=======
+>>>>>>> before adding thermostat server to all clusters app
 
 // TODO: Find a way to calculate maximum message length for clusters
 //       https://github.com/project-chip/connectedhomeip/issues/965
@@ -1797,6 +1805,7 @@ PacketBufferHandle encodeColorControlClusterReadClusterRevisionAttribute(uint8_t
        .Put8(seqNum)
        .Put8(ZCL_READ_ATTRIBUTES_COMMAND_ID)
        .Put16(0xFFFD);
+<<<<<<< master
     COMMAND_FOOTER();
 }
 
@@ -1845,6 +1854,8 @@ PacketBufferHandle encodeContentLaunchClusterReadClusterRevisionAttribute(uint8_
 {
     COMMAND_HEADER("ReadContentLaunchClusterRevision", CONTENT_LAUNCH_CLUSTER_ID);
     buf.Put8(kFrameControlGlobalCommand).Put8(seqNum).Put8(ZCL_READ_ATTRIBUTES_COMMAND_ID).Put16(0xFFFD);
+=======
+>>>>>>> before adding thermostat server to all clusters app
     COMMAND_FOOTER();
 }
 
@@ -2927,6 +2938,7 @@ PacketBufferHandle encodeLevelControlClusterReadClusterRevisionAttribute(uint8_t
        .Put8(seqNum)
        .Put8(ZCL_READ_ATTRIBUTES_COMMAND_ID)
        .Put16(0xFFFD);
+<<<<<<< master
     COMMAND_FOOTER();
 }
 
@@ -3074,6 +3086,8 @@ PacketBufferHandle encodeMediaPlaybackClusterReadClusterRevisionAttribute(uint8_
 {
     COMMAND_HEADER("ReadMediaPlaybackClusterRevision", MEDIA_PLAYBACK_CLUSTER_ID);
     buf.Put8(kFrameControlGlobalCommand).Put8(seqNum).Put8(ZCL_READ_ATTRIBUTES_COMMAND_ID).Put16(0xFFFD);
+=======
+>>>>>>> before adding thermostat server to all clusters app
     COMMAND_FOOTER();
 }
 
@@ -3503,6 +3517,7 @@ PacketBufferHandle encodeTemperatureMeasurementClusterReadClusterRevisionAttribu
        .Put8(seqNum)
        .Put8(ZCL_READ_ATTRIBUTES_COMMAND_ID)
        .Put16(0xFFFD);
+<<<<<<< master
     COMMAND_FOOTER();
 }
 
@@ -3755,3 +3770,8 @@ PacketBufferHandle encodeThermostatClusterReadClusterRevisionAttribute(uint8_t s
     COMMAND_FOOTER();
 }
 
+=======
+    COMMAND_FOOTER();
+}
+
+>>>>>>> before adding thermostat server to all clusters app
