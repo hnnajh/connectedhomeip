@@ -24,6 +24,7 @@
 #import "ChipError.h"
 #import "gen/CHIPClientCallbacks.h"
 #import "gen/CHIPClustersObjc.h"
+#import "gen/CHIPClientCallbacks.h"
 
 #include <controller/CHIPClusters.h>
 
@@ -134,8 +135,9 @@ public:
         CHIPBooleanAttributeCallbackBridge * callback = reinterpret_cast<CHIPBooleanAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithBool:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithBool:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -166,8 +168,9 @@ public:
         CHIPInt8uAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt8uAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithUnsignedChar:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithUnsignedChar:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -198,8 +201,9 @@ public:
         CHIPInt8sAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt8sAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithChar:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithChar:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -230,8 +234,9 @@ public:
         CHIPInt16uAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt16uAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithUnsignedShort:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithUnsignedShort:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -262,8 +267,9 @@ public:
         CHIPInt16sAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt16sAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithShort:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithShort:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -727,8 +733,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.MoveToLevel(onSuccess->Cancel(), onFailure->Cancel(), level, transitionTime, optionMask, optionOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToLevel(onSuccess->Cancel(), onFailure->Cancel(), level, transitionTime, optionMask, optionOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -801,8 +806,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.Step(
-        onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionMask, optionOverride);
+    CHIP_ERROR err = self.cppCluster.Step(onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionMask, optionOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -920,8 +924,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentLevel(
-        onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentLevel(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1082,7 +1086,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPOnOff ()
 @property (readonly) Controller::OnOffCluster cppCluster;
@@ -1271,6 +1277,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:CHIP_ERROR_INCORRECT_STATE], nil);
         return;
     }
+
 
     CHIP_ERROR err = self.cppCluster.ConfigureAttributeOnOff(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval);
     if (err != CHIP_NO_ERROR) {
@@ -1481,4 +1488,6 @@ private:
     }
 }
 
+
 @end
+

@@ -20,40 +20,35 @@
 // Prevent multiple inclusion
 #pragma once
 
+
+
 // Default values for the attributes longer than a pointer,
 // in a form of a binary blob
 // Separate block is generated for big-endian and little-endian cases.
 #if BIGENDIAN_CPU
-#define GENERATED_DEFAULTS                                                                                                         \
-    {                                                                                                                              \
-    }
+#define GENERATED_DEFAULTS { \
+}
+
 
 #else // !BIGENDIAN_CPU
-#define GENERATED_DEFAULTS                                                                                                         \
-    {                                                                                                                              \
-    }
+#define GENERATED_DEFAULTS { \
+}
 
 #endif // BIGENDIAN_CPU
 
 #define GENERATED_DEFAULTS_COUNT (0)
 
-#define ZAP_TYPE(type) ZCL_##type##_ATTRIBUTE_TYPE
-#define ZAP_LONG_DEFAULTS_INDEX(index)                                                                                             \
-    {                                                                                                                              \
-        (uint8_t *) (&generatedDefaults[index])                                                                                    \
-    }
-#define ZAP_MIN_MAX_DEFAULTS_INDEX(index)                                                                                          \
-    {                                                                                                                              \
-        (uint8_t *) (&minMaxDefault[index])                                                                                        \
-    }
+#define ZAP_TYPE(type) ZCL_ ## type ## _ATTRIBUTE_TYPE
+#define ZAP_LONG_DEFAULTS_INDEX(index) {(uint8_t*)(&generatedDefaults[index])}
+#define ZAP_MIN_MAX_DEFAULTS_INDEX(index) {(uint8_t*)(&minMaxDefault[index])}
 
 // This is an array of EmberAfAttributeMinMaxValue structures.
 #define GENERATED_MIN_MAX_DEFAULT_COUNT 0
-#define GENERATED_MIN_MAX_DEFAULTS                                                                                                 \
-    {                                                                                                                              \
-    }
+#define GENERATED_MIN_MAX_DEFAULTS { \
+}
 
-#define ZAP_ATTRIBUTE_MASK(mask) ATTRIBUTE_MASK_##mask
+
+#define ZAP_ATTRIBUTE_MASK(mask) ATTRIBUTE_MASK_ ## mask
 // This is an array of EmberAfAttributeMetadata structures.
 #define GENERATED_ATTRIBUTE_COUNT 29
 #define GENERATED_ATTRIBUTES                                                                                                       \
@@ -107,17 +102,18 @@
             }, /* Level Control (server): start up current level */                                                                \
     }
 
+
 // This is an array of EmberAfCluster structures.
-#define ZAP_ATTRIBUTE_INDEX(index) ((EmberAfAttributeMetadata *) (&generatedAttributes[index]))
+#define ZAP_ATTRIBUTE_INDEX(index) ((EmberAfAttributeMetadata *)(&generatedAttributes[index]))
 
 // Cluster function static arrays
-#define GENERATED_FUNCTION_ARRAYS                                                                                                  \
-    const EmberAfGenericClusterFunction chipFuncArrayOnOffServer[] = {                                                             \
-        (EmberAfGenericClusterFunction) emberAfOnOffClusterServerInitCallback,                                                     \
-    };                                                                                                                             \
-    const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {                                                      \
-        (EmberAfGenericClusterFunction) emberAfLevelControlClusterServerInitCallback,                                              \
-    };
+#define GENERATED_FUNCTION_ARRAYS   \
+const EmberAfGenericClusterFunction chipFuncArrayOnOffServer[] = {\
+  (EmberAfGenericClusterFunction) emberAfOnOffClusterServerInitCallback,\
+};\
+const EmberAfGenericClusterFunction chipFuncArrayLevelControlServer[] = {\
+  (EmberAfGenericClusterFunction) emberAfLevelControlClusterServerInitCallback,\
+};\
 
 #define ZAP_CLUSTER_MASK(mask) CLUSTER_MASK_##mask
 #define GENERATED_CLUSTER_COUNT 7
@@ -162,7 +158,9 @@
               chipFuncArrayLevelControlServer }, /* Endpoint: 3, Cluster: Level Control (server) */                                \
     }
 
-#define ZAP_CLUSTER_INDEX(index) ((EmberAfCluster *) (&generatedClusters[index]))
+
+#define ZAP_CLUSTER_INDEX(index) ((EmberAfCluster*)(&generatedClusters[index]))
+
 
 // This is an array of EmberAfEndpointType structures.
 #define GENERATED_ENDPOINT_TYPES                                                                                                   \
@@ -170,6 +168,8 @@
         { ZAP_CLUSTER_INDEX(0), 1, 4 }, { ZAP_CLUSTER_INDEX(1), 2, 6 }, { ZAP_CLUSTER_INDEX(3), 2, 16 },                           \
             { ZAP_CLUSTER_INDEX(5), 2, 16 },                                                                                       \
     }
+
+
 
 // Largest attribute size is needed for various buffers
 #define ATTRIBUTE_LARGEST (2)
@@ -220,6 +220,7 @@
         0, 0, 0, 0                                                                                                                 \
     }
 
+
 // Array of EmberAfCommandMetadata structs.
 #define ZAP_COMMAND_MASK(mask) COMMAND_MASK_##mask
 #define EMBER_AF_GENERATED_COMMAND_COUNT (40)
@@ -267,35 +268,30 @@
             { 0x0008, 0x07, ZAP_COMMAND_MASK(INCOMING_SERVER) }, /* Level Control (server): StopWithOnOff */                       \
     }
 
+
 // Array of EmberAfManufacturerCodeEntry structures for commands.
 #define GENERATED_COMMAND_MANUFACTURER_CODE_COUNT (0)
-#define GENERATED_COMMAND_MANUFACTURER_CODES                                                                                       \
-    {                                                                                                                              \
-        {                                                                                                                          \
-            0x00, 0x00                                                                                                             \
-        }                                                                                                                          \
-    }
+#define GENERATED_COMMAND_MANUFACTURER_CODES { \
+  { 0x00, 0x00 } \
+}
+
 
 // This is an array of EmberAfManufacturerCodeEntry structures for clusters.
 #define GENERATED_CLUSTER_MANUFACTURER_CODE_COUNT (0)
-#define GENERATED_CLUSTER_MANUFACTURER_CODES                                                                                       \
-    {                                                                                                                              \
-        {                                                                                                                          \
-            0x00, 0x00                                                                                                             \
-        }                                                                                                                          \
-    }
+#define GENERATED_CLUSTER_MANUFACTURER_CODES { \
+  { 0x00, 0x00 } \
+}
+
 
 // This is an array of EmberAfManufacturerCodeEntry structures for attributes.
 #define GENERATED_ATTRIBUTE_MANUFACTURER_CODE_COUNT (0)
-#define GENERATED_ATTRIBUTE_MANUFACTURER_CODES                                                                                     \
-    {                                                                                                                              \
-        {                                                                                                                          \
-            0x00, 0x00                                                                                                             \
-        }                                                                                                                          \
-    }
+#define GENERATED_ATTRIBUTE_MANUFACTURER_CODES { \
+  { 0x00, 0x00 } \
+}
+
 
 // Array of EmberAfPluginReportingEntry structures.
-#define ZRD(x) EMBER_ZCL_REPORTING_DIRECTION_##x
+#define ZRD(x) EMBER_ZCL_REPORTING_DIRECTION_ ## x
 #define ZAP_REPORT_DIRECTION(x) ZRD(x)
 
 // Use this macro to check if Reporting plugin is included
@@ -305,12 +301,9 @@
 #define EMBER_AF_PLUGIN_REPORTING_ENABLE_GROUP_BOUND_REPORTS
 
 #define EMBER_AF_GENERATED_REPORTING_CONFIG_DEFAULTS_TABLE_SIZE (2)
-#define EMBER_AF_GENERATED_REPORTING_CONFIG_DEFAULTS                                                                               \
-    {                                                                                                                              \
-        {                                                                                                                          \
-            ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, { { 0, 65344, 0 } }          \
-        }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */                                                \
-            {                                                                                                                      \
-                ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0008, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, { { 0, 65344, 0 } }      \
-            }, /* Reporting for cluster: "Level Control", attribute: "current level". side: server */                              \
-    }
+#define EMBER_AF_GENERATED_REPORTING_CONFIG_DEFAULTS { \
+  { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0006, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "On/off", attribute: "on/off". side: server */ \
+  { ZAP_REPORT_DIRECTION(REPORTED), 0x0001, 0x0008, 0x0000, ZAP_CLUSTER_MASK(SERVER), 0x0000, {{ 0, 65344, 0 }} }, /* Reporting for cluster: "Level Control", attribute: "current level". side: server */ \
+}
+
+

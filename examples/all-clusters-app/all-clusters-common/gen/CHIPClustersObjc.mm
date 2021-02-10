@@ -24,6 +24,7 @@
 #import "ChipError.h"
 #import "gen/CHIPClientCallbacks.h"
 #import "gen/CHIPClustersObjc.h"
+#import "gen/CHIPClientCallbacks.h"
 
 #include <controller/CHIPClusters.h>
 
@@ -134,8 +135,9 @@ public:
         CHIPBooleanAttributeCallbackBridge * callback = reinterpret_cast<CHIPBooleanAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithBool:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithBool:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -166,8 +168,9 @@ public:
         CHIPInt8uAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt8uAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithUnsignedChar:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithUnsignedChar:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -198,8 +201,9 @@ public:
         CHIPInt8sAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt8sAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithChar:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithChar:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -230,8 +234,9 @@ public:
         CHIPInt16uAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt16uAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithUnsignedShort:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithUnsignedShort:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -262,8 +267,9 @@ public:
         CHIPInt16sAttributeCallbackBridge * callback = reinterpret_cast<CHIPInt16sAttributeCallbackBridge *>(context);
         if (callback && callback->mQueue) {
             dispatch_async(callback->mQueue, ^{
-                callback->mHandler(nil, @ { @"value" : [NSNumber numberWithShort:value] });
-                if (!callback->mKeepAlive) {
+                callback->mHandler(nil, @{ @"value": [NSNumber numberWithShort:value] });
+                if (!callback->mKeepAlive)
+                {
                     callback->Cancel();
                     delete callback;
                 }
@@ -478,7 +484,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPBasic ()
 @property (readonly) Controller::BasicCluster cppCluster;
@@ -605,7 +613,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPBinding ()
 @property (readonly) Controller::BindingCluster cppCluster;
@@ -694,7 +704,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPColorControl ()
 @property (readonly) Controller::ColorControlCluster cppCluster;
@@ -726,8 +738,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.MoveColor(onSuccess->Cancel(), onFailure->Cancel(), rateX, rateY, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveColor(onSuccess->Cancel(), onFailure->Cancel(), rateX, rateY, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -755,8 +766,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.MoveColorTemperature(onSuccess->Cancel(), onFailure->Cancel(), moveMode, rate,
-        colorTemperatureMinimum, colorTemperatureMaximum, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveColorTemperature(onSuccess->Cancel(), onFailure->Cancel(), moveMode, rate, colorTemperatureMinimum, colorTemperatureMaximum, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -782,8 +792,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.MoveHue(onSuccess->Cancel(), onFailure->Cancel(), moveMode, rate, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveHue(onSuccess->Cancel(), onFailure->Cancel(), moveMode, rate, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -809,8 +818,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.MoveSaturation(onSuccess->Cancel(), onFailure->Cancel(), moveMode, rate, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveSaturation(onSuccess->Cancel(), onFailure->Cancel(), moveMode, rate, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -837,8 +845,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.MoveToColor(
-        onSuccess->Cancel(), onFailure->Cancel(), colorX, colorY, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToColor(onSuccess->Cancel(), onFailure->Cancel(), colorX, colorY, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -864,8 +871,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.MoveToColorTemperature(
-        onSuccess->Cancel(), onFailure->Cancel(), colorTemperature, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToColorTemperature(onSuccess->Cancel(), onFailure->Cancel(), colorTemperature, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -892,8 +898,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.MoveToHue(
-        onSuccess->Cancel(), onFailure->Cancel(), hue, direction, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToHue(onSuccess->Cancel(), onFailure->Cancel(), hue, direction, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -920,8 +925,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.MoveToHueAndSaturation(
-        onSuccess->Cancel(), onFailure->Cancel(), hue, saturation, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToHueAndSaturation(onSuccess->Cancel(), onFailure->Cancel(), hue, saturation, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -947,8 +951,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.MoveToSaturation(
-        onSuccess->Cancel(), onFailure->Cancel(), saturation, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToSaturation(onSuccess->Cancel(), onFailure->Cancel(), saturation, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -975,8 +978,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.StepColor(
-        onSuccess->Cancel(), onFailure->Cancel(), stepX, stepY, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.StepColor(onSuccess->Cancel(), onFailure->Cancel(), stepX, stepY, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1005,8 +1007,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.StepColorTemperature(onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize,
-        transitionTime, colorTemperatureMinimum, colorTemperatureMaximum, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.StepColorTemperature(onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, colorTemperatureMinimum, colorTemperatureMaximum, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1033,8 +1034,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.StepHue(
-        onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.StepHue(onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1061,8 +1061,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.StepSaturation(
-        onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionsMask, optionsOverride);
+    CHIP_ERROR err = self.cppCluster.StepSaturation(onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionsMask, optionsOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1135,8 +1134,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.ConfigureAttributeCurrentHue(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentHue(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1200,8 +1199,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentSaturation(
-        onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentSaturation(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1288,8 +1287,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.ConfigureAttributeCurrentX(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentX(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1353,8 +1352,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.ConfigureAttributeCurrentY(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentY(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -1465,8 +1464,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.ConfigureAttributeColorTemperature(
-        onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeColorTemperature(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -2777,6 +2776,7 @@ private:
     }
 }
 
+
 @end
 
 @interface CHIPContentLaunch ()
@@ -3223,8 +3223,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.SetHolidaySchedule(
-        onSuccess->Cancel(), onFailure->Cancel(), scheduleId, localStartTime, localEndTime, operatingModeDuringHoliday);
+    CHIP_ERROR err = self.cppCluster.SetHolidaySchedule(onSuccess->Cancel(), onFailure->Cancel(), scheduleId, localStartTime, localEndTime, operatingModeDuringHoliday);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -3327,8 +3326,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.SetWeekdaySchedule(
-        onSuccess->Cancel(), onFailure->Cancel(), scheduleId, userId, daysMask, startHour, startMinute, endHour, endMinute);
+    CHIP_ERROR err = self.cppCluster.SetWeekdaySchedule(onSuccess->Cancel(), onFailure->Cancel(), scheduleId, userId, daysMask, startHour, startMinute, endHour, endMinute);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -3354,8 +3352,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.SetYeardaySchedule(
-        onSuccess->Cancel(), onFailure->Cancel(), scheduleId, userId, localStartTime, localEndTime);
+    CHIP_ERROR err = self.cppCluster.SetYeardaySchedule(onSuccess->Cancel(), onFailure->Cancel(), scheduleId, userId, localStartTime, localEndTime);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -3448,8 +3445,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.ConfigureAttributeLockState(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeLockState(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -3542,7 +3539,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPGroups ()
 @property (readonly) Controller::GroupsCluster cppCluster;
@@ -3738,7 +3737,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPIasZone ()
 @property (readonly) Controller::IasZoneCluster cppCluster;
@@ -3912,7 +3913,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPIdentify ()
 @property (readonly) Controller::IdentifyCluster cppCluster;
@@ -4040,7 +4043,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPLevelControl ()
 @property (readonly) Controller::LevelControlCluster cppCluster;
@@ -4098,8 +4103,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err
-        = self.cppCluster.MoveToLevel(onSuccess->Cancel(), onFailure->Cancel(), level, transitionTime, optionMask, optionOverride);
+    CHIP_ERROR err = self.cppCluster.MoveToLevel(onSuccess->Cancel(), onFailure->Cancel(), level, transitionTime, optionMask, optionOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -4172,8 +4176,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.Step(
-        onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionMask, optionOverride);
+    CHIP_ERROR err = self.cppCluster.Step(onSuccess->Cancel(), onFailure->Cancel(), stepMode, stepSize, transitionTime, optionMask, optionOverride);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -4291,8 +4294,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentLevel(
-        onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeCurrentLevel(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -4337,6 +4340,7 @@ private:
         completionHandler([CHIPError errorForCHIPErrorCode:err], nil);
     }
 }
+
 
 @end
 
@@ -4739,6 +4743,7 @@ private:
         return;
     }
 
+
     CHIP_ERROR err = self.cppCluster.ConfigureAttributeOnOff(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
@@ -4786,7 +4791,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPScenes ()
 @property (readonly) Controller::ScenesCluster cppCluster;
@@ -4822,8 +4829,7 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.AddScene(
-        onSuccess->Cancel(), onFailure->Cancel(), groupId, sceneId, transitionTime, sceneName, clusterId, length, value);
+    CHIP_ERROR err = self.cppCluster.AddScene(onSuccess->Cancel(), onFailure->Cancel(), groupId, sceneId, transitionTime, sceneName, clusterId, length, value);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -5110,7 +5116,9 @@ private:
     }
 }
 
+
 @end
+
 
 @interface CHIPTemperatureMeasurement ()
 @property (readonly) Controller::TemperatureMeasurementCluster cppCluster;
@@ -5164,8 +5172,8 @@ private:
         return;
     }
 
-    CHIP_ERROR err = self.cppCluster.ConfigureAttributeMeasuredValue(
-        onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
+
+    CHIP_ERROR err = self.cppCluster.ConfigureAttributeMeasuredValue(onSuccess->Cancel(), onFailure->Cancel(), minInterval, maxInterval, change);
     if (err != CHIP_NO_ERROR) {
         delete onSuccess;
         delete onFailure;
@@ -5257,4 +5265,6 @@ private:
     }
 }
 
+
 @end
+
