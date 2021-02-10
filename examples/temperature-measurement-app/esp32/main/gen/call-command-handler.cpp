@@ -31,6 +31,7 @@ using namespace chip;
 EmberAfStatus emberAfBasicClusterServerCommandParse(EmberAfClusterCommand * cmd);
 EmberAfStatus emberAfTemperatureMeasurementClusterServerCommandParse(EmberAfClusterCommand * cmd);
 
+
 static EmberAfStatus status(bool wasHandled, bool clusterExists, bool mfgSpecific)
 {
     if (wasHandled)
@@ -51,6 +52,7 @@ static EmberAfStatus status(bool wasHandled, bool clusterExists, bool mfgSpecifi
     }
 }
 
+
 // Main command parsing controller.
 EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
 {
@@ -70,10 +72,10 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
     {
         switch (cmd->apsFrame->clusterId)
         {
-        case ZCL_BASIC_CLUSTER_ID:
+        case ZCL_BASIC_CLUSTER_ID :
             result = emberAfBasicClusterServerCommandParse(cmd);
             break;
-        case ZCL_TEMP_MEASUREMENT_CLUSTER_ID:
+        case ZCL_TEMP_MEASUREMENT_CLUSTER_ID :
             // No commands are enabled for cluster Temperature Measurement
             result = status(false, true, cmd->mfgSpecific);
             break;
@@ -96,7 +98,7 @@ EmberAfStatus emberAfBasicClusterServerCommandParse(EmberAfClusterCommand * cmd)
         switch (cmd->commandId)
         {
         case ZCL_RESET_TO_FACTORY_DEFAULTS_COMMAND_ID: {
-            wasHandled = emberAfBasicClusterResetToFactoryDefaultsCallback();
+        wasHandled = emberAfBasicClusterResetToFactoryDefaultsCallback();
             break;
         }
         default: {

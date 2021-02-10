@@ -26,6 +26,7 @@ typedef void (^ResponseHandler)(NSError * _Nullable error, NSDictionary * _Nulla
 
 @class CHIPDevice;
 
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CHIPOnOff : NSObject
@@ -36,10 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)toggle:(ResponseHandler)completionHandler;
 
 - (BOOL)readAttributeOnOff:(ResponseHandler)completionHandler;
-- (BOOL)configureAttributeOnOff:(uint16_t)minInterval
-                    maxInterval:(uint16_t)maxInterval
-              completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)reportAttributeOnOff:(ResponseHandler)reportHandler;
+- (BOOL) configureAttributeOnOff:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler;
+- (BOOL) reportAttributeOnOff:(ResponseHandler)reportHandler;
 - (BOOL)readAttributeClusterRevision:(ResponseHandler)completionHandler;
 
 - (instancetype)init NS_UNAVAILABLE;
