@@ -30,7 +30,9 @@
 
 #include <thread>
 
+#if CHIP_ENABLE_MDNS
 #include "MdnsImpl.h"
+#endif
 
 namespace chip {
 namespace DeviceLayer {

@@ -1,0 +1,273 @@
+diff --git a/BUILD.gn b/BUILD.gn
+index d653baa0..bcf0c373 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -68,6 +68,8 @@ if (current_toolchain != "${dir_pw_toolchain}/dummy:dummy") {
+       "${nlassert_root}:nlassert",
+       "${nlio_root}:nlio",
+       "${nlunit_test_root}:nlunit-test",
++      "${chip_root}/examples/chip-tool",
++      "${chip_root}/examples/lighting-app/linux",
+     ]
+ 
+     if (chip_device_platform != "none") {
+diff --git a/build/chip/tools.gni b/build/chip/tools.gni
+index 18167301..67c4b629 100644
+--- a/build/chip/tools.gni
++++ b/build/chip/tools.gni
+@@ -14,5 +14,5 @@
+ 
+ declare_args() {
+   # Build CHIP tools.
+-  chip_build_tools = current_os != "freertos" && current_os != "android"
++  chip_build_tools = current_os != "freertos" #&& current_os != "android"
+ }
+diff --git a/examples/chip-tool/config/PersistentStorage.cpp b/examples/chip-tool/config/PersistentStorage.cpp
+index 1ae0466a..84320cd0 100644
+--- a/examples/chip-tool/config/PersistentStorage.cpp
++++ b/examples/chip-tool/config/PersistentStorage.cpp
+@@ -27,7 +27,7 @@ using namespace ::chip;
+ using namespace ::chip::Controller;
+ using namespace ::chip::Logging;
+ 
+-constexpr const char kFilename[]           = "/tmp/chip_tool_config.ini";
++constexpr const char kFilename[]           = "/data/securedStorageLocation/SmartHome/chip-tool/chip_tool_config.ini";
+ constexpr const char kDefaultSectionName[] = "Default";
+ constexpr const char kPortKey[]            = "ListenPort";
+ constexpr const char kLoggingKey[]         = "LoggingLevel";
+diff --git a/examples/lighting-app/linux/main.cpp b/examples/lighting-app/linux/main.cpp
+index 942d8cde..b1874471 100644
+--- a/examples/lighting-app/linux/main.cpp
++++ b/examples/lighting-app/linux/main.cpp
+@@ -167,9 +167,9 @@ int main(int argc, char * argv[])
+     chip::DeviceLayer::PlatformMgrImpl().AddEventHandler(EventHandler, 0);
+ 
+     chip::DeviceLayer::ConnectivityMgr().SetBLEDeviceName(nullptr); // Use default device name (CHIP-XXXX)
+-
++#if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
+     chip::DeviceLayer::Internal::BLEMgrImpl().ConfigureBle(LinuxDeviceOptions::GetInstance().mBleDevice, false);
+-
++#endif
+     chip::DeviceLayer::ConnectivityMgr().SetBLEAdvertisingEnabled(true);
+ 
+     LightingMgr().Init();
+diff --git a/examples/pigweed-app/mobly_tests/echo_test.py b/examples/pigweed-app/mobly_tests/echo_test.py
+index 9ef17962..e69de29b 100644
+--- a/examples/pigweed-app/mobly_tests/echo_test.py
++++ b/examples/pigweed-app/mobly_tests/echo_test.py
+@@ -1,45 +0,0 @@
+-# Copyright (c) 2021 Project CHIP Authors
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-# http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-from chip_mobly import pigweed_device
+-from mobly import asserts
+-from mobly import base_test
+-from mobly import test_runner
+-import time
+-
+-
+-class PigweedEchoTest(base_test.BaseTestClass):
+-    def setup_class(self):
+-        ''' Registering pigweed_device controller module declares the test's
+-        dependency on CHIP/Pigweed device hardware. By default, we expect at least one
+-        object is created from this.'''
+-        self.ads = self.register_controller(pigweed_device)
+-        self.dut = self.ads[0]
+-        self.dut.platform.flash() # Flashes the image passed in the configuration yml.
+-        time.sleep(1) # give the device time to boot and register rpcs
+-
+-    def test_hello(self):
+-        ''' Tests EchoService.Echo '''
+-        expected = "hello!"
+-        status, payload = self.dut.rpcs().EchoService.Echo(msg=expected)
+-        asserts.assert_true(status.ok(), "Status is %s" % status)
+-        asserts.assert_equal(
+-            payload.msg,
+-            expected,
+-            'Returned payload is "%s" expected "%s"' % (payload.msg, expected),
+-        )
+-
+-
+-if __name__ == "__main__":
+-    test_runner.main()
+diff --git a/integrations/mobly/chip_mobly/pigweed_device.py b/integrations/mobly/chip_mobly/pigweed_device.py
+index d736ccc3..e69de29b 100644
+--- a/integrations/mobly/chip_mobly/pigweed_device.py
++++ b/integrations/mobly/chip_mobly/pigweed_device.py
+@@ -1,91 +0,0 @@
+-# Copyright (c) 2020 Project CHIP Authors
+-#
+-# Licensed under the Apache License, Version 2.0 (the "License");
+-# you may not use this file except in compliance with the License.
+-# You may obtain a copy of the License at
+-#
+-# http://www.apache.org/licenses/LICENSE-2.0
+-#
+-# Unless required by applicable law or agreed to in writing, software
+-# distributed under the License is distributed on an "AS IS" BASIS,
+-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-# See the License for the specific language governing permissions and
+-# limitations under the License.
+-
+-import os
+-from pathlib import Path
+-import serial # type: ignore
+-import importlib
+-
+-from pw_hdlc.rpc import HdlcRpcClient, default_channels
+-
+-# Point the script to the .proto file with our RPC services.
+-PROTO = Path(os.environ["PW_ROOT"], "pw_rpc/pw_rpc_protos/echo.proto")
+-
+-MOBLY_CONTROLLER_CONFIG_NAME = "PigweedDevice"
+-
+-
+-class Error(Exception):
+-    """This is the Exception class defined for all errors."""
+-
+-
+-class PigweedDevice:
+-    def __init__(self, device_tty, baud, platform_module=None, platform_args=None):
+-        ser = serial.Serial(device_tty, baud, timeout=0.01)
+-        self.pw_rpc_client = HdlcRpcClient(lambda: ser.read(4096),
+-                                           [PROTO], default_channels(ser.write))
+-        self._platform = None
+-        print("Platform args: %s" % platform_args)
+-        print("Platform module: %s" % platform_module)
+-        if platform_module:
+-            m = importlib.import_module(platform_module)
+-            create_platform_method = getattr(m, "create_platform")
+-            self._platform = create_platform_method(platform_args)
+-
+-    def rpcs(self):
+-        return self.pw_rpc_client.rpcs().pw.rpc
+-
+-    @property
+-    def platform(self):
+-        return self._platform
+-
+-
+-def create(configs):
+-    """Initializes the CHIP devices based on the testbed configuration.
+-
+-    Args:
+-      configs: a list of testbed configs.
+-
+-    Returns:
+-      a list of device objects
+-    """
+-    objs = []
+-    for config in configs:
+-        _validate_config(config)
+-        device = PigweedDevice(**config)
+-        objs.append(device)
+-    return objs
+-
+-
+-def destroy(unused_objs):
+-    """Destroys the wearable objects.
+-
+-    Args:
+-      unused_objs: a list of device objects.
+-    """
+-    pass
+-
+-
+-def _validate_config(config):
+-    """Verifies that a config dict for a CHIP device is valid.
+-
+-    Args:
+-      config: A dict that is the configuration for a CHIP device.
+-
+-    Raises:
+-      chip_device.Error: Config file is not valid.
+-    """
+-    required_keys = ["device_tty", "baud"]  # A placeholder.
+-    for key in required_keys:
+-        if key not in config:
+-            raise Error("Required key %s missing from config %s" % (key, config))
+diff --git a/integrations/mobly/hello_world_test.py b/integrations/mobly/hello_world_test.py
+index d4b2eb35..3a2252cb 100755
+--- a/integrations/mobly/hello_world_test.py
++++ b/integrations/mobly/hello_world_test.py
+@@ -11,32 +11,3 @@
+ # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+-
+-from chip_mobly import pigweed_device
+-from mobly import asserts # type: ignore
+-from mobly import base_test
+-from mobly import test_runner
+-
+-
+-class HelloWorldTest(base_test.BaseTestClass):
+-    def setup_class(self):
+-        # Registering pigweed_device controller module declares the test's
+-        # dependency on CHIP/Pigweed device hardware. By default, we expect at least one
+-        # object is created from this.
+-        # Assumes correct image is already flashed.
+-        self.ads = self.register_controller(pigweed_device)
+-        self.dut = self.ads[0]
+-
+-    def test_hello(self):
+-        expected = "hello!"
+-        status, payload = self.dut.rpcs().EchoService.Echo(msg=expected)
+-        asserts.assert_true(status.ok(), "Status is %s" % status)
+-        asserts.assert_equal(
+-            payload.msg,
+-            expected,
+-            'Returned payload is "%s" expected "%s"' % (payload.msg, expected),
+-        )
+-
+-
+-if __name__ == "__main__":
+-    test_runner.main()
+diff --git a/src/platform/Linux/CHIPLinuxStorage.h b/src/platform/Linux/CHIPLinuxStorage.h
+index e79282a4..35ff97fe 100644
+--- a/src/platform/Linux/CHIPLinuxStorage.h
++++ b/src/platform/Linux/CHIPLinuxStorage.h
+@@ -37,15 +37,15 @@
+ #include <platform/Linux/CHIPLinuxStorageIni.h>
+ 
+ #ifndef FATCONFDIR
+-#define FATCONFDIR "/tmp"
++#define FATCONFDIR "/data/securedStorageLocation/SmartHome/chip-tool-server"
+ #endif
+ 
+ #ifndef SYSCONFDIR
+-#define SYSCONFDIR "/tmp"
++#define SYSCONFDIR "/data/securedStorageLocation/SmartHome/chip-tool-server"
+ #endif
+ 
+ #ifndef LOCALSTATEDIR
+-#define LOCALSTATEDIR "/tmp"
++#define LOCALSTATEDIR "/data/securedStorageLocation/SmartHome/chip-tool-server"
+ #endif
+ 
+ #define CHIP_DEFAULT_FACTORY_PATH                                                                                                  \
+diff --git a/src/platform/Linux/PlatformManagerImpl.cpp b/src/platform/Linux/PlatformManagerImpl.cpp
+index e57db3f2..d6aea920 100644
+--- a/src/platform/Linux/PlatformManagerImpl.cpp
++++ b/src/platform/Linux/PlatformManagerImpl.cpp
+@@ -30,7 +30,9 @@
+ 
+ #include <thread>
+ 
++#if CHIP_ENABLE_MDNS
+ #include "MdnsImpl.h"
++#endif
+ 
+ namespace chip {
+ namespace DeviceLayer {

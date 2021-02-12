@@ -27,7 +27,7 @@ using namespace ::chip;
 using namespace ::chip::Controller;
 using namespace ::chip::Logging;
 
-constexpr const char kFilename[]           = "/tmp/chip_tool_config.ini";
+constexpr const char kFilename[]           = "/data/securedStorageLocation/SmartHome/chip-tool/chip_tool_config.ini";
 constexpr const char kDefaultSectionName[] = "Default";
 constexpr const char kPortKey[]            = "ListenPort";
 constexpr const char kLoggingKey[]         = "LoggingLevel";
