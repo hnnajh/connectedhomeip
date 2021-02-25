@@ -1,11 +1,6 @@
 {
-<<<<<<< master
   "writeTime": "Fri Feb 19 2021 18:39:55 GMT+0100 (Central European Standard Time)",
   "featureLevel": 11,
-=======
-  "writeTime": "Tue Feb 09 2021 18:49:17 GMT-0500 (Eastern Standard Time)",
-  "featureLevel": 6,
->>>>>>> before adding thermostat server to all clusters app
   "creator": "zap",
   "keyValuePairs": [
     {
@@ -38,9 +33,9 @@
   "endpointTypes": [
     {
       "name": "Anonymous Endpoint Type",
-      "deviceTypeName": null,
-      "deviceTypeCode": null,
-      "deviceTypeProfileId": null,
+      "deviceTypeName": "CHIP-All-Clusters-Server",
+      "deviceTypeCode": 0,
+      "deviceTypeProfileId": 259,
       "clusters": [
         {
           "name": "Basic",
@@ -53,16 +48,20 @@
             {
               "name": "ResetToFactoryDefaults",
               "code": 0,
+              "mfgCode": null,
               "source": "client",
               "incoming": 1,
               "outgoing": 1
             },
+            {
               "name": "MfgSpecificPing",
               "code": 0,
               "mfgCode": "4098",
               "source": "client",
               "incoming": 0,
               "outgoing": 1
+            }
+          ],
           "attributes": [
             {
               "name": "cluster revision",
@@ -78,16 +77,6 @@
               "minInterval": 0,
               "maxInterval": 65344,
               "reportableChange": 0
-            }
-          ],
-          "commands": [
-            {
-              "name": "ResetToFactoryDefaults",
-              "code": 0,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
             }
           ]
         },
@@ -154,6 +143,23 @@
           "define": "IDENTIFY_CLUSTER",
           "side": "client",
           "enabled": 1,
+          "attributes": [
+            {
+              "name": "cluster revision",
+              "code": 65533,
+              "mfgCode": null,
+              "side": "client",
+              "included": 1,
+              "storageOption": "RAM",
+              "singleton": 0,
+              "bounded": 0,
+              "defaultValue": "2",
+              "reportable": 0,
+              "minInterval": 0,
+              "maxInterval": 65344,
+              "reportableChange": 0
+            }
+          ],
           "commands": [
             {
               "name": "Identify",
@@ -171,23 +177,6 @@
               "incoming": 1,
               "outgoing": 1
             }
-          ],
-          "attributes": [
-            {
-              "name": "cluster revision",
-              "code": 65533,
-              "mfgCode": null,
-              "side": "client",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "2",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            }
           ]
         },
         {
@@ -197,16 +186,6 @@
           "define": "IDENTIFY_CLUSTER",
           "side": "server",
           "enabled": 0,
-          "commands": [
-            {
-              "name": "IdentifyQueryResponse",
-              "code": 0,
-              "mfgCode": null,
-              "source": "server",
-              "incoming": 1,
-              "outgoing": 1
-            }
-          ],
           "attributes": [
             {
               "name": "cluster revision",
@@ -238,6 +217,16 @@
               "maxInterval": 65344,
               "reportableChange": 0
             }
+          ],
+          "commands": [
+            {
+              "name": "IdentifyQueryResponse",
+              "code": 0,
+              "mfgCode": null,
+              "source": "server",
+              "incoming": 1,
+              "outgoing": 1
+            }
           ]
         },
         {
@@ -247,23 +236,6 @@
           "define": "GROUPS_CLUSTER",
           "side": "client",
           "enabled": 1,
-          "attributes": [
-            {
-              "name": "cluster revision",
-              "code": 65533,
-              "mfgCode": null,
-              "side": "client",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "3",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            }
-          ],
           "commands": [
             {
               "name": "AddGroup",
@@ -312,6 +284,23 @@
               "source": "client",
               "incoming": 1,
               "outgoing": 1
+            }
+          ],
+          "attributes": [
+            {
+              "name": "cluster revision",
+              "code": 65533,
+              "mfgCode": null,
+              "side": "client",
+              "included": 1,
+              "storageOption": "RAM",
+              "singleton": 0,
+              "bounded": 0,
+              "defaultValue": "3",
+              "reportable": 0,
+              "minInterval": 0,
+              "maxInterval": 65344,
+              "reportableChange": 0
             }
           ]
         },
@@ -1834,439 +1823,6 @@
           ]
         },
         {
-          "name": "Thermostat",
-          "code": 513,
-<<<<<<< master
-=======
-          "mfgCode": null,
-          "define": "THERMOSTAT_CLUSTER",
-          "side": "client",
-          "enabled": 1,
-          "commands": [
-            {
-              "name": "SetpointRaiseLower",
-              "code": 0,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "SetWeeklySchedule",
-              "code": 1,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "GetWeeklySchedule",
-              "code": 2,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "ClearWeeklySchedule",
-              "code": 3,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "GetRelayStatusLog",
-              "code": 4,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            }
-          ],
-          "attributes": [
-            {
-              "name": "cluster revision",
-              "code": 65533,
-              "mfgCode": null,
-              "side": "client",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "3",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            }
-          ]
-        },
-        {
-          "name": "Thermostat",
-          "code": 513,
-          "mfgCode": null,
-          "define": "THERMOSTAT_CLUSTER",
-          "side": "server",
-          "enabled": 0,
-          "attributes": [
-            {
-              "name": "cluster revision",
-              "code": 65533,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "3",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "local temperature",
-              "code": 0,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "",
-              "reportable": 1,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "pi cooling demand",
-              "code": 7,
-              "mfgCode": null,
-              "side": "server",
-              "included": 0,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "",
-              "reportable": 1,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "pi heating demand",
-              "code": 8,
-              "mfgCode": null,
-              "side": "server",
-              "included": 0,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "",
-              "reportable": 1,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "occupied cooling setpoint",
-              "code": 17,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x0A28",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "occupied heating setpoint",
-              "code": 18,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x07D0",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "control sequence of operation",
-              "code": 27,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x04",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "system mode",
-              "code": 28,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x01",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            }
-          ],
-          "commands": [
-            {
-              "name": "CurrentWeeklySchedule",
-              "code": 0,
-              "mfgCode": null,
-              "source": "server",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "RelayStatusLog",
-              "code": 1,
-              "mfgCode": null,
-              "source": "server",
-              "incoming": 1,
-              "outgoing": 1
-            }
-          ]
-        },
-        {
-          "name": "Color Control",
-          "code": 768,
->>>>>>> before adding thermostat server to all clusters app
-          "mfgCode": null,
-          "define": "THERMOSTAT_CLUSTER",
-          "side": "client",
-          "enabled": 1,
-          "commands": [
-            {
-              "name": "SetpointRaiseLower",
-              "code": 0,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "SetWeeklySchedule",
-              "code": 1,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "GetWeeklySchedule",
-              "code": 2,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "ClearWeeklySchedule",
-              "code": 3,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "GetRelayStatusLog",
-              "code": 4,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
-            }
-          ],
-          "attributes": [
-            {
-              "name": "cluster revision",
-              "code": 65533,
-              "mfgCode": null,
-              "side": "client",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "3",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            }
-          ]
-        },
-        {
-          "name": "Thermostat",
-          "code": 513,
-          "mfgCode": null,
-          "define": "THERMOSTAT_CLUSTER",
-          "side": "server",
-          "enabled": 0,
-          "attributes": [
-            {
-              "name": "cluster revision",
-              "code": 65533,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "3",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "local temperature",
-              "code": 0,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "",
-              "reportable": 1,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "pi cooling demand",
-              "code": 7,
-              "mfgCode": null,
-              "side": "server",
-              "included": 0,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "",
-              "reportable": 1,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "pi heating demand",
-              "code": 8,
-              "mfgCode": null,
-              "side": "server",
-              "included": 0,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "",
-              "reportable": 1,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "occupied cooling setpoint",
-              "code": 17,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x0A28",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "occupied heating setpoint",
-              "code": 18,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x07D0",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "control sequence of operation",
-              "code": 27,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x04",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            },
-            {
-              "name": "system mode",
-              "code": 28,
-              "mfgCode": null,
-              "side": "server",
-              "included": 1,
-              "storageOption": "RAM",
-              "singleton": 0,
-              "bounded": 0,
-              "defaultValue": "0x01",
-              "reportable": 0,
-              "minInterval": 0,
-              "maxInterval": 65344,
-              "reportableChange": 0
-            }
-          ],
-          "commands": [
-            {
-              "name": "CurrentWeeklySchedule",
-              "code": 0,
-              "mfgCode": null,
-              "source": "server",
-              "incoming": 1,
-              "outgoing": 1
-            },
-            {
-              "name": "RelayStatusLog",
-              "code": 1,
-              "mfgCode": null,
-              "source": "server",
-              "incoming": 1,
-              "outgoing": 1
-            }
-          ]
-        },
-        {
           "name": "Color Control",
           "code": 768,
           "mfgCode": null,
@@ -2412,6 +1968,7 @@
           "define": "COLOR_CONTROL_CLUSTER",
           "side": "server",
           "enabled": 0,
+          "commands": [],
           "attributes": [
             {
               "name": "cluster revision",
@@ -3178,8 +2735,7 @@
               "maxInterval": 65344,
               "reportableChange": 0
             }
-          ],
-          "commands": []
+          ]
         },
         {
           "name": "Temperature Measurement",
@@ -3188,6 +2744,7 @@
           "define": "TEMP_MEASUREMENT_CLUSTER",
           "side": "client",
           "enabled": 1,
+          "commands": [],
           "attributes": [
             {
               "name": "cluster revision",
@@ -3204,8 +2761,7 @@
               "maxInterval": 65344,
               "reportableChange": 0
             }
-          ],
-          "commands": []
+          ]
         },
         {
           "name": "Temperature Measurement",
@@ -3300,6 +2856,16 @@
           "define": "IAS_ZONE_CLUSTER",
           "side": "client",
           "enabled": 0,
+          "commands": [
+            {
+              "name": "ZoneEnrollResponse",
+              "code": 0,
+              "mfgCode": null,
+              "source": "client",
+              "incoming": 1,
+              "outgoing": 1
+            }
+          ],
           "attributes": [
             {
               "name": "cluster revision",
@@ -3315,16 +2881,6 @@
               "minInterval": 0,
               "maxInterval": 65344,
               "reportableChange": 0
-            }
-          ],
-          "commands": [
-            {
-              "name": "ZoneEnrollResponse",
-              "code": 0,
-              "mfgCode": null,
-              "source": "client",
-              "incoming": 1,
-              "outgoing": 1
             }
           ]
         },
@@ -3445,7 +3001,6 @@
               "reportableChange": 0
             }
           ]
-<<<<<<< master
         },
         {
           "name": "Binding",
@@ -3758,8 +3313,6 @@
               "reportableChange": 0
             }
           ]
-=======
->>>>>>> before adding thermostat server to all clusters app
         }
       ]
     }
@@ -3768,7 +3321,6 @@
     {
       "endpointTypeName": "Anonymous Endpoint Type",
       "endpointTypeIndex": 0,
-      "endpointTypeRef": 42,
       "profileId": "0x0103",
       "endpointId": 1,
       "networkId": 0

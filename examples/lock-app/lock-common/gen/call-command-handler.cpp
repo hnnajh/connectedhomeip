@@ -30,7 +30,6 @@ using namespace chip;
 
 EmberAfStatus emberAfOnOffClusterServerCommandParse(EmberAfClusterCommand * cmd);
 
-
 static EmberAfStatus status(bool wasHandled, bool clusterExists, bool mfgSpecific)
 {
     if (wasHandled)
@@ -51,7 +50,6 @@ static EmberAfStatus status(bool wasHandled, bool clusterExists, bool mfgSpecifi
     }
 }
 
-
 // Main command parsing controller.
 EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
 {
@@ -71,7 +69,7 @@ EmberAfStatus emberAfClusterSpecificCommandParse(EmberAfClusterCommand * cmd)
     {
         switch (cmd->apsFrame->clusterId)
         {
-        case ZCL_ON_OFF_CLUSTER_ID :
+        case ZCL_ON_OFF_CLUSTER_ID:
             result = emberAfOnOffClusterServerCommandParse(cmd);
             break;
         default:
@@ -93,15 +91,15 @@ EmberAfStatus emberAfOnOffClusterServerCommandParse(EmberAfClusterCommand * cmd)
         switch (cmd->commandId)
         {
         case ZCL_OFF_COMMAND_ID: {
-        wasHandled = emberAfOnOffClusterOffCallback();
+            wasHandled = emberAfOnOffClusterOffCallback();
             break;
         }
         case ZCL_ON_COMMAND_ID: {
-        wasHandled = emberAfOnOffClusterOnCallback();
+            wasHandled = emberAfOnOffClusterOnCallback();
             break;
         }
         case ZCL_TOGGLE_COMMAND_ID: {
-        wasHandled = emberAfOnOffClusterToggleCallback();
+            wasHandled = emberAfOnOffClusterToggleCallback();
             break;
         }
         default: {

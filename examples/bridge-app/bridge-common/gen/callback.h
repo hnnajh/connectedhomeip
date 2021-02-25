@@ -37,7 +37,6 @@ void emberAfClusterInitCallback(chip::EndpointId endpoint, chip::ClusterId clust
 
 // Cluster Init Functions
 
-<<<<<<< master
 /** @brief Basic Cluster Init
  *
  * Cluster Init
@@ -45,8 +44,6 @@ void emberAfClusterInitCallback(chip::EndpointId endpoint, chip::ClusterId clust
  * @param endpoint    Endpoint that is being initialized
  */
 void emberAfBasicClusterInitCallback(chip::EndpointId endpoint);
-=======
->>>>>>> before adding thermostat server to all clusters app
 
 /** @brief Level Control Cluster Init
  *
@@ -56,7 +53,6 @@ void emberAfBasicClusterInitCallback(chip::EndpointId endpoint);
  */
 void emberAfLevelControlClusterInitCallback(chip::EndpointId endpoint);
 
-
 /** @brief On/off Cluster Init
  *
  * Cluster Init
@@ -65,11 +61,8 @@ void emberAfLevelControlClusterInitCallback(chip::EndpointId endpoint);
  */
 void emberAfOnOffClusterInitCallback(chip::EndpointId endpoint);
 
-
 // Cluster Server/Client Init Functions
 
-
-<<<<<<< master
 //
 // Basic Cluster server
 //
@@ -138,8 +131,6 @@ EmberAfStatus emberAfBasicClusterServerPreAttributeChangedCallback(chip::Endpoin
  */
 void emberAfBasicClusterServerTickCallback(chip::EndpointId endpoint);
 
-=======
->>>>>>> before adding thermostat server to all clusters app
 //
 // Level Control Cluster server
 //
@@ -169,7 +160,9 @@ void emberAfLevelControlClusterServerAttributeChangedCallback(chip::EndpointId e
  * @param attributeId       Attribute that changed
  * @param manufacturerCode  Manufacturer Code of the attribute that changed
  */
-void emberAfLevelControlClusterServerManufacturerSpecificAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId, uint16_t manufacturerCode);
+void emberAfLevelControlClusterServerManufacturerSpecificAttributeChangedCallback(chip::EndpointId endpoint,
+                                                                                  chip::AttributeId attributeId,
+                                                                                  uint16_t manufacturerCode);
 
 /** @brief Level Control Cluster Server Message Sent
  *
@@ -182,7 +175,9 @@ void emberAfLevelControlClusterServerManufacturerSpecificAttributeChangedCallbac
  * @param message            The message that was sent
  * @param status             The status of the sent message
  */
-void emberAfLevelControlClusterServerMessageSentCallback(EmberOutgoingMessageType type, uint64_t indexOrDestination, EmberApsFrame * apsFrame, uint16_t msgLen, uint8_t * message, EmberStatus status);
+void emberAfLevelControlClusterServerMessageSentCallback(EmberOutgoingMessageType type, uint64_t indexOrDestination,
+                                                         EmberApsFrame * apsFrame, uint16_t msgLen, uint8_t * message,
+                                                         EmberStatus status);
 
 /** @brief Level Control Cluster Server Pre Attribute Changed
  *
@@ -194,7 +189,9 @@ void emberAfLevelControlClusterServerMessageSentCallback(EmberOutgoingMessageTyp
  * @param size          Attribute size
  * @param value         Attribute value
  */
-EmberAfStatus emberAfLevelControlClusterServerPreAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId, EmberAfAttributeType attributeType, uint8_t size, uint8_t * value);
+EmberAfStatus emberAfLevelControlClusterServerPreAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId,
+                                                                          EmberAfAttributeType attributeType, uint8_t size,
+                                                                          uint8_t * value);
 
 /** @brief Level Control Cluster Server Tick
  *
@@ -233,7 +230,8 @@ void emberAfOnOffClusterServerAttributeChangedCallback(chip::EndpointId endpoint
  * @param attributeId       Attribute that changed
  * @param manufacturerCode  Manufacturer Code of the attribute that changed
  */
-void emberAfOnOffClusterServerManufacturerSpecificAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId, uint16_t manufacturerCode);
+void emberAfOnOffClusterServerManufacturerSpecificAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId,
+                                                                           uint16_t manufacturerCode);
 
 /** @brief On/off Cluster Server Message Sent
  *
@@ -246,7 +244,8 @@ void emberAfOnOffClusterServerManufacturerSpecificAttributeChangedCallback(chip:
  * @param message            The message that was sent
  * @param status             The status of the sent message
  */
-void emberAfOnOffClusterServerMessageSentCallback(EmberOutgoingMessageType type, uint64_t indexOrDestination, EmberApsFrame * apsFrame, uint16_t msgLen, uint8_t * message, EmberStatus status);
+void emberAfOnOffClusterServerMessageSentCallback(EmberOutgoingMessageType type, uint64_t indexOrDestination,
+                                                  EmberApsFrame * apsFrame, uint16_t msgLen, uint8_t * message, EmberStatus status);
 
 /** @brief On/off Cluster Server Pre Attribute Changed
  *
@@ -258,7 +257,9 @@ void emberAfOnOffClusterServerMessageSentCallback(EmberOutgoingMessageType type,
  * @param size          Attribute size
  * @param value         Attribute value
  */
-EmberAfStatus emberAfOnOffClusterServerPreAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId, EmberAfAttributeType attributeType, uint8_t size, uint8_t * value);
+EmberAfStatus emberAfOnOffClusterServerPreAttributeChangedCallback(chip::EndpointId endpoint, chip::AttributeId attributeId,
+                                                                   EmberAfAttributeType attributeType, uint8_t size,
+                                                                   uint8_t * value);
 
 /** @brief On/off Cluster Server Tick
  *
@@ -271,7 +272,6 @@ void emberAfOnOffClusterServerTickCallback(chip::EndpointId endpoint);
 // Cluster Commands Callback
 
 /**
-<<<<<<< master
  * @brief Basic Cluster ResetToFactoryDefaults Command callback
  */
 
@@ -284,128 +284,88 @@ bool emberAfBasicClusterResetToFactoryDefaultsCallback();
  * @param optionMask
  * @param optionOverride
  */
-=======
-* @brief Level Control Cluster Move Command callback
-* @param moveMode
-* @param rate
-* @param optionMask
-* @param optionOverride
-*/
->>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfLevelControlClusterMoveCallback(uint8_t moveMode, uint8_t rate, uint8_t optionMask, uint8_t optionOverride);
 
 /**
-* @brief Level Control Cluster MoveToLevel Command callback
-* @param level
-* @param transitionTime
-* @param optionMask
-* @param optionOverride
-*/
+ * @brief Level Control Cluster MoveToLevel Command callback
+ * @param level
+ * @param transitionTime
+ * @param optionMask
+ * @param optionOverride
+ */
 
-bool emberAfLevelControlClusterMoveToLevelCallback(uint8_t level, uint16_t transitionTime, uint8_t optionMask, uint8_t optionOverride);
+bool emberAfLevelControlClusterMoveToLevelCallback(uint8_t level, uint16_t transitionTime, uint8_t optionMask,
+                                                   uint8_t optionOverride);
 
 /**
-* @brief Level Control Cluster MoveToLevelWithOnOff Command callback
-* @param level
-* @param transitionTime
-*/
+ * @brief Level Control Cluster MoveToLevelWithOnOff Command callback
+ * @param level
+ * @param transitionTime
+ */
 
 bool emberAfLevelControlClusterMoveToLevelWithOnOffCallback(uint8_t level, uint16_t transitionTime);
 
 /**
-* @brief Level Control Cluster MoveWithOnOff Command callback
-* @param moveMode
-* @param rate
-*/
+ * @brief Level Control Cluster MoveWithOnOff Command callback
+ * @param moveMode
+ * @param rate
+ */
 
 bool emberAfLevelControlClusterMoveWithOnOffCallback(uint8_t moveMode, uint8_t rate);
 
 /**
-* @brief Level Control Cluster Step Command callback
-* @param stepMode
-* @param stepSize
-* @param transitionTime
-* @param optionMask
-* @param optionOverride
-*/
+ * @brief Level Control Cluster Step Command callback
+ * @param stepMode
+ * @param stepSize
+ * @param transitionTime
+ * @param optionMask
+ * @param optionOverride
+ */
 
-bool emberAfLevelControlClusterStepCallback(uint8_t stepMode, uint8_t stepSize, uint16_t transitionTime, uint8_t optionMask, uint8_t optionOverride);
+bool emberAfLevelControlClusterStepCallback(uint8_t stepMode, uint8_t stepSize, uint16_t transitionTime, uint8_t optionMask,
+                                            uint8_t optionOverride);
 
 /**
-* @brief Level Control Cluster StepWithOnOff Command callback
-* @param stepMode
-* @param stepSize
-* @param transitionTime
-*/
+ * @brief Level Control Cluster StepWithOnOff Command callback
+ * @param stepMode
+ * @param stepSize
+ * @param transitionTime
+ */
 
 bool emberAfLevelControlClusterStepWithOnOffCallback(uint8_t stepMode, uint8_t stepSize, uint16_t transitionTime);
 
 /**
-* @brief Level Control Cluster Stop Command callback
-* @param optionMask
-* @param optionOverride
-*/
+ * @brief Level Control Cluster Stop Command callback
+ * @param optionMask
+ * @param optionOverride
+ */
 
 bool emberAfLevelControlClusterStopCallback(uint8_t optionMask, uint8_t optionOverride);
 
 /**
-* @brief Level Control Cluster StopWithOnOff Command callback
-*/
+ * @brief Level Control Cluster StopWithOnOff Command callback
+ */
 
 bool emberAfLevelControlClusterStopWithOnOffCallback();
 
 /**
-* @brief On/off Cluster Off Command callback
-*/
+ * @brief On/off Cluster Off Command callback
+ */
 
 bool emberAfOnOffClusterOffCallback();
 
 /**
-<<<<<<< master
  * @brief On/off Cluster On Command callback
  */
-=======
-* @brief On/off Cluster OffWithEffect Command callback
-* @param effectId
-* @param effectVariant
-*/
-
-bool emberAfOnOffClusterOffWithEffectCallback(uint8_t effectId, uint8_t effectVariant);
-
-/**
-* @brief On/off Cluster On Command callback
-*/
->>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfOnOffClusterOnCallback();
 
 /**
-<<<<<<< master
  * @brief On/off Cluster Toggle Command callback
  */
-=======
-* @brief On/off Cluster OnWithRecallGlobalScene Command callback
-*/
-
-bool emberAfOnOffClusterOnWithRecallGlobalSceneCallback();
-
-/**
-* @brief On/off Cluster OnWithTimedOff Command callback
-* @param onOffControl
-* @param onTime
-* @param offWaitTime
-*/
-
-bool emberAfOnOffClusterOnWithTimedOffCallback(uint8_t onOffControl, uint16_t onTime, uint16_t offWaitTime);
-
-/**
-* @brief On/off Cluster Toggle Command callback
-*/
->>>>>>> before adding thermostat server to all clusters app
 
 bool emberAfOnOffClusterToggleCallback();
-
 
 //
 // Non-Cluster Related Callbacks
@@ -563,8 +523,8 @@ bool emberAfReadReportingConfigurationResponseCallback(chip::ClusterId clusterId
  * @param extended Indicates whether the response is in the extended format or
  * not.  Ver.: always
  */
-bool emberAfDiscoverAttributesResponseCallback(chip::ClusterId clusterId, bool discoveryComplete, uint8_t * buffer,
-                                               uint16_t bufLen, bool extended);
+bool emberAfDiscoverAttributesResponseCallback(chip::ClusterId clusterId, bool discoveryComplete, uint8_t * buffer, uint16_t bufLen,
+                                               bool extended);
 
 /** @brief Discover Commands Generated Response
  *
@@ -583,7 +543,6 @@ bool emberAfDiscoverAttributesResponseCallback(chip::ClusterId clusterId, bool d
 bool emberAfDiscoverCommandsGeneratedResponseCallback(chip::ClusterId clusterId, uint16_t manufacturerCode, bool discoveryComplete,
                                                       chip::CommandId * commandIds, uint16_t commandIdCount);
 
-
 /** @brief Discover Commands Received Response
  *
  * This function is called by the framework when Discover Commands Received
@@ -600,7 +559,6 @@ bool emberAfDiscoverCommandsGeneratedResponseCallback(chip::ClusterId clusterId,
  */
 bool emberAfDiscoverCommandsReceivedResponseCallback(chip::ClusterId clusterId, uint16_t manufacturerCode, bool discoveryComplete,
                                                      chip::CommandId * commandIds, uint16_t commandIdCount);
-
 
 /** @brief Pre Command Received
  *
@@ -695,8 +653,8 @@ EmberAfStatus emberAfPreAttributeChangeCallback(chip::EndpointId endpoint, chip:
  * @param size   Ver.: always
  * @param value   Ver.: always
  */
-void emberAfPostAttributeChangeCallback(chip::EndpointId endpoint, chip::ClusterId clusterId, chip::AttributeId attributeId, uint8_t mask,
-                                        uint16_t manufacturerCode, uint8_t type, uint8_t size, uint8_t * value);
+void emberAfPostAttributeChangeCallback(chip::EndpointId endpoint, chip::ClusterId clusterId, chip::AttributeId attributeId,
+                                        uint8_t mask, uint16_t manufacturerCode, uint8_t type, uint8_t size, uint8_t * value);
 
 /** @brief Read Attributes Response
  *
@@ -855,7 +813,8 @@ uint32_t emberAfGetCurrentTimeCallback();
  * @param returnEndpointInfo A pointer to a data struct that will be written
  * with information about the endpoint.  Ver.: always
  */
-bool emberAfGetEndpointInfoCallback(chip::EndpointId endpoint, uint8_t * returnNetworkIndex, EmberAfEndpointInfoStruct * returnEndpointInfo);
+bool emberAfGetEndpointInfoCallback(chip::EndpointId endpoint, uint8_t * returnNetworkIndex,
+                                    EmberAfEndpointInfoStruct * returnEndpointInfo);
 
 /** @brief Get Source Route Overhead
  *
@@ -893,4 +852,3 @@ EmberStatus emberAfInterpanSendMessageCallback(EmberAfInterpanHeader * header, u
  *
  */
 bool emberAfStartMoveCallback();
-

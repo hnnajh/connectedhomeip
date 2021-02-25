@@ -24,10 +24,7 @@
 
 @class CHIPDevice;
 
-<<<<<<< master
 typedef void (^ResponseHandler)(NSError * _Nullable error, NSDictionary * _Nullable values);
-=======
->>>>>>> before adding thermostat server to all clusters app
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -76,7 +73,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface CHIPLevelControl : CHIPCluster
 
-<<<<<<< master
 - (void)move:(uint8_t)moveMode
                  rate:(uint8_t)rate
            optionMask:(uint8_t)optionMask
@@ -116,30 +112,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)readAttributeStartUpCurrentLevel:(ResponseHandler)completionHandler;
 - (void)writeAttributeStartUpCurrentLevel:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
 - (void)readAttributeClusterRevision:(ResponseHandler)completionHandler;
-=======
-- (nullable instancetype)initWithDevice:(CHIPDevice *)device endpoint:(uint8_t)endpoint queue:(dispatch_queue_t)queue;
-- (BOOL)move:(uint8_t)moveMode rate:(uint8_t)rate optionMask:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)moveToLevel:(uint8_t)level transitionTime:(uint16_t)transitionTime optionMask:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)moveToLevelWithOnOff:(uint8_t)level transitionTime:(uint16_t)transitionTime completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)moveWithOnOff:(uint8_t)moveMode rate:(uint8_t)rate completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)step:(uint8_t)stepMode stepSize:(uint8_t)stepSize transitionTime:(uint16_t)transitionTime optionMask:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)stepWithOnOff:(uint8_t)stepMode stepSize:(uint8_t)stepSize transitionTime:(uint16_t)transitionTime completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)stop:(uint8_t)optionMask optionOverride:(uint8_t)optionOverride completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)stopWithOnOff:(ResponseHandler)completionHandler;
-
-- (BOOL)readAttributeCurrentLevel:(ResponseHandler)completionHandler;
-- (BOOL) configureAttributeCurrentLevel:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(uint8_t)change completionHandler:(ResponseHandler)completionHandler;
-- (BOOL) reportAttributeCurrentLevel:(ResponseHandler)reportHandler;
-- (BOOL)readAttributeRemainingTime:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeOptions:(ResponseHandler)completionHandler;
-- (BOOL)writeAttributeOptions:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeStartUpCurrentLevel:(ResponseHandler)completionHandler;
-- (BOOL)writeAttributeStartUpCurrentLevel:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeClusterRevision:(ResponseHandler)completionHandler;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
->>>>>>> before adding thermostat server to all clusters app
 
 @end
 
@@ -149,7 +121,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface CHIPOnOff : CHIPCluster
 
-<<<<<<< master
 - (void)off:(ResponseHandler)completionHandler;
 - (void)offWithEffect:(uint8_t)effectId effectVariant:(uint8_t)effectVariant completionHandler:(ResponseHandler)completionHandler;
 - (void)on:(ResponseHandler)completionHandler;
@@ -173,30 +144,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)readAttributeStartUpOnOff:(ResponseHandler)completionHandler;
 - (void)writeAttributeStartUpOnOff:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
 - (void)readAttributeClusterRevision:(ResponseHandler)completionHandler;
-=======
-- (nullable instancetype)initWithDevice:(CHIPDevice *)device endpoint:(uint8_t)endpoint queue:(dispatch_queue_t)queue;
-- (BOOL)off:(ResponseHandler)completionHandler;
-- (BOOL)offWithEffect:(uint8_t)effectId effectVariant:(uint8_t)effectVariant completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)on:(ResponseHandler)completionHandler;
-- (BOOL)onWithRecallGlobalScene:(ResponseHandler)completionHandler;
-- (BOOL)onWithTimedOff:(uint8_t)onOffControl onTime:(uint16_t)onTime offWaitTime:(uint16_t)offWaitTime completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)toggle:(ResponseHandler)completionHandler;
-
-- (BOOL)readAttributeOnOff:(ResponseHandler)completionHandler;
-- (BOOL) configureAttributeOnOff:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler;
-- (BOOL) reportAttributeOnOff:(ResponseHandler)reportHandler;
-- (BOOL)readAttributeGlobalSceneControl:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeOnTime:(ResponseHandler)completionHandler;
-- (BOOL)writeAttributeOnTime:(uint16_t)value completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeOffWaitTime:(ResponseHandler)completionHandler;
-- (BOOL)writeAttributeOffWaitTime:(uint16_t)value completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeStartUpOnOff:(ResponseHandler)completionHandler;
-- (BOOL)writeAttributeStartUpOnOff:(uint8_t)value completionHandler:(ResponseHandler)completionHandler;
-- (BOOL)readAttributeClusterRevision:(ResponseHandler)completionHandler;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
->>>>>>> before adding thermostat server to all clusters app
 
 @end
 
