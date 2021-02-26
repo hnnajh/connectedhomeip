@@ -34,17 +34,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface CHIPCluster : NSObject
 
-- (nullable instancetype)initWithDevice:(CHIPDevice *)device
-                               endpoint:(uint8_t)endpoint
-                                  queue:(dispatch_queue_t)queue NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithDevice:(CHIPDevice *)device endpoint:(uint8_t)endpoint queue:(dispatch_queue_t)queue NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 @end
 
+
+
 /**
  * Cluster On/off
- *
+ *    
  */
 @interface CHIPOnOff : CHIPCluster
 
@@ -53,13 +53,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)toggle:(ResponseHandler)completionHandler;
 
 - (void)readAttributeOnOff:(ResponseHandler)completionHandler;
-- (void)configureAttributeOnOff:(uint16_t)minInterval
-                    maxInterval:(uint16_t)maxInterval
-              completionHandler:(ResponseHandler)completionHandler;
-- (void)reportAttributeOnOff:(ResponseHandler)reportHandler;
+- (void) configureAttributeOnOff:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval completionHandler:(ResponseHandler)completionHandler;
+- (void) reportAttributeOnOff:(ResponseHandler)reportHandler;
 - (void)readAttributeClusterRevision:(ResponseHandler)completionHandler;
 
 @end
+
 
 NS_ASSUME_NONNULL_END
 

@@ -393,6 +393,26 @@ class ChipCluster:
             },
             "TemperatureMeasurement": {
             },
+            "Thermostat": {
+                "ClearWeeklySchedule": {
+                },
+                "GetRelayStatusLog": {
+                },
+                "GetWeeklySchedule": {
+                    "daysToReturn": "int",
+                    "modeToReturn": "int",
+                },
+                "SetWeeklySchedule": {
+                    "numberOfTransitionsForSequence": "int",
+                    "dayOfWeekForSequence": "int",
+                    "modeForSequence": "int",
+                    "payload": "int",
+                },
+                "SetpointRaiseLower": {
+                    "mode": "int",
+                    "amount": "int",
+                },
+            },
         }
 
     def SendCommand(self, device: ctypes.c_void_p, cluster: str, command: str, endpoint: int, groupid: int, args):
@@ -976,6 +996,41 @@ class ChipCluster:
             )
         )
 
+    def ClusterThermostat_CommandClearWeeklySchedule(self, device: ctypes.c_void_p, ZCLendpoint: int, ZCLgroupid: int):
+        self._ChipStack.Call(
+            lambda: self._chipLib.chip_ime_AppendCommand_Thermostat_ClearWeeklySchedule(
+                device, ZCLendpoint, ZCLgroupid
+            )
+        )
+
+    def ClusterThermostat_CommandGetRelayStatusLog(self, device: ctypes.c_void_p, ZCLendpoint: int, ZCLgroupid: int):
+        self._ChipStack.Call(
+            lambda: self._chipLib.chip_ime_AppendCommand_Thermostat_GetRelayStatusLog(
+                device, ZCLendpoint, ZCLgroupid
+            )
+        )
+
+    def ClusterThermostat_CommandGetWeeklySchedule(self, device: ctypes.c_void_p, ZCLendpoint: int, ZCLgroupid: int, daysToReturn: int, modeToReturn: int):
+        self._ChipStack.Call(
+            lambda: self._chipLib.chip_ime_AppendCommand_Thermostat_GetWeeklySchedule(
+                device, ZCLendpoint, ZCLgroupid, daysToReturn, modeToReturn
+            )
+        )
+
+    def ClusterThermostat_CommandSetWeeklySchedule(self, device: ctypes.c_void_p, ZCLendpoint: int, ZCLgroupid: int, numberOfTransitionsForSequence: int, dayOfWeekForSequence: int, modeForSequence: int, payload: int):
+        self._ChipStack.Call(
+            lambda: self._chipLib.chip_ime_AppendCommand_Thermostat_SetWeeklySchedule(
+                device, ZCLendpoint, ZCLgroupid, numberOfTransitionsForSequence, dayOfWeekForSequence, modeForSequence, payload
+            )
+        )
+
+    def ClusterThermostat_CommandSetpointRaiseLower(self, device: ctypes.c_void_p, ZCLendpoint: int, ZCLgroupid: int, mode: int, amount: int):
+        self._ChipStack.Call(
+            lambda: self._chipLib.chip_ime_AppendCommand_Thermostat_SetpointRaiseLower(
+                device, ZCLendpoint, ZCLgroupid, mode, amount
+            )
+        )
+
     def InitLib(self, chipLib):
         self._chipLib = chipLib
         # Cluster BarrierControl
@@ -1235,3 +1290,19 @@ class ChipCluster:
         self._chipLib.chip_ime_AppendCommand_Scenes_ViewScene.argtypes = [ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint16, ctypes.c_uint16, ctypes.c_uint8]
         self._chipLib.chip_ime_AppendCommand_Scenes_ViewScene.restype = ctypes.c_uint32
         # Cluster TemperatureMeasurement
+        # Cluster Thermostat
+        # Cluster Thermostat Command ClearWeeklySchedule
+        self._chipLib.chip_ime_AppendCommand_Thermostat_ClearWeeklySchedule.argtypes = [ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint16]
+        self._chipLib.chip_ime_AppendCommand_Thermostat_ClearWeeklySchedule.restype = ctypes.c_uint32
+        # Cluster Thermostat Command GetRelayStatusLog
+        self._chipLib.chip_ime_AppendCommand_Thermostat_GetRelayStatusLog.argtypes = [ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint16]
+        self._chipLib.chip_ime_AppendCommand_Thermostat_GetRelayStatusLog.restype = ctypes.c_uint32
+        # Cluster Thermostat Command GetWeeklySchedule
+        self._chipLib.chip_ime_AppendCommand_Thermostat_GetWeeklySchedule.argtypes = [ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint16, ctypes.c_uint8, ctypes.c_uint8]
+        self._chipLib.chip_ime_AppendCommand_Thermostat_GetWeeklySchedule.restype = ctypes.c_uint32
+        # Cluster Thermostat Command SetWeeklySchedule
+        self._chipLib.chip_ime_AppendCommand_Thermostat_SetWeeklySchedule.argtypes = [ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint16, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint8, ctypes.c_uint8]
+        self._chipLib.chip_ime_AppendCommand_Thermostat_SetWeeklySchedule.restype = ctypes.c_uint32
+        # Cluster Thermostat Command SetpointRaiseLower
+        self._chipLib.chip_ime_AppendCommand_Thermostat_SetpointRaiseLower.argtypes = [ctypes.c_void_p, ctypes.c_uint8, ctypes.c_uint16, ctypes.c_uint8, ctypes.c_int8]
+        self._chipLib.chip_ime_AppendCommand_Thermostat_SetpointRaiseLower.restype = ctypes.c_uint32

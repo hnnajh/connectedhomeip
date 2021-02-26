@@ -34,17 +34,17 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface CHIPCluster : NSObject
 
-- (nullable instancetype)initWithDevice:(CHIPDevice *)device
-                               endpoint:(uint8_t)endpoint
-                                  queue:(dispatch_queue_t)queue NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithDevice:(CHIPDevice *)device endpoint:(uint8_t)endpoint queue:(dispatch_queue_t)queue NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 @end
 
+
+
 /**
  * Cluster Basic
- *
+ *    
  */
 @interface CHIPBasic : CHIPCluster
 
@@ -56,23 +56,24 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
+
+
 /**
  * Cluster Temperature Measurement
- *
+ *    
  */
 @interface CHIPTemperatureMeasurement : CHIPCluster
 
+
 - (void)readAttributeMeasuredValue:(ResponseHandler)completionHandler;
-- (void)configureAttributeMeasuredValue:(uint16_t)minInterval
-                            maxInterval:(uint16_t)maxInterval
-                                 change:(int16_t)change
-                      completionHandler:(ResponseHandler)completionHandler;
-- (void)reportAttributeMeasuredValue:(ResponseHandler)reportHandler;
+- (void) configureAttributeMeasuredValue:(uint16_t)minInterval  maxInterval:(uint16_t)maxInterval change:(int16_t)change completionHandler:(ResponseHandler)completionHandler;
+- (void) reportAttributeMeasuredValue:(ResponseHandler)reportHandler;
 - (void)readAttributeMinMeasuredValue:(ResponseHandler)completionHandler;
 - (void)readAttributeMaxMeasuredValue:(ResponseHandler)completionHandler;
 - (void)readAttributeClusterRevision:(ResponseHandler)completionHandler;
 
 @end
+
 
 NS_ASSUME_NONNULL_END
 
