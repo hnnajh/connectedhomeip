@@ -102,6 +102,12 @@ config("abi_default") {
   }
   asmflags = cflags
   ldflags = cflags
+
+  if (current_os == "android") {
+    ldflags += [ "-Wl,--hash-style=both" ]
+  }
+
+  print(current_os, ldflags)
 }
 
 config("target_default") {
