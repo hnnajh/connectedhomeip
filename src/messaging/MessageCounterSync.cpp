@@ -31,7 +31,6 @@
 #include <protocols/Protocols.h>
 #include <support/BufferWriter.h>
 #include <support/CodeUtils.h>
-#include <support/ReturnMacros.h>
 #include <support/logging/CHIPLogging.h>
 
 namespace chip {
@@ -39,24 +38,18 @@ namespace Messaging {
 
 CHIP_ERROR MessageCounterSyncMgr::Init(Messaging::ExchangeManager * exchangeMgr)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-
-    VerifyOrReturnError(exchangeMgr != nullptr, err = CHIP_ERROR_INCORRECT_STATE);
+    VerifyOrReturnError(exchangeMgr != nullptr, CHIP_ERROR_INCORRECT_STATE);
     mExchangeMgr = exchangeMgr;
 
-    // Register to receive unsolicited Secure Channel Request messages from the exchange manager.
-    err = mExchangeMgr->RegisterUnsolicitedMessageHandlerForProtocol(Protocols::kProtocol_SecureChannel, this);
-
-    ReturnErrorOnFailure(err);
-
-    return err;
+    // Register to receive unsolicited Message Counter Synchronization Request messages from the exchange manager.
+    return mExchangeMgr->RegisterUnsolicitedMessageHandlerForType(Protocols::SecureChannel::MsgType::MsgCounterSyncReq, this);
 }
 
 void MessageCounterSyncMgr::Shutdown()
 {
     if (mExchangeMgr != nullptr)
     {
-        mExchangeMgr->UnregisterUnsolicitedMessageHandlerForProtocol(Protocols::kProtocol_SecureChannel);
+        mExchangeMgr->UnregisterUnsolicitedMessageHandlerForType(Protocols::SecureChannel::MsgType::MsgCounterSyncReq);
         mExchangeMgr = nullptr;
     }
 }
@@ -93,7 +86,7 @@ void MessageCounterSyncMgr::OnResponseTimeout(Messaging::ExchangeContext * excha
         exchangeContext->Close();
 }
 
-CHIP_ERROR MessageCounterSyncMgr::AddToRetransmissionTable(uint16_t protocolId, uint8_t msgType, const SendFlags & sendFlags,
+CHIP_ERROR MessageCounterSyncMgr::AddToRetransmissionTable(Protocols::Id protocolId, uint8_t msgType, const SendFlags & sendFlags,
                                                            System::PacketBufferHandle msgBuf,
                                                            Messaging::ExchangeContext * exchangeContext)
 {
@@ -158,8 +151,7 @@ void MessageCounterSyncMgr::RetransPendingGroupMsgs(NodeId peerNodeId)
     }
 }
 
-CHIP_ERROR MessageCounterSyncMgr::AddToReceiveTable(const PacketHeader & packetHeader, const PayloadHeader & payloadHeader,
-                                                    const SecureSessionHandle & session, System::PacketBufferHandle msgBuf)
+CHIP_ERROR MessageCounterSyncMgr::AddToReceiveTable(System::PacketBufferHandle msgBuf)
 {
     bool added     = false;
     CHIP_ERROR err = CHIP_NO_ERROR;
@@ -169,12 +161,8 @@ CHIP_ERROR MessageCounterSyncMgr::AddToReceiveTable(const PacketHeader & packetH
         // Entries are in use if they have a message buffer.
         if (entry.msgBuf.IsNull())
         {
-            entry.packetHeader  = packetHeader;
-            entry.payloadHeader = payloadHeader;
-            entry.session       = session;
-            entry.msgBuf        = std::move(msgBuf);
-            added               = true;
-
+            entry.msgBuf = std::move(msgBuf);
+            added        = true;
             break;
         }
     }
@@ -201,17 +189,30 @@ void MessageCounterSyncMgr::ProcessPendingGroupMsgs(NodeId peerNodeId)
     // this table was using an application group key; that's why it was added.
     for (ReceiveTableEntry & entry : mReceiveTable)
     {
-        if (!entry.msgBuf.IsNull() && entry.session.GetPeerNodeId() == peerNodeId)
+        if (!entry.msgBuf.IsNull())
         {
-            // Reprocess message.
-            mExchangeMgr->HandleGroupMessageReceived(entry.packetHeader, entry.payloadHeader, entry.session,
-                                                     std::move(entry.msgBuf));
+            PacketHeader packetHeader;
+            uint16_t headerSize = 0;
 
-            // Explicitly free any buffer owned by this handle.  The
-            // HandleGroupMessageReceived() call should really handle this, but
-            // just in case it messes up we don't want to get confused about
-            // wheter the entry is in use.
-            entry.msgBuf = nullptr;
+            if (packetHeader.Decode((entry.msgBuf)->Start(), (entry.msgBuf)->DataLength(), &headerSize) != CHIP_NO_ERROR)
+            {
+                ChipLogError(ExchangeManager, "ProcessPendingGroupMsgs::Failed to decode PacketHeader");
+                break;
+            }
+
+            if (packetHeader.GetSourceNodeId().HasValue() && packetHeader.GetSourceNodeId().Value() == peerNodeId)
+            {
+                (entry.msgBuf)->ConsumeHead(headerSize);
+
+                // Reprocess message.
+                mExchangeMgr->GetSessionMgr()->HandleGroupMessageReceived(packetHeader, std::move(entry.msgBuf));
+
+                // Explicitly free any buffer owned by this handle.  The
+                // HandleGroupMessageReceived() call should really handle this, but
+                // just in case it messes up we don't want to get confused about
+                // wheter the entry is in use.
+                entry.msgBuf = nullptr;
+            }
         }
     }
 }
@@ -269,7 +270,7 @@ CHIP_ERROR MessageCounterSyncMgr::SendMsgCounterSyncReq(SecureSessionHandle sess
     exchangeContext->SetResponseTimeout(kMsgCounterSyncTimeout);
 
     // Send the message counter synchronization request in a Secure Channel Protocol::MsgCounterSyncReq message.
-    err = exchangeContext->SendMessageImpl(Protocols::kProtocol_SecureChannel,
+    err = exchangeContext->SendMessageImpl(Protocols::SecureChannel::Id,
                                            static_cast<uint8_t>(Protocols::SecureChannel::MsgType::MsgCounterSyncReq),
                                            std::move(msgBuf), sendFlags);
     SuccessOrExit(err);
@@ -318,7 +319,7 @@ CHIP_ERROR MessageCounterSyncMgr::SendMsgCounterSyncResp(Messaging::ExchangeCont
     msgBuf->SetDataLength(kMsgCounterSyncRespMsgSize);
 
     // Send message counter synchronization response message.
-    err = exchangeContext->SendMessageImpl(Protocols::kProtocol_SecureChannel,
+    err = exchangeContext->SendMessageImpl(Protocols::SecureChannel::Id,
                                            static_cast<uint8_t>(Protocols::SecureChannel::MsgType::MsgCounterSyncRsp),
                                            std::move(msgBuf), Messaging::SendFlags(Messaging::SendMessageFlags::kNoAutoRequestAck));
 

@@ -29,7 +29,6 @@ static const char * const CHIP_CONTROLLER_QUEUE = "com.zigbee.chip.framework.con
 static const char * const CHIP_COMMISSIONER_DEVICE_ID_KEY = "com.zigbee.chip.commissioner.device.id";
 
 static NSString * const kErrorMemoryInit = @"Init Memory failure";
-static NSString * const kErrorCommissionerCreate = @"Init failure while creating a commissioner";
 static NSString * const kErrorCommissionerInit = @"Init failure while initializing a commissioner";
 static NSString * const kErrorPairingInit = @"Init failure while creating a pairing delegate";
 static NSString * const kErrorPersistentStorageInit = @"Init failure while creating a persistent storage delegate";
@@ -51,6 +50,7 @@ static NSString * const kInfoStackShutdown = @"Shutting down the CHIP Stack";
 @property (readonly) CHIPDevicePairingDelegateBridge * pairingDelegateBridge;
 @property (readonly) CHIPPersistentStorageDelegateBridge * persistentStorageDelegateBridge;
 @property (readonly) chip::NodeId localDeviceId;
+@property (readonly) uint16_t listenPort;
 
 @end
 
@@ -123,7 +123,7 @@ static NSString * const kInfoStackShutdown = @"Shutting down the CHIP Stack";
     return YES;
 }
 
-- (BOOL)startup:(id<CHIPPersistentStorageDelegate>)storageDelegate queue:(nonnull dispatch_queue_t)queue
+- (BOOL)startup:(_Nullable id<CHIPPersistentStorageDelegate>)storageDelegate queue:(_Nullable dispatch_queue_t)queue
 {
     __block BOOL commissionerInitialized = NO;
     dispatch_sync(_chipWorkQueue, ^{
@@ -139,9 +139,18 @@ static NSString * const kInfoStackShutdown = @"Shutting down the CHIP Stack";
         [self _getControllerNodeId];
 
         _cppCommissioner = new chip::Controller::DeviceCommissioner();
-        if (_cppCommissioner != nullptr) {
-            errorCode = _cppCommissioner->Init(_localDeviceId, _persistentStorageDelegateBridge, _pairingDelegateBridge);
+        if ([self checkForInitError:(_cppCommissioner != nullptr) logMsg:kErrorMemoryInit]) {
+            return;
         }
+
+        if (_listenPort) {
+            errorCode = _cppCommissioner->SetUdpListenPort(_listenPort);
+            if ([self checkForStartError:(CHIP_NO_ERROR == errorCode) logMsg:kErrorCommissionerInit]) {
+                return;
+            }
+        }
+
+        errorCode = _cppCommissioner->Init(_localDeviceId, _persistentStorageDelegateBridge, _pairingDelegateBridge);
         if ([self checkForStartError:(CHIP_NO_ERROR == errorCode) logMsg:kErrorCommissionerInit]) {
             return;
         }
@@ -167,11 +176,11 @@ static NSString * const kInfoStackShutdown = @"Shutting down the CHIP Stack";
     uint16_t idStringLen = 32;
     char deviceIdString[idStringLen];
     if (CHIP_NO_ERROR
-        != _persistentStorageDelegateBridge->GetKeyValue(CHIP_COMMISSIONER_DEVICE_ID_KEY, deviceIdString, idStringLen)) {
+        != _persistentStorageDelegateBridge->SyncGetKeyValue(CHIP_COMMISSIONER_DEVICE_ID_KEY, deviceIdString, idStringLen)) {
         _localDeviceId = arc4random();
         _localDeviceId = _localDeviceId << 32 | arc4random();
         CHIP_LOG_ERROR("Assigned %llx node ID to the controller", _localDeviceId);
-        _persistentStorageDelegateBridge->SetKeyValue(
+        _persistentStorageDelegateBridge->AsyncSetKeyValue(
             CHIP_COMMISSIONER_DEVICE_ID_KEY, [[NSString stringWithFormat:@"%llx", _localDeviceId] UTF8String]);
     } else {
         NSScanner * scanner = [NSScanner scannerWithString:[NSString stringWithUTF8String:deviceIdString]];
@@ -190,8 +199,34 @@ static NSString * const kInfoStackShutdown = @"Shutting down the CHIP Stack";
     dispatch_sync(_chipWorkQueue, ^{
         chip::RendezvousParameters params
             = chip::RendezvousParameters().SetSetupPINCode(setupPINCode).SetDiscriminator(discriminator);
-        CHIP_ERROR err = self.cppCommissioner->PairDevice(deviceID, params);
-        success = ![self checkForError:err logMsg:kErrorPairDevice error:error];
+        CHIP_ERROR errorCode = CHIP_ERROR_INCORRECT_STATE;
+
+        if ([self _isRunning]) {
+            errorCode = self.cppCommissioner->PairDevice(deviceID, params);
+        }
+        success = ![self checkForError:errorCode logMsg:kErrorPairDevice error:error];
+    });
+
+    return success;
+}
+
+- (BOOL)pairDeviceWithoutSecurity:(uint64_t)deviceID
+                          address:(NSString *)address
+                             port:(uint16_t)port
+                            error:(NSError * __autoreleasing *)error
+{
+    __block BOOL success;
+    dispatch_sync(_chipWorkQueue, ^{
+        CHIP_ERROR errorCode = CHIP_ERROR_INCORRECT_STATE;
+        chip::Controller::SerializedDevice serializedTestDevice;
+        chip::Inet::IPAddress addr;
+        chip::Inet::IPAddress::FromString([address UTF8String], addr);
+
+        if ([self _isRunning]) {
+            errorCode = _cppCommissioner->PairTestDeviceWithoutSecurity(
+                deviceID, chip::Transport::PeerAddress::UDP(addr, port), serializedTestDevice);
+        }
+        success = ![self checkForError:errorCode logMsg:kErrorPairDevice error:error];
     });
 
     return success;
@@ -246,6 +281,11 @@ static NSString * const kInfoStackShutdown = @"Shutting down the CHIP Stack";
     });
 
     return chipDevice;
+}
+
+- (void)setListenPort:(uint16_t)port
+{
+    _listenPort = port;
 }
 
 - (void)setPairingDelegate:(id<CHIPDevicePairingDelegate>)delegate queue:(dispatch_queue_t)queue

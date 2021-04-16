@@ -43,16 +43,16 @@
 #include "ChipDeviceController-ScriptDevicePairingDelegate.h"
 #include "ChipDeviceController-StorageDelegate.h"
 
+#include "chip/interaction_model/Delegate.h"
+
 #include <app/CommandSender.h>
 #include <app/InteractionModelEngine.h>
 #include <controller/CHIPDevice.h>
 #include <controller/CHIPDeviceController.h>
-#include <controller/DeviceAddressUpdater.h>
 #include <mdns/Resolver.h>
 #include <support/CHIPMem.h>
 #include <support/CodeUtils.h>
 #include <support/DLLUtil.h>
-#include <support/ReturnMacros.h>
 #include <support/logging/CHIPLogging.h>
 
 using namespace chip;
@@ -78,10 +78,8 @@ chip::NodeId kRemoteDeviceId       = chip::kTestDeviceNodeId;
 
 extern "C" {
 CHIP_ERROR pychip_DeviceController_NewDeviceController(chip::Controller::DeviceCommissioner ** outDevCtrl,
-                                                       chip::Controller::DeviceAddressUpdater ** outAddressUpdater,
                                                        chip::NodeId localDeviceId);
-CHIP_ERROR pychip_DeviceController_DeleteDeviceController(chip::Controller::DeviceCommissioner * devCtrl,
-                                                          chip::Controller::DeviceAddressUpdater * addressUpdater);
+CHIP_ERROR pychip_DeviceController_DeleteDeviceController(chip::Controller::DeviceCommissioner * devCtrl);
 CHIP_ERROR
 pychip_DeviceController_GetAddressAndPort(chip::Controller::DeviceCommissioner * devCtrl, chip::NodeId nodeId, char * outAddress,
                                           uint64_t maxAddressLen, uint16_t * outPort);
@@ -103,10 +101,6 @@ CHIP_ERROR
 pychip_ScriptDevicePairingDelegate_SetKeyExchangeCallback(chip::Controller::DeviceCommissioner * devCtrl,
                                                           chip::Controller::DevicePairingDelegate_OnPairingCompleteFunct callback);
 
-// Discovery
-CHIP_ERROR pychip_DeviceAddressUpdater_New(chip::Controller::DeviceAddressUpdater ** outAddressUpdater,
-                                           chip::Controller::DeviceCommissioner * devCtrl);
-void pychip_DeviceAddressUpdater_Delete(chip::Controller::DeviceAddressUpdater * addressUpdater);
 void pychip_ScriptDeviceAddressUpdateDelegate_SetOnAddressUpdateComplete(
     chip::Controller::DeviceAddressUpdateDelegate_OnUpdateComplete callback);
 CHIP_ERROR pychip_Resolver_ResolveNode(uint64_t fabricid, chip::NodeId nodeid);
@@ -122,13 +116,17 @@ void pychip_Stack_SetLogFunct(LogMessageFunct logFunct);
 
 CHIP_ERROR pychip_GetDeviceByNodeId(chip::Controller::DeviceCommissioner * devCtrl, chip::NodeId nodeId,
                                     chip::Controller::Device ** device);
+uint64_t pychip_GetCommandSenderHandle(chip::Controller::Device * device);
+// CHIP Stack objects
+CHIP_ERROR pychip_BLEMgrImpl_ConfigureBle(uint32_t bluetoothAdapterId);
 }
 
 CHIP_ERROR pychip_DeviceController_NewDeviceController(chip::Controller::DeviceCommissioner ** outDevCtrl,
-                                                       chip::Controller::DeviceAddressUpdater ** outAddressUpdater,
                                                        chip::NodeId localDeviceId)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
+    ControllerInitParams initParams{ .storageDelegate              = &sStorageDelegate,
+                                     .mDeviceAddressUpdateDelegate = &sDeviceAddressUpdateDelegate };
 
     *outDevCtrl = new chip::Controller::DeviceCommissioner();
     VerifyOrExit(*outDevCtrl != NULL, err = CHIP_ERROR_NO_MEMORY);
@@ -137,21 +135,19 @@ CHIP_ERROR pychip_DeviceController_NewDeviceController(chip::Controller::DeviceC
     {
         localDeviceId = kDefaultLocalDeviceId;
     }
-    SuccessOrExit(err = (*outDevCtrl)->Init(localDeviceId, &sStorageDelegate, &sPairingDelegate));
+
+#if CHIP_ENABLE_INTERACTION_MODEL
+    initParams.imDelegate = &PythonInteractionModelDelegate::Instance();
+#endif
+
+    SuccessOrExit(err = (*outDevCtrl)->Init(localDeviceId, initParams, &sPairingDelegate));
     SuccessOrExit(err = (*outDevCtrl)->ServiceEvents());
 
 exit:
-    if (err != CHIP_NO_ERROR && *outAddressUpdater != NULL)
-    {
-        delete *outAddressUpdater;
-        *outAddressUpdater = NULL;
-    }
-
     return err;
 }
 
-CHIP_ERROR pychip_DeviceController_DeleteDeviceController(chip::Controller::DeviceCommissioner * devCtrl,
-                                                          chip::Controller::DeviceAddressUpdater * addressUpdater)
+CHIP_ERROR pychip_DeviceController_DeleteDeviceController(chip::Controller::DeviceCommissioner * devCtrl)
 {
     if (devCtrl != NULL)
     {
@@ -271,28 +267,6 @@ pychip_ScriptDevicePairingDelegate_SetKeyExchangeCallback(chip::Controller::Devi
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR pychip_DeviceAddressUpdater_New(chip::Controller::DeviceAddressUpdater ** outAddressUpdater,
-                                           chip::Controller::DeviceCommissioner * devCtrl)
-{
-    auto addressUpdater = std::make_unique<chip::Controller::DeviceAddressUpdater>();
-
-    VerifyOrReturnError(addressUpdater.get() != nullptr, CHIP_ERROR_NO_MEMORY);
-    ReturnErrorOnFailure(addressUpdater->Init(devCtrl, &sDeviceAddressUpdateDelegate));
-    ReturnErrorOnFailure(Mdns::Resolver::Instance().SetResolverDelegate(addressUpdater.get()));
-
-    *outAddressUpdater = addressUpdater.release();
-    return CHIP_NO_ERROR;
-}
-
-void pychip_DeviceAddressUpdater_Delete(chip::Controller::DeviceAddressUpdater * addressUpdater)
-{
-    if (addressUpdater != nullptr)
-    {
-        Mdns::Resolver::Instance().SetResolverDelegate(nullptr);
-        delete addressUpdater;
-    }
-}
-
 void pychip_ScriptDeviceAddressUpdateDelegate_SetOnAddressUpdateComplete(
     chip::Controller::DeviceAddressUpdateDelegate_OnUpdateComplete callback)
 {
@@ -346,6 +320,12 @@ CHIP_ERROR pychip_GetDeviceByNodeId(chip::Controller::DeviceCommissioner * devCt
                                     chip::Controller::Device ** device)
 {
     return devCtrl->GetDevice(nodeId, device);
+}
+
+uint64_t pychip_GetCommandSenderHandle(chip::Controller::Device * device)
+{
+    chip::app::CommandSender * sender = device->GetCommandSender();
+    return sender == nullptr ? 0 : reinterpret_cast<uint64_t>(sender);
 }
 
 void pychip_Stack_SetLogFunct(LogMessageFunct logFunct)

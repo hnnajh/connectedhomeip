@@ -31,10 +31,6 @@
 
 #include <thread>
 
-#if CHIP_ENABLE_MDNS
-#include "MdnsImpl.h"
-#endif
-
 #include <arpa/inet.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>

@@ -30,10 +30,6 @@ namespace Mdns {
 class DiscoveryImplPlatform : public ServiceAdvertiser, public Resolver
 {
 public:
-    /**
-     * This method initializes the publisher.
-     *
-     */
     CHIP_ERROR Init();
 
     CHIP_ERROR Start(Inet::InetLayer * inetLayer, uint16_t port) override;
@@ -63,12 +59,12 @@ private:
 
     CHIP_ERROR PublishUnprovisionedDevice(chip::Inet::IPAddressType addressType, chip::Inet::InterfaceId interface);
     CHIP_ERROR PublishProvisionedDevice(chip::Inet::IPAddressType addressType, chip::Inet::InterfaceId interface);
-    CHIP_ERROR SetupHostname();
 
     static void HandleNodeIdResolve(void * context, MdnsService * result, CHIP_ERROR error);
     static void HandleMdnsInit(void * context, CHIP_ERROR initError);
     static void HandleMdnsError(void * context, CHIP_ERROR initError);
     static CHIP_ERROR GenerateRotatingDeviceId(char rotatingDeviceIdHexBuffer[], size_t & rotatingDeviceIdHexBufferSize);
+    CHIP_ERROR SetupHostname(chip::ByteSpan macOrEui64);
 
     OperationalAdvertisingParameters mOperationalAdvertisingParams;
     bool mIsOperationalPublishing = false;

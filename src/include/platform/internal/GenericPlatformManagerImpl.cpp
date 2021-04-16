@@ -49,6 +49,9 @@ CHIP_ERROR GenericPlatformManagerImpl<ImplClass>::_InitChipStack()
 
     mMsgLayerWasActive = false;
 
+    // Arrange for CHIP core errors to be translated to text
+    RegisterCHIPLayerErrorFormatter();
+
     // Arrange for Device Layer errors to be translated to text.
     RegisterDeviceLayerErrorFormatter();
 
@@ -98,6 +101,12 @@ CHIP_ERROR GenericPlatformManagerImpl<ImplClass>::_InitChipStack()
         ChipLogError(DeviceLayer, "Connectivity Manager initialization failed: %s", ErrorStr(err));
     }
     SuccessOrExit(err);
+
+    // Initialize the NFC Manager.
+#if CHIP_DEVICE_CONFIG_ENABLE_NFC
+    err = NFCMgr().Init();
+    VerifyOrExit(err == CHIP_NO_ERROR, ChipLogError(DeviceLayer, "NFC Manager initialization failed: %s", ErrorStr(err)));
+#endif
 
     // TODO Initialize CHIP Event Logging.
 
