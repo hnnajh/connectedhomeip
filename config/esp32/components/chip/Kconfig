@@ -328,7 +328,7 @@ menu "CHIP Device Layer"
         config CHIP_TASK_STACK_SIZE
             int "CHIP Task Stack Size"
             range 0 65535
-            default 5120
+            default 6144
             help
                 The size (in bytes) of the CHIP task stack.
 
@@ -676,7 +676,7 @@ menu "CHIP Device Layer"
         config USE_TEST_SETUP_PIN_CODE
             int "Use Test Setup Pin Code"
             range 0 99999999
-            default 12345678
+            default 20202021
             help
                 Specifies a hard-coded device setup pin code to be used if none is found in CHIP NV storage.
                 Setting the value to 0 disables the feature.

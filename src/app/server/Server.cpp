@@ -482,12 +482,18 @@ void InitServer(AppDelegate * delegate)
     gAdvDelegate.SetDelegate(delegate);
 
     // Init transport before operations with secure session mgr.
+    err = gTransports.Init(UdpListenParameters(&DeviceLayer::InetLayer).SetAddressType(kIPAddressType_IPv6)
+
 #if INET_CONFIG_ENABLE_IPV4
-    err = gTransports.Init(UdpListenParameters(&DeviceLayer::InetLayer).SetAddressType(kIPAddressType_IPv6),
-                           UdpListenParameters(&DeviceLayer::InetLayer).SetAddressType(kIPAddressType_IPv4));
-#else
-    err = gTransports.Init(UdpListenParameters(&DeviceLayer::InetLayer).SetAddressType(kIPAddressType_IPv6));
+                               ,
+                           UdpListenParameters(&DeviceLayer::InetLayer).SetAddressType(kIPAddressType_IPv4)
 #endif
+#if CONFIG_NETWORK_LAYER_BLE
+                               ,
+                           BleListenParameters(DeviceLayer::ConnectivityMgr().GetBleLayer())
+#endif
+    );
+
     SuccessOrExit(err);
 
     err = gSessions.Init(chip::kTestDeviceNodeId, &DeviceLayer::SystemLayer, &gTransports, &gAdminPairings);
@@ -563,6 +569,8 @@ CHIP_ERROR AddTestPairing()
 {
     CHIP_ERROR err               = CHIP_NO_ERROR;
     AdminPairingInfo * adminInfo = nullptr;
+    PASESession * testSession    = nullptr;
+    PASESessionSerializable serializedTestSession;
 
     for (const AdminPairingInfo & admin : gAdminPairings)
         if (admin.IsInitialized() && admin.GetNodeId() == chip::kTestDeviceNodeId)
@@ -572,11 +580,21 @@ CHIP_ERROR AddTestPairing()
     VerifyOrExit(adminInfo != nullptr, err = CHIP_ERROR_NO_MEMORY);
 
     adminInfo->SetNodeId(chip::kTestDeviceNodeId);
+    gTestPairing.ToSerializable(serializedTestSession);
+
+    testSession = chip::Platform::New<PASESession>();
+    testSession->FromSerializable(serializedTestSession);
     SuccessOrExit(err = gSessions.NewPairing(Optional<PeerAddress>{ PeerAddress::Uninitialized() }, chip::kTestControllerNodeId,
-                                             &gTestPairing, SecureSessionMgr::PairingDirection::kResponder, gNextAvailableAdminId));
+                                             testSession, SecureSessionMgr::PairingDirection::kResponder, gNextAvailableAdminId));
     ++gNextAvailableAdminId;
 
 exit:
+    if (testSession)
+    {
+        testSession->Clear();
+        chip::Platform::Delete(testSession);
+    }
+
     if (err != CHIP_NO_ERROR && adminInfo != nullptr)
         gAdminPairings.ReleaseAdminId(gNextAvailableAdminId);
 
