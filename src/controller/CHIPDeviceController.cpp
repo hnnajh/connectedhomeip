@@ -57,6 +57,7 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <iostream>
 #include <time.h>
 
 using namespace chip::Inet;
@@ -87,7 +88,6 @@ constexpr uint16_t kMaxKeyIDStringSize = 6;
         char key[len + 2 * sizeof(NodeId) + 1];                                                                                    \
         nlSTATIC_ASSERT_PRINT(sizeof(node) <= sizeof(uint64_t), "Node ID size is greater than expected");                          \
         snprintf(key, sizeof(key), "%s%" PRIx64, keyPrefix, node);                                                                 \
-        action;                                                                                                                    \
     } while (0)
 
 DeviceController::DeviceController()
@@ -267,7 +267,8 @@ CHIP_ERROR DeviceController::SetUdpListenPort(uint16_t listenPort)
 CHIP_ERROR DeviceController::GetDevice(NodeId deviceId, const SerializedDevice & deviceInfo, Device ** out_device)
 {
     Device * device = nullptr;
-
+    ChipLogProgress(Controller, "TESTTESTTEST");
+    std::cout << "TEST in COUT" << std::endl;
     VerifyOrReturnError(out_device != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
     uint16_t index = FindDeviceIndex(deviceId);
 
@@ -960,11 +961,6 @@ void DeviceCommissioner::PersistDeviceList()
             }
             chip::Platform::MemoryFree(serialized);
         }
-
-        // TODO: Consider storing value in binary representation instead of converting to string
-        char keyIDStr[kMaxKeyIDStringSize];
-        snprintf(keyIDStr, sizeof(keyIDStr), "%d", mNextKeyId);
-        mStorageDelegate->AsyncSetKeyValue(kNextAvailableKeyID, keyIDStr);
     }
 }
 

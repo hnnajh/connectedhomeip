@@ -17,7 +17,7 @@
  */
 
 #pragma once
-
+#include <controller/DeviceAddressUpdateDelegate.h>
 #include "../../config/PersistentStorage.h"
 #include "../common/Command.h"
 
