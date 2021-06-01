@@ -25,7 +25,9 @@ CHIP_ERROR DiscoverCommand::Run(PersistentStorage & storage, NodeId localId, Nod
     chip::Controller::CommissionerInitParams params;
 
     params.storageDelegate                = &storage;
+#if CHIP_DEVICE_CONFIG_ENABLE_MDNS
     params.mDeviceAddressUpdateDelegate   = this;
+#endif
     params.operationalCredentialsDelegate = &mOpCredsIssuer;
 
     ReturnErrorOnFailure(mCommissioner.SetUdpListenPort(storage.GetListenPort()));

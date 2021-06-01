@@ -80,7 +80,8 @@ int ChipLinuxAppInit(int argc, char ** argv)
     chip::DeviceLayer::ConnectivityMgr().SetBLEDeviceName(nullptr); // Use default device name (CHIP-XXXX)
 
 #if CONFIG_NETWORK_LAYER_BLE
-    chip::DeviceLayer::Internal::BLEMgrImpl().ConfigureBle(LinuxDeviceOptions::GetInstance().mBleDevice, false);
+    // hnnajh: temp fix
+    //chip::DeviceLayer::Internal::BLEMgrImpl().ConfigureBle(LinuxDeviceOptions::GetInstance().mBleDevice, false);
 #endif
 
     chip::DeviceLayer::ConnectivityMgr().SetBLEAdvertisingEnabled(true);

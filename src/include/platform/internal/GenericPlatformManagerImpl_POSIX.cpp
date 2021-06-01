@@ -235,7 +235,9 @@ template <class ImplClass>
 void * GenericPlatformManagerImpl_POSIX<ImplClass>::EventLoopTaskMain(void * arg)
 {
     ChipLogDetail(DeviceLayer, "CHIP task running");
+#if defined(CHIP_STACK_LOCK_TRACKING_ENABLED)
     static_cast<GenericPlatformManagerImpl_POSIX<ImplClass> *>(arg)->Impl()->mMainLoopStarted = true;
+#endif
     static_cast<GenericPlatformManagerImpl_POSIX<ImplClass> *>(arg)->Impl()->RunEventLoop();
     return nullptr;
 }

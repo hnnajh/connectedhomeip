@@ -32,7 +32,9 @@ CHIP_ERROR PairingCommand::Run(PersistentStorage & storage, NodeId localId, Node
 
     chip::Controller::CommissionerInitParams params;
     params.storageDelegate              = &storage;
+#if CHIP_DEVICE_CONFIG_ENABLE_MDNS
     params.mDeviceAddressUpdateDelegate = this;
+#endif
     params.pairingDelegate              = this;
 
     err = mOpCredsIssuer.Initialize(storage);

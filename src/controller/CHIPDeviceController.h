@@ -391,7 +391,8 @@ public:
      */
     CHIP_ERROR PairDevice(NodeId remoteDeviceId, RendezvousParameters & params);
 
-    [[deprecated("Available until Rendezvous is implemented")]] CHIP_ERROR
+    //[[deprecated("Available until Rendezvous is implemented")]]
+    CHIP_ERROR
     PairTestDeviceWithoutSecurity(NodeId remoteDeviceId, const Transport::PeerAddress & peerAddress, SerializedDevice & serialized);
 
     /**

@@ -19,7 +19,7 @@ declare_args() {
 }
 
 config("includes") {
-  include_dirs = [ "." ]
+  include_dirs = [ ".", "${chip_root}/examples/chip-tool" ]
 }
 
 static_library("lib") {
