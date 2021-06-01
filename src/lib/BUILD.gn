@@ -19,7 +19,7 @@ declare_args() {
 }
 
 config("includes") {
-  include_dirs = [ "." ]
+  include_dirs = [ ".", "${chip_root}/examples/chip-tool" ]
 }
 
 static_library("lib") {
@@ -27,6 +27,7 @@ static_library("lib") {
     "${chip_root}/src/app",
     "${chip_root}/src/ble",
     "${chip_root}/src/controller",
+    "${chip_root}/src/controller/data_model",
     "${chip_root}/src/crypto",
     "${chip_root}/src/inet",
     "${chip_root}/src/lib/asn1",

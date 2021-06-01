@@ -22,11 +22,11 @@
 
 #include <app/util/DataModelHandler.h>
 
-#if __has_include("gen/endpoint_config.h")
+//#if __has_include("gen/endpoint_config.h")
 #define USE_ZAP_CONFIG 1
 #include <app/util/attribute-storage.h>
 #include <app/util/util.h>
-#endif
+//#endif
 #include <support/logging/CHIPLogging.h>
 
 #ifdef EMBER_AF_PLUGIN_REPORTING_SERVER

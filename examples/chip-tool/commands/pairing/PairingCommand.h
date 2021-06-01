@@ -24,6 +24,7 @@
 #include "gen/CHIPClusters.h"
 
 #include <controller/ExampleOperationalCredentialsIssuer.h>
+#include <controller/DeviceAddressUpdateDelegate.h>
 
 enum class PairingMode
 {

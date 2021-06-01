@@ -100,9 +100,7 @@ void Engine::RegisterDefaultCommands()
 #if CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE
     RegisterBLECommands();
 #endif
-#if CHIP_DEVICE_CONFIG_ENABLE_WIFI_STATION || CHIP_DEVICE_CONFIG_ENABLE_WIFI_AP
-    RegisterWiFiCommands();
-#endif
+
 #if CONFIG_DEVICE_LAYER
     RegisterConfigCommands();
 #endif
