@@ -100,6 +100,25 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @end
 
+@implementation CHIPBindingClusterTargetStruct
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _fabricIndex = @(0);
+
+        _node = nil;
+
+        _group = nil;
+
+        _endpoint = nil;
+
+        _cluster = nil;
+    }
+    return self;
+}
+@end
+
 @implementation CHIPAccessControlClusterTarget
 - (instancetype)init
 {
@@ -190,22 +209,61 @@ NS_ASSUME_NONNULL_BEGIN
 {
     if (self = [super init]) {
 
-        _fabricIndex = @(0);
-
         _providerNodeID = @(0);
 
         _endpoint = @(0);
+
+        _fabricIndex = @(0);
     }
     return self;
 }
 @end
 
-@implementation CHIPGeneralCommissioningClusterBasicCommissioningInfoType
+@implementation CHIPPowerSourceClusterBatChargeFaultChangeType
 - (instancetype)init
 {
     if (self = [super init]) {
 
-        _failSafeExpiryLengthMs = @(0);
+        _current = [NSArray array];
+
+        _previous = [NSArray array];
+    }
+    return self;
+}
+@end
+
+@implementation CHIPPowerSourceClusterBatFaultChangeType
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _current = [NSArray array];
+
+        _previous = [NSArray array];
+    }
+    return self;
+}
+@end
+
+@implementation CHIPPowerSourceClusterWiredFaultChangeType
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _current = [NSArray array];
+
+        _previous = [NSArray array];
+    }
+    return self;
+}
+@end
+
+@implementation CHIPGeneralCommissioningClusterBasicCommissioningInfo
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _failSafeExpiryLengthSeconds = @(0);
     }
     return self;
 }
@@ -277,13 +335,17 @@ NS_ASSUME_NONNULL_BEGIN
 
         _name = @"";
 
-        _fabricConnected = @(0);
+        _isOperational = @(0);
 
-        _offPremiseServicesReachableIPv4 = @(0);
+        _offPremiseServicesReachableIPv4 = nil;
 
-        _offPremiseServicesReachableIPv6 = @(0);
+        _offPremiseServicesReachableIPv6 = nil;
 
         _hardwareAddress = [NSData data];
+
+        _iPv4Addresses = [NSArray array];
+
+        _iPv6Addresses = [NSArray array];
 
         _type = @(0);
     }
@@ -291,7 +353,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @end
 
-@implementation CHIPSoftwareDiagnosticsClusterSoftwareFault
+@implementation CHIPSoftwareDiagnosticsClusterSoftwareFaultStruct
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -467,13 +529,13 @@ NS_ASSUME_NONNULL_BEGIN
 
         _noc = [NSData data];
 
-        _icac = [NSData data];
+        _icac = nil;
     }
     return self;
 }
 @end
 
-@implementation CHIPGroupKeyManagementClusterGroupInfo
+@implementation CHIPGroupKeyManagementClusterGroupInfoMapStruct
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -484,13 +546,13 @@ NS_ASSUME_NONNULL_BEGIN
 
         _endpoints = [NSArray array];
 
-        _groupName = @"";
+        _groupName = nil;
     }
     return self;
 }
 @end
 
-@implementation CHIPGroupKeyManagementClusterGroupKey
+@implementation CHIPGroupKeyManagementClusterGroupKeyMapStruct
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -505,26 +567,26 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @end
 
-@implementation CHIPGroupKeyManagementClusterGroupKeySet
+@implementation CHIPGroupKeyManagementClusterGroupKeySetStruct
 - (instancetype)init
 {
     if (self = [super init]) {
 
         _groupKeySetID = @(0);
 
-        _securityPolicy = @(0);
+        _groupKeySecurityPolicy = @(0);
 
-        _epochKey0 = [NSData data];
+        _epochKey0 = nil;
 
-        _epochStartTime0 = @(0);
+        _epochStartTime0 = nil;
 
-        _epochKey1 = [NSData data];
+        _epochKey1 = nil;
 
-        _epochStartTime1 = @(0);
+        _epochStartTime1 = nil;
 
-        _epochKey2 = [NSData data];
+        _epochKey2 = nil;
 
-        _epochStartTime2 = @(0);
+        _epochStartTime2 = nil;
     }
     return self;
 }
@@ -619,11 +681,11 @@ NS_ASSUME_NONNULL_BEGIN
 
         _minorNumber = @(0);
 
-        _name = @"";
+        _name = nil;
 
-        _callSign = @"";
+        _callSign = nil;
 
-        _affiliateCallSign = @"";
+        _affiliateCallSign = nil;
     }
     return self;
 }
@@ -636,9 +698,9 @@ NS_ASSUME_NONNULL_BEGIN
 
         _operatorName = @"";
 
-        _lineupName = @"";
+        _lineupName = nil;
 
-        _postalCode = @"";
+        _postalCode = nil;
 
         _lineupInfoType = @(0);
     }
@@ -666,7 +728,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         _updatedAt = @(0);
 
-        _position = @(0);
+        _position = nil;
     }
     return self;
 }
@@ -726,7 +788,7 @@ NS_ASSUME_NONNULL_BEGIN
 
         _value = @"";
 
-        _externalIDList = [NSArray array];
+        _externalIDList = nil;
     }
     return self;
 }
@@ -748,11 +810,11 @@ NS_ASSUME_NONNULL_BEGIN
 {
     if (self = [super init]) {
 
-        _imageUrl = @"";
+        _imageUrl = nil;
 
-        _color = @"";
+        _color = nil;
 
-        _size = [CHIPContentLauncherClusterDimension new];
+        _size = nil;
     }
     return self;
 }
@@ -765,15 +827,15 @@ NS_ASSUME_NONNULL_BEGIN
 
         _providerName = @"";
 
-        _background = [CHIPContentLauncherClusterStyleInformation new];
+        _background = nil;
 
-        _logo = [CHIPContentLauncherClusterStyleInformation new];
+        _logo = nil;
 
-        _progressBar = [CHIPContentLauncherClusterStyleInformation new];
+        _progressBar = nil;
 
-        _splash = [CHIPContentLauncherClusterStyleInformation new];
+        _splash = nil;
 
-        _waterMark = [CHIPContentLauncherClusterStyleInformation new];
+        _waterMark = nil;
     }
     return self;
 }
@@ -794,7 +856,7 @@ NS_ASSUME_NONNULL_BEGIN
 }
 @end
 
-@implementation CHIPApplicationLauncherClusterApplicationLauncherApplication
+@implementation CHIPApplicationLauncherClusterApplication
 - (instancetype)init
 {
     if (self = [super init]) {
@@ -812,9 +874,9 @@ NS_ASSUME_NONNULL_BEGIN
 {
     if (self = [super init]) {
 
-        _application = [CHIPApplicationLauncherClusterApplicationLauncherApplication new];
+        _application = [CHIPApplicationLauncherClusterApplication new];
 
-        _endpoint = @"";
+        _endpoint = nil;
     }
     return self;
 }
@@ -935,6 +997,17 @@ NS_ASSUME_NONNULL_BEGIN
     if (self = [super init]) {
 
         _a = [NSArray array];
+    }
+    return self;
+}
+@end
+
+@implementation CHIPTestClusterClusterTestFabricScoped
+- (instancetype)init
+{
+    if (self = [super init]) {
+
+        _fabricIndex = @(0);
     }
     return self;
 }

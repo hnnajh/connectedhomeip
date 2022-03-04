@@ -30,6 +30,20 @@
 namespace chip {
 namespace Controller {
 
+class DLL_EXPORT GeneralCommissioningCluster : public ClusterBase
+{
+public:
+    GeneralCommissioningCluster() : ClusterBase(app::Clusters::GeneralCommissioning::Id) {}
+    ~GeneralCommissioningCluster() {}
+};
+
+class DLL_EXPORT OperationalCredentialsCluster : public ClusterBase
+{
+public:
+    OperationalCredentialsCluster() : ClusterBase(app::Clusters::OperationalCredentials::Id) {}
+    ~OperationalCredentialsCluster() {}
+};
+
 class DLL_EXPORT TemperatureMeasurementCluster : public ClusterBase
 {
 public:

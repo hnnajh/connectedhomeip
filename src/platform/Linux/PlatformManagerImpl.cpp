@@ -37,12 +37,18 @@
 
 #include <arpa/inet.h>
 #include <dirent.h>
+#include <errno.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
 #include <net/if.h>
 #include <netinet/in.h>
 #include <signal.h>
 #include <unistd.h>
+
+#if __GLIBC__ == 2 && __GLIBC_MINOR__ < 30
+#include <sys/syscall.h>
+#define gettid() syscall(SYS_gettid)
+#endif
 
 using namespace ::chip::app::Clusters;
 
@@ -55,62 +61,27 @@ namespace {
 
 void SignalHandler(int signum)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-
     ChipLogDetail(DeviceLayer, "Caught signal %d", signum);
 
-    // The BootReason attribute SHALL indicate the reason for the Node’s most recent boot, the real usecase
-    // for this attribute is embedded system. In Linux simulation, we use different signals to tell the current
-    // running process to terminate with different reasons.
     switch (signum)
     {
-    case SIGINT:
-        ConfigurationMgr().StoreBootReason(DiagnosticDataProvider::BootReasonType::SoftwareReset);
-        err = CHIP_ERROR_REBOOT_SIGNAL_RECEIVED;
-        break;
-    case SIGHUP:
-        ConfigurationMgr().StoreBootReason(DiagnosticDataProvider::BootReasonType::BrownOutReset);
-        err = CHIP_ERROR_REBOOT_SIGNAL_RECEIVED;
-        break;
-    case SIGTERM:
-        ConfigurationMgr().StoreBootReason(DiagnosticDataProvider::BootReasonType::PowerOnReboot);
-        err = CHIP_ERROR_REBOOT_SIGNAL_RECEIVED;
-        break;
     case SIGUSR1:
-        ConfigurationMgr().StoreBootReason(DiagnosticDataProvider::BootReasonType::HardwareWatchdogReset);
-        err = CHIP_ERROR_REBOOT_SIGNAL_RECEIVED;
-        break;
-    case SIGUSR2:
-        ConfigurationMgr().StoreBootReason(DiagnosticDataProvider::BootReasonType::SoftwareWatchdogReset);
-        err = CHIP_ERROR_REBOOT_SIGNAL_RECEIVED;
-        break;
-    case SIGTSTP:
-        ConfigurationMgr().StoreBootReason(DiagnosticDataProvider::BootReasonType::SoftwareUpdateCompleted);
-        err = CHIP_ERROR_REBOOT_SIGNAL_RECEIVED;
-        break;
-    case SIGTRAP:
         PlatformMgrImpl().HandleSoftwareFault(SoftwareDiagnostics::Events::SoftwareFault::Id);
         break;
-    case SIGILL:
+    case SIGUSR2:
         PlatformMgrImpl().HandleGeneralFault(GeneralDiagnostics::Events::HardwareFaultChange::Id);
         break;
-    case SIGALRM:
+    case SIGHUP:
         PlatformMgrImpl().HandleGeneralFault(GeneralDiagnostics::Events::RadioFaultChange::Id);
         break;
-    case SIGVTALRM:
+    case SIGTERM:
         PlatformMgrImpl().HandleGeneralFault(GeneralDiagnostics::Events::NetworkFaultChange::Id);
         break;
-    case SIGIO:
+    case SIGTSTP:
         PlatformMgrImpl().HandleSwitchEvent(Switch::Events::SwitchLatched::Id);
         break;
     default:
         break;
-    }
-
-    if (err == CHIP_ERROR_REBOOT_SIGNAL_RECEIVED)
-    {
-        PlatformMgr().Shutdown();
-        exit(EXIT_FAILURE);
     }
 }
 
@@ -165,13 +136,19 @@ void PlatformManagerImpl::WiFIIPChangeListener()
                     if (routeInfo->rta_type == IFA_LOCAL)
                     {
                         char name[IFNAMSIZ];
-                        ChipDeviceEvent event;
-                        if_indextoname(addressMessage->ifa_index, name);
+                        if (if_indextoname(addressMessage->ifa_index, name) == NULL)
+                        {
+                            ChipLogError(DeviceLayer, "Error %d when getting the interface name at index: %d", errno,
+                                         addressMessage->ifa_index);
+                            continue;
+                        }
+
                         if (strcmp(name, ConnectivityManagerImpl::GetWiFiIfName()) != 0)
                         {
                             continue;
                         }
 
+                        ChipDeviceEvent event;
                         event.Type                            = DeviceEventType::kInternetConnectivityChange;
                         event.InternetConnectivityChange.IPv4 = kConnectivity_Established;
                         event.InternetConnectivityChange.IPv6 = kConnectivity_NoChange;
@@ -201,7 +178,6 @@ CHIP_ERROR PlatformManagerImpl::_InitChipStack()
 
     memset(&action, 0, sizeof(action));
     action.sa_handler = SignalHandler;
-    sigaction(SIGINT, &action, NULL);
     sigaction(SIGHUP, &action, NULL);
     sigaction(SIGTERM, &action, NULL);
     sigaction(SIGUSR1, &action, NULL);
@@ -235,22 +211,13 @@ CHIP_ERROR PlatformManagerImpl::_InitChipStack()
 
     mStartTime = System::SystemClock().GetMonotonicTimestamp();
 
-    ScheduleWork(HandleDeviceRebooted, 0);
-
 exit:
     return err;
 }
 
 CHIP_ERROR PlatformManagerImpl::_Shutdown()
 {
-    PlatformManagerDelegate * platformManagerDelegate = PlatformMgr().GetDelegate();
-    uint64_t upTime                                   = 0;
-
-    // The ShutDown event SHOULD be emitted by a Node prior to any orderly shutdown sequence.
-    if (platformManagerDelegate != nullptr)
-    {
-        platformManagerDelegate->OnShutDown();
-    }
+    uint64_t upTime = 0;
 
     if (GetDiagnosticDataProvider().GetUpTime(upTime) == CHIP_NO_ERROR)
     {
@@ -282,17 +249,17 @@ CHIP_ERROR PlatformManagerImpl::_GetFixedLabelList(
     FixedLabel::Structs::LabelStruct::Type floor;
     FixedLabel::Structs::LabelStruct::Type direction;
 
-    room.label = CharSpan("room", strlen("room"));
-    room.value = CharSpan("bedroom 2", strlen("bedroom 2"));
+    room.label = CharSpan::fromCharString("room");
+    room.value = CharSpan::fromCharString("bedroom 2");
 
-    orientation.label = CharSpan("orientation", strlen("orientation"));
-    orientation.value = CharSpan("North", strlen("North"));
+    orientation.label = CharSpan::fromCharString("orientation");
+    orientation.value = CharSpan::fromCharString("North");
 
-    floor.label = CharSpan("floor", strlen("floor"));
-    floor.value = CharSpan("2", strlen("2"));
+    floor.label = CharSpan::fromCharString("floor");
+    floor.value = CharSpan::fromCharString("2");
 
-    direction.label = CharSpan("direction", strlen("direction"));
-    direction.value = CharSpan("up", strlen("up"));
+    direction.label = CharSpan::fromCharString("direction");
+    direction.value = CharSpan::fromCharString("up");
 
     labelList.add(room);
     labelList.add(orientation);
@@ -320,17 +287,17 @@ PlatformManagerImpl::_GetUserLabelList(
     UserLabel::Structs::LabelStruct::Type floor;
     UserLabel::Structs::LabelStruct::Type direction;
 
-    room.label = CharSpan("room", strlen("room"));
-    room.value = CharSpan("bedroom 2", strlen("bedroom 2"));
+    room.label = CharSpan::fromCharString("room");
+    room.value = CharSpan::fromCharString("bedroom 2");
 
-    orientation.label = CharSpan("orientation", strlen("orientation"));
-    orientation.value = CharSpan("North", strlen("North"));
+    orientation.label = CharSpan::fromCharString("orientation");
+    orientation.value = CharSpan::fromCharString("North");
 
-    floor.label = CharSpan("floor", strlen("floor"));
-    floor.value = CharSpan("2", strlen("2"));
+    floor.label = CharSpan::fromCharString("floor");
+    floor.value = CharSpan::fromCharString("2");
 
-    direction.label = CharSpan("direction", strlen("direction"));
-    direction.value = CharSpan("up", strlen("up"));
+    direction.label = CharSpan::fromCharString("direction");
+    direction.value = CharSpan::fromCharString("up");
 
     labelList.add(room);
     labelList.add(orientation);
@@ -344,14 +311,14 @@ CHIP_ERROR
 PlatformManagerImpl::_GetSupportedLocales(AttributeList<chip::CharSpan, kMaxLanguageTags> & supportedLocales)
 {
     // In Linux simulation, return following hardcoded list of Strings that are valid values for the ActiveLocale.
-    supportedLocales.add(CharSpan("en-US", strlen("en-US")));
-    supportedLocales.add(CharSpan("de-DE", strlen("de-DE")));
-    supportedLocales.add(CharSpan("fr-FR", strlen("fr-FR")));
-    supportedLocales.add(CharSpan("en-GB", strlen("en-GB")));
-    supportedLocales.add(CharSpan("es-ES", strlen("es-ES")));
-    supportedLocales.add(CharSpan("zh-CN", strlen("zh-CN")));
-    supportedLocales.add(CharSpan("it-IT", strlen("it-IT")));
-    supportedLocales.add(CharSpan("ja-JP", strlen("ja-JP")));
+    supportedLocales.add(CharSpan::fromCharString("en-US"));
+    supportedLocales.add(CharSpan::fromCharString("de-DE"));
+    supportedLocales.add(CharSpan::fromCharString("fr-FR"));
+    supportedLocales.add(CharSpan::fromCharString("en-GB"));
+    supportedLocales.add(CharSpan::fromCharString("es-ES"));
+    supportedLocales.add(CharSpan::fromCharString("zh-CN"));
+    supportedLocales.add(CharSpan::fromCharString("it-IT"));
+    supportedLocales.add(CharSpan::fromCharString("ja-JP"));
 
     return CHIP_NO_ERROR;
 }
@@ -375,26 +342,6 @@ PlatformManagerImpl::_GetSupportedCalendarTypes(
     supportedCalendarTypes.add(app::Clusters::TimeFormatLocalization::CalendarType::kTaiwanese);
 
     return CHIP_NO_ERROR;
-}
-
-void PlatformManagerImpl::HandleDeviceRebooted(intptr_t arg)
-{
-    PlatformManagerDelegate * platformManagerDelegate       = PlatformMgr().GetDelegate();
-    GeneralDiagnosticsDelegate * generalDiagnosticsDelegate = GetDiagnosticDataProvider().GetGeneralDiagnosticsDelegate();
-
-    if (generalDiagnosticsDelegate != nullptr)
-    {
-        generalDiagnosticsDelegate->OnDeviceRebooted();
-    }
-
-    // The StartUp event SHALL be emitted by a Node after completing a boot or reboot process
-    if (platformManagerDelegate != nullptr)
-    {
-        uint16_t softwareVersion;
-
-        ReturnOnFailure(ConfigurationMgr().GetSoftwareVersion(softwareVersion));
-        platformManagerDelegate->OnStartUp(softwareVersion);
-    }
 }
 
 void PlatformManagerImpl::HandleGeneralFault(uint32_t EventId)
@@ -469,13 +416,13 @@ void PlatformManagerImpl::HandleSoftwareFault(uint32_t EventId)
 
     if (delegate != nullptr)
     {
-        SoftwareDiagnostics::Structs::SoftwareFault::Type softwareFault;
+        SoftwareDiagnostics::Structs::SoftwareFaultStruct::Type softwareFault;
         char threadName[kMaxThreadNameLength + 1];
 
         softwareFault.id = gettid();
         strncpy(threadName, std::to_string(softwareFault.id).c_str(), kMaxThreadNameLength);
         threadName[kMaxThreadNameLength] = '\0';
-        softwareFault.name               = CharSpan(threadName, strlen(threadName));
+        softwareFault.name               = CharSpan::fromCharString(threadName);
         softwareFault.faultRecording     = ByteSpan(Uint8::from_const_char("FaultRecording"), strlen("FaultRecording"));
 
         delegate->OnSoftwareFaultDetected(softwareFault);

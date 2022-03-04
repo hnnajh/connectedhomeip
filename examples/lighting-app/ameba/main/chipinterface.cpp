@@ -30,21 +30,39 @@
 #include <support/CHIPMem.h>
 
 #include <app/clusters/identify-server/identify-server.h>
+#include <app/clusters/network-commissioning/network-commissioning.h>
 #include <app/server/OnboardingCodesUtil.h>
 #include <lib/support/ErrorStr.h>
 #include <platform/Ameba/AmebaConfig.h>
+#include <platform/Ameba/NetworkCommissioningDriver.h>
+#include <platform/CHIPDeviceLayer.h>
 #include <setup_payload/ManualSetupPayloadGenerator.h>
 #include <setup_payload/QRCodeSetupPayloadGenerator.h>
 
 #include <lwip_netconf.h>
 
+#if CONFIG_ENABLE_OTA_REQUESTOR
+#include "app/clusters/ota-requestor/BDXDownloader.h"
+#include "app/clusters/ota-requestor/OTARequestor.h"
+#include "platform/Ameba/AmebaOTAImageProcessor.h"
+#include "platform/GenericOTARequestorDriver.h"
+#endif
+
 using namespace ::chip;
 using namespace ::chip::Credentials;
 using namespace ::chip::DeviceManager;
 using namespace ::chip::DeviceLayer;
+using namespace ::chip::System;
 
-#define QRCODE_BASE_URL "https://dhrishi.github.io/connectedhomeip/qrcode.html"
-#define EXAMPLE_VENDOR_TAG_IP 1
+namespace {
+app::Clusters::NetworkCommissioning::Instance
+    sWiFiNetworkCommissioningInstance(0 /* Endpoint Id */, &(NetworkCommissioning::AmebaWiFiDriver::GetInstance()));
+} // namespace
+
+void NetWorkCommissioningInstInit()
+{
+    sWiFiNetworkCommissioningInstance.Init();
+}
 
 #ifdef CONFIG_PLATFORM_8721D
 #define STATUS_LED_GPIO_NUM PB_5
@@ -56,118 +74,50 @@ using namespace ::chip::DeviceLayer;
 
 static DeviceCallbacks EchoCallbacks;
 
-void GetGatewayIP(char * ip_buf, size_t ip_len)
+#if CONFIG_ENABLE_OTA_REQUESTOR
+OTARequestor gRequestorCore;
+GenericOTARequestorDriver gRequestorUser;
+BDXDownloader gDownloader;
+AmebaOTAImageProcessor gImageProcessor;
+#endif
+
+#if CONFIG_ENABLE_OTA_REQUESTOR
+extern "C" void amebaQueryImageCmdHandler()
 {
-    uint8_t * gateway = LwIP_GetGW(&xnetif[0]);
-    sprintf(ip_buf, "%d.%d.%d.%d", gateway[0], gateway[1], gateway[2], gateway[3]);
-    printf("Got gateway ip: %s\r\n", ip_buf);
+    ChipLogProgress(DeviceLayer, "Calling amebaQueryImageCmdHandler");
+    static_cast<OTARequestor *>(GetRequestorInstance())->TriggerImmediateQuery();
 }
 
-// need to check CONFIG_RENDEZVOUS_MODE
-bool isRendezvousBLE()
+extern "C" void amebaApplyUpdateCmdHandler()
 {
-    RendezvousInformationFlags flags = RendezvousInformationFlags(CONFIG_RENDEZVOUS_MODE);
-    return flags.Has(RendezvousInformationFlag::kBLE);
+    ChipLogProgress(DeviceLayer, "Calling amebaApplyUpdateCmdHandler");
+
+    static_cast<OTARequestor *>(GetRequestorInstance())->ApplyUpdate();
 }
 
-std::string createSetupPayload()
+static void InitOTARequestor(void)
 {
-    CHIP_ERROR err = CHIP_NO_ERROR;
-    std::string result;
+    // Initialize and interconnect the Requestor and Image Processor objects -- START
+    SetRequestorInstance(&gRequestorCore);
 
-    uint16_t discriminator;
-    err = ConfigurationMgr().GetSetupDiscriminator(discriminator);
-    if (err != CHIP_NO_ERROR)
-    {
-        printf("Couldn't get discriminator: %s\r\n", ErrorStr(err));
-        return result;
-    }
-    printf("Setup discriminator: %u (0x%x)\r\n", discriminator, discriminator);
+    // Set server instance used for session establishment
+    gRequestorCore.Init(&(chip::Server::GetInstance()), &gRequestorUser, &gDownloader);
 
-    uint32_t setupPINCode;
-    err = ConfigurationMgr().GetSetupPinCode(setupPINCode);
-    if (err != CHIP_NO_ERROR)
-    {
-        printf("Couldn't get setupPINCode: %s\r\n", ErrorStr(err));
-        return result;
-    }
-    printf("Setup PIN code: %u (0x%x)\r\n", setupPINCode, setupPINCode);
+    // WARNING: this is probably not realistic to know such details of the image or to even have an OTADownloader instantiated at
+    // the beginning of program execution. We're using hardcoded values here for now since this is a reference application.
+    // TODO: instatiate and initialize these values when QueryImageResponse tells us an image is available
+    // TODO: add API for OTARequestor to pass QueryImageResponse info to the application to use for OTADownloader init
+    OTAImageProcessorParams ipParams;
+    gImageProcessor.SetOTAImageProcessorParams(ipParams);
+    gImageProcessor.SetOTADownloader(&gDownloader);
 
-    uint16_t vendorId;
-    err = ConfigurationMgr().GetVendorId(vendorId);
-    if (err != CHIP_NO_ERROR)
-    {
-        printf("Couldn't get vendorId: %s\r\n", ErrorStr(err));
-        return result;
-    }
+    // Connect the Downloader and Image Processor objects
+    gDownloader.SetImageProcessorDelegate(&gImageProcessor);
+    gRequestorUser.Init(&gRequestorCore, &gImageProcessor);
 
-    uint16_t productId;
-    err = ConfigurationMgr().GetProductId(productId);
-    if (err != CHIP_NO_ERROR)
-    {
-        printf("Couldn't get productId: %s\r\n", ErrorStr(err));
-        return result;
-    }
-
-    SetupPayload payload;
-    payload.version               = 0;
-    payload.discriminator         = discriminator;
-    payload.setUpPINCode          = setupPINCode;
-    payload.rendezvousInformation = RendezvousInformationFlags(CONFIG_RENDEZVOUS_MODE);
-    payload.vendorID              = vendorId;
-    payload.productID             = productId;
-
-    if (!isRendezvousBLE())
-    {
-        char gw_ip[INET6_ADDRSTRLEN];
-        GetGatewayIP(gw_ip, sizeof(gw_ip));
-        payload.addOptionalVendorData(EXAMPLE_VENDOR_TAG_IP, gw_ip);
-
-        QRCodeSetupPayloadGenerator generator(payload);
-
-        size_t tlvDataLen = sizeof(gw_ip);
-        uint8_t tlvDataStart[tlvDataLen];
-        err = generator.payloadBase38Representation(result, tlvDataStart, tlvDataLen);
-    }
-    else
-    {
-        QRCodeSetupPayloadGenerator generator(payload);
-        err = generator.payloadBase38Representation(result);
-    }
-
-    {
-        ManualSetupPayloadGenerator generator(payload);
-        std::string outCode;
-
-        if (generator.payloadDecimalStringRepresentation(outCode) == CHIP_NO_ERROR)
-        {
-            printf("Short Manual(decimal) setup code: %s\r\n", outCode.c_str());
-        }
-        else
-        {
-            printf("Failed to get decimal setup code\r\n");
-        }
-
-        payload.commissioningFlow = CommissioningFlow::kCustom;
-        generator                 = ManualSetupPayloadGenerator(payload);
-
-        if (generator.payloadDecimalStringRepresentation(outCode) == CHIP_NO_ERROR)
-        {
-            // intentional extra space here to align the log with the short code
-            printf("Long Manual(decimal) setup code:  %s\r\n", outCode.c_str());
-        }
-        else
-        {
-            printf("Failed to get decimal setup code\r\n");
-        }
-    }
-
-    if (err != CHIP_NO_ERROR)
-    {
-        printf("Couldn't get payload string %\r\n" CHIP_ERROR_FORMAT, err.Format());
-    }
-    return result;
-};
+    // Initialize and interconnect the Requestor and Image Processor objects -- END
+}
+#endif // CONFIG_ENABLE_OTA_REQUESTOR
 
 void OnIdentifyStart(Identify *)
 {
@@ -205,49 +155,52 @@ static Identify gIdentify1 = {
     chip::EndpointId{ 1 }, OnIdentifyStart, OnIdentifyStop, EMBER_ZCL_IDENTIFY_IDENTIFY_TYPE_VISIBLE_LED, OnTriggerEffect,
 };
 
-extern "C" void ChipTest(void)
+static void InitServer(intptr_t context)
 {
-    printf("In ChipTest()\r\n");
-    CHIP_ERROR err = CHIP_NO_ERROR;
-
-    printf("initPrefr\n");
-    initPref();
-
-    CHIPDeviceManager & deviceMgr = CHIPDeviceManager::GetInstance();
-    err                           = deviceMgr.Init(&EchoCallbacks);
-
-    if (err != CHIP_NO_ERROR)
-    {
-        printf("DeviceManagerInit() - ERROR!\r\n");
-    }
-    else
-    {
-        printf("DeviceManagerInit() - OK\r\n");
-    }
-
+    // Init ZCL Data Model and CHIP App Server
     chip::Server::GetInstance().Init();
 
     // Initialize device attestation config
     SetDeviceAttestationCredentialsProvider(Examples::GetExampleDACProvider());
+    NetWorkCommissioningInstInit();
 
-    std::string qrCodeText = createSetupPayload();
-
-    printf("QR CODE Text: '%s'\r\n", qrCodeText.c_str());
-
+    if (RTW_SUCCESS != wifi_is_connected_to_ap())
     {
-        std::vector<char> qrCode(3 * qrCodeText.size() + 1);
-        err = EncodeQRCodeToUrl(qrCodeText.c_str(), qrCodeText.size(), qrCode.data(), qrCode.max_size());
-        if (err == CHIP_NO_ERROR)
-        {
-            printf("Copy/paste the below URL in a browser to see the QR CODE:\n\t%s?data=%s", QRCODE_BASE_URL, qrCode.data());
-        }
+        // QR code will be used with CHIP Tool
+        PrintOnboardingCodes(chip::RendezvousInformationFlags(chip::RendezvousInformationFlag::kBLE));
     }
-    printf("\n\n");
+
+#if CONFIG_ENABLE_OTA_REQUESTOR
+    InitOTARequestor();
+#endif
+}
+
+extern "C" void ChipTest(void)
+{
+    ChipLogProgress(DeviceLayer, "Lighting App Demo!");
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    initPref();
+
+    CHIPDeviceManager & deviceMgr = CHIPDeviceManager::GetInstance();
+
+    err = deviceMgr.Init(&EchoCallbacks);
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(DeviceLayer, "DeviceManagerInit() - ERROR!\r\n");
+    }
+    else
+    {
+        ChipLogProgress(DeviceLayer, "DeviceManagerInit() - OK\r\n");
+    }
+
+    chip::DeviceLayer::PlatformMgr().ScheduleWork(InitServer, 0);
 
     statusLED1.Init(STATUS_LED_GPIO_NUM);
 
-    while (true)
-        vTaskDelay(pdMS_TO_TICKS(50));
+#if CONFIG_ENABLE_OTA_REQUESTOR
+    InitOTARequestor();
+#endif
 }
 
 bool lowPowerClusterSleep()

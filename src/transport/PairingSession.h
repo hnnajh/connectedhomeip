@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2021 Project CHIP Authors
+ *    Copyright (c) 2021-2022 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -38,7 +38,7 @@ namespace chip {
 class DLL_EXPORT PairingSession
 {
 public:
-    PairingSession() {}
+    PairingSession(Transport::SecureSession::Type secureSessionType) : mSecureSessionType(secureSessionType) {}
     virtual ~PairingSession() {}
 
     Transport::SecureSession::Type GetSecureSessionType() const { return mSecureSessionType; }
@@ -81,17 +81,7 @@ public:
 
     /**
      * @brief
-     *   Get the value of peer session counter which is synced during session establishment
-     */
-    virtual uint32_t GetPeerCounter()
-    {
-        // TODO(#6652): This is a stub implementation, should be replaced by the real one when CASE and PASE is completed
-        return LocalSessionMessageCounter::kInitialSyncValue;
-    }
-
-    /**
-     * @brief
-     *   Get the value of peer session counter which is synced during session establishment
+     *   Get the MRP config that was communicated during the session establishment.
      */
     virtual const ReliableMessageProtocolConfig & GetMRPConfig() const { return mMRPConfig; }
 
@@ -104,7 +94,6 @@ public:
                                           TLV::TLVWriter & tlvWriter);
 
 protected:
-    void SetSecureSessionType(Transport::SecureSession::Type secureSessionType) { mSecureSessionType = secureSessionType; }
     void SetPeerNodeId(NodeId peerNodeId) { mPeerNodeId = peerNodeId; }
     void SetPeerCATs(CATValues peerCATs) { mPeerCATs = peerCATs; }
     void SetPeerSessionId(uint16_t id) { mPeerSessionId.SetValue(id); }
@@ -177,17 +166,16 @@ protected:
     // TODO: remove Clear, we should create a new instance instead reset the old instance.
     void Clear()
     {
-        mSecureSessionType = Transport::SecureSession::Type::kUndefined;
-        mPeerNodeId        = kUndefinedNodeId;
-        mPeerCATs          = kUndefinedCATs;
-        mPeerAddress       = Transport::PeerAddress::Uninitialized();
+        mPeerNodeId  = kUndefinedNodeId;
+        mPeerCATs    = kUndefinedCATs;
+        mPeerAddress = Transport::PeerAddress::Uninitialized();
         mPeerSessionId.ClearValue();
         mLocalSessionId = kInvalidKeyId;
     }
 
 private:
-    Transport::SecureSession::Type mSecureSessionType = Transport::SecureSession::Type::kUndefined;
-    NodeId mPeerNodeId                                = kUndefinedNodeId;
+    const Transport::SecureSession::Type mSecureSessionType;
+    NodeId mPeerNodeId = kUndefinedNodeId;
     CATValues mPeerCATs;
 
     // TODO: the local key id should be allocateed at start
@@ -200,7 +188,7 @@ private:
 
     Optional<uint16_t> mPeerSessionId;
 
-    ReliableMessageProtocolConfig mMRPConfig = gDefaultMRPConfig;
+    ReliableMessageProtocolConfig mMRPConfig = GetLocalMRPConfig();
 };
 
 } // namespace chip

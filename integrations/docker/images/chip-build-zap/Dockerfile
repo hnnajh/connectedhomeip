@@ -1,8 +1,8 @@
 FROM alpine:3.14
 
 RUN apk add --no-cache \
-  nodejs=14.18.1-r0 \
-  openjdk11=11.0.12_p7-r0 \
+  nodejs=14.19.0-r0 \
+  openjdk11=11.0.14_p9-r0 \
   npm=7.17.0-r0 \
   python3=3.9.5-r2 \
   pixman-dev=0.40.0-r2 \
@@ -13,4 +13,13 @@ RUN apk add --no-cache \
   libjpeg-turbo-dev=2.1.0-r0 \
   giflib-dev=5.2.1-r0 \
   git=2.32.0-r0 \
-  clang-dev=11.1.0-r1
+  clang-dev=11.1.0-r1 \
+  py3-pip=20.3.4-r1
+
+# Generator dependencies
+RUN pip3 install --no-cache-dir \
+    click==8.0.3                \
+    coloredlogs==15.0.1         \
+    jinja2==3.0.3               \
+    lark==1.0.0                 \
+    stringcase==1.2.0

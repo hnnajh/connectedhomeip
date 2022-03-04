@@ -40,8 +40,12 @@
 
 {{#chip_client_clusters}}
 {{#chip_server_cluster_attributes}}
-{{#if isList}}
+{{#if isArray}}
 {{#>CHIPCallbackBridge ns=parent.name                                }}{{asUpperCamelCase ../../name}}{{asUpperCamelCase ../name}}ListAttributeCallback{{/CHIPCallbackBridge}}
+{{else}}
+  {{#if_is_struct type}}
+  {{#>CHIPCallbackBridge ns=parent.name                              }}{{asUpperCamelCase ../../name}}{{asUpperCamelCase ../name}}StructAttributeCallback{{/CHIPCallbackBridge}}
+  {{/if_is_struct}}
 {{/if}}
 {{/chip_server_cluster_attributes}}
 {{/chip_client_clusters}}

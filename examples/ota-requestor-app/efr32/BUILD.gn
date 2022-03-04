@@ -39,7 +39,7 @@ declare_args() {
   chip_print_memory_usage = false
 
   # PIN code for PASE session establishment.
-  setupPinCode = 73141520
+  setupPinCode = 20202021
   setupDiscriminator = 3840
 
   # Monitor & log memory usage at runtime.
@@ -63,6 +63,7 @@ efr32_sdk("sdk") {
     "${chip_root}/src/platform/EFR32",
     "${efr32_project_dir}/include",
     "${examples_plat_dir}",
+    "${chip_root}/src/lib",
   ]
 
   defines = [
@@ -81,6 +82,8 @@ efr32_sdk("sdk") {
 
 efr32_executable("ota_requestor_app") {
   output_name = "chip-efr32-ota-requestor-example.out"
+  include_dirs = [ "include" ]
+  defines = []
 
   sources = [
     "${examples_plat_dir}/LEDWidget.cpp",
@@ -116,10 +119,6 @@ efr32_executable("ota_requestor_app") {
     ]
   }
 
-  include_dirs = [ "include" ]
-
-  defines = []
-
   if (show_qr_code) {
     sources += [ "${examples_plat_dir}/display/lcd.c" ]
     defines += [ "DISPLAY_ENABLED" ]
@@ -130,6 +129,7 @@ efr32_executable("ota_requestor_app") {
       "PW_RPC_ENABLED",
       "PW_RPC_ATTRIBUTE_SERVICE=1",
       "PW_RPC_BUTTON_SERVICE=1",
+      "PW_RPC_DESCRIPTOR_SERVICE=1",
       "PW_RPC_DEVICE_SERVICE=1",
       "PW_RPC_LIGHTING_SERVICE=1",
     ]
@@ -147,6 +147,7 @@ efr32_executable("ota_requestor_app") {
       "${chip_root}/config/efr32/lib/pw_rpc:pw_rpc",
       "${chip_root}/examples/common/pigweed:attributes_service.nanopb_rpc",
       "${chip_root}/examples/common/pigweed:button_service.nanopb_rpc",
+      "${chip_root}/examples/common/pigweed:descriptor_service.nanopb_rpc",
       "${chip_root}/examples/common/pigweed:device_service.nanopb_rpc",
       "${chip_root}/examples/common/pigweed:lighting_service.nanopb_rpc",
       "${examples_plat_dir}/pw_sys_io:pw_sys_io_efr32",

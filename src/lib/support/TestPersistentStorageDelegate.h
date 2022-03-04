@@ -19,22 +19,28 @@
 #pragma once
 
 #include <algorithm>
+#include <credentials/FabricTable.h>
 #include <lib/core/CHIPCore.h>
 #include <lib/core/CHIPPersistentStorageDelegate.h>
 #include <lib/support/DLLUtil.h>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
 namespace chip {
-
-class TestPersistentStorageDelegate : public PersistentStorageDelegate
+// TODO : Remove FabricStorage dependency
+class TestPersistentStorageDelegate : public PersistentStorageDelegate, public FabricStorage
 {
 public:
     TestPersistentStorageDelegate() {}
 
     CHIP_ERROR SyncGetKeyValue(const char * key, void * buffer, uint16_t & size) override
     {
+        if (mErrorKeys.find(std::string(key)) != mErrorKeys.end())
+        {
+            return CHIP_ERROR_PERSISTED_STORAGE_FAILED;
+        }
         bool contains = mStorage.find(key) != mStorage.end();
         VerifyOrReturnError(contains, CHIP_ERROR_PERSISTED_STORAGE_VALUE_NOT_FOUND);
 
@@ -49,6 +55,10 @@ public:
 
     CHIP_ERROR SyncSetKeyValue(const char * key, const void * value, uint16_t size) override
     {
+        if (mErrorKeys.find(std::string(key)) != mErrorKeys.end())
+        {
+            return CHIP_ERROR_PERSISTED_STORAGE_FAILED;
+        }
         const uint8_t * bytes = static_cast<const uint8_t *>(value);
         mStorage[key]         = std::vector<uint8_t>(bytes, bytes + size);
         return CHIP_NO_ERROR;
@@ -56,12 +66,35 @@ public:
 
     CHIP_ERROR SyncDeleteKeyValue(const char * key) override
     {
+        if (mErrorKeys.find(std::string(key)) != mErrorKeys.end())
+        {
+            return CHIP_ERROR_PERSISTED_STORAGE_FAILED;
+        }
+        bool contains = mStorage.find(key) != mStorage.end();
+        VerifyOrReturnError(contains, CHIP_ERROR_PERSISTED_STORAGE_VALUE_NOT_FOUND);
         mStorage.erase(key);
         return CHIP_NO_ERROR;
     }
 
+    CHIP_ERROR SyncStore(FabricIndex fabricIndex, const char * key, const void * buffer, uint16_t size) override
+    {
+        return SyncSetKeyValue(key, buffer, size);
+    };
+
+    CHIP_ERROR SyncLoad(FabricIndex fabricIndex, const char * key, void * buffer, uint16_t & size) override
+    {
+        return SyncGetKeyValue(key, buffer, size);
+    };
+
+    CHIP_ERROR SyncDelete(FabricIndex fabricIndex, const char * key) override { return SyncDeleteKeyValue(key); };
+
+    void AddErrorKey(const std::string & key) { mErrorKeys.insert(key); }
+
+    void ClearErrorKey() { mErrorKeys.clear(); }
+
 protected:
     std::map<std::string, std::vector<uint8_t>> mStorage;
+    std::set<std::string> mErrorKeys;
 };
 
 } // namespace chip

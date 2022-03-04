@@ -37,8 +37,22 @@ public:
 
     const char * FabricTable(chip::FabricIndex fabric) { return Format("f/%x/t", fabric); }
 
+    // Access Control List
+
+    const char * AccessControlList() { return Format("acl"); }
+    const char * AccessControlEntry(size_t index)
+    {
+        // This cast will never overflow because the number of ACL entries will be low.
+        return Format("acl/%x", static_cast<unsigned int>(index));
+    }
+
+    // Group Message Counters
+    const char * GroupDataCounter() { return Format("gdc"); }
+    const char * GroupControlCounter() { return Format("gcc"); }
+
     // Group Data Provider
 
+    const char * FabricTable() { return Format("f/t"); }
     const char * FabricGroups(chip::FabricIndex fabric) { return Format("f/%x/g", fabric); }
     const char * FabricGroup(chip::FabricIndex fabric, chip::GroupId group) { return Format("f/%x/g/%x", fabric, group); }
     const char * FabricGroupKey(chip::FabricIndex fabric, uint16_t index) { return Format("f/%x/gk/%x", fabric, index); }
@@ -54,6 +68,9 @@ public:
         // for the cluster and attribute ids.
         return Format("a/%" PRIx16 "/%" PRIx32 "/%" PRIx32, aPath.mEndpointId, aPath.mClusterId, aPath.mAttributeId);
     }
+
+    const char * BindingTable() { return Format("bt"); }
+    const char * BindingTableEntry(uint8_t index) { return Format("bt/%x", index); }
 
 private:
     static const size_t kKeyLengthMax = 32;

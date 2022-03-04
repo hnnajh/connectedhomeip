@@ -28,10 +28,8 @@
 
 #include <app/CommandSender.h>
 #include <app/DeviceProxy.h>
-#include <app/util/CHIPDeviceCallbacksMgr.h>
 #include <app/util/attribute-filter.h>
 #include <app/util/basic-types.h>
-#include <controller-clusters/zap-generated/CHIPClientCallbacks.h>
 #include <controller/CHIPDeviceControllerSystemState.h>
 #include <controller/OperationalCredentialsDelegate.h>
 #include <lib/core/CHIPCallback.h>
@@ -76,8 +74,6 @@ struct ControllerDeviceInitParams
     Ble::BleLayer * bleLayer = nullptr;
 #endif
     FabricTable * fabricsTable = nullptr;
-
-    Controller::DeviceControllerInteractionModelDelegate * imDelegate = nullptr;
 };
 
 class CommissioneeDeviceProxy : public DeviceProxy, public SessionReleaseDelegate
@@ -91,7 +87,7 @@ public:
      * @brief
      *   Send the command in internal command sender.
      */
-    CHIP_ERROR SendCommands(app::CommandSender * commandObj) override;
+    CHIP_ERROR SendCommands(app::CommandSender * commandObj, Optional<System::Clock::Timeout> timeout) override;
 
     /**
      * @brief Get the IP address and port assigned to the device.
@@ -125,7 +121,6 @@ public:
         mUDPEndPointManager = params.udpEndPointManager;
         mFabricIndex        = fabric;
         mIDAllocator        = params.idAllocator;
-        mpIMDelegate        = params.imDelegate;
 #if CONFIG_NETWORK_LAYER_BLE
         mBleLayer = params.bleLayer;
 #endif
@@ -150,8 +145,8 @@ public:
     void Init(ControllerDeviceInitParams params, NodeId deviceId, const Transport::PeerAddress & peerAddress, FabricIndex fabric)
     {
         Init(params, fabric);
-        mDeviceId = deviceId;
-        mState    = ConnectionState::Connecting;
+        mPeerId = PeerId().SetNodeId(deviceId);
+        mState  = ConnectionState::Connecting;
 
         mDeviceAddress = peerAddress;
     }
@@ -161,8 +156,6 @@ public:
      *   Called when the associated session is released
      *
      *   The receiver should release all resources associated with the connection.
-     *
-     * @param session A handle to the secure session
      */
     void OnSessionReleased() override;
 
@@ -210,7 +203,9 @@ public:
 
     void Reset();
 
-    NodeId GetDeviceId() const override { return mDeviceId; }
+    NodeId GetDeviceId() const override { return mPeerId.GetNodeId(); }
+    PeerId GetPeerId() const { return mPeerId; }
+    CHIP_ERROR SetPeerId(ByteSpan rcac, ByteSpan noc) override;
 
     bool MatchesSession(const SessionHandle & session) const { return mSecureSession.Contains(session); }
 
@@ -231,46 +226,6 @@ public:
         return LoadSecureSessionParametersIfNeeded(loadedSecureSession);
     };
 
-    CHIP_ERROR SetCSRNonce(ByteSpan csrNonce)
-    {
-        VerifyOrReturnError(csrNonce.size() == sizeof(mCSRNonce), CHIP_ERROR_INVALID_ARGUMENT);
-        memcpy(mCSRNonce, csrNonce.data(), csrNonce.size());
-        return CHIP_NO_ERROR;
-    }
-
-    ByteSpan GetCSRNonce() const { return ByteSpan(mCSRNonce, sizeof(mCSRNonce)); }
-
-    CHIP_ERROR SetAttestationNonce(ByteSpan attestationNonce)
-    {
-        VerifyOrReturnError(attestationNonce.size() == sizeof(mAttestationNonce), CHIP_ERROR_INVALID_ARGUMENT);
-        memcpy(mAttestationNonce, attestationNonce.data(), attestationNonce.size());
-        return CHIP_NO_ERROR;
-    }
-
-    ByteSpan GetAttestationNonce() const { return ByteSpan(mAttestationNonce, sizeof(mAttestationNonce)); }
-
-    bool AreCredentialsAvailable() const { return (mDAC != nullptr && mDACLen != 0); }
-
-    ByteSpan GetDAC() const { return ByteSpan(mDAC, mDACLen); }
-    ByteSpan GetPAI() const { return ByteSpan(mPAI, mPAILen); }
-
-    CHIP_ERROR SetDAC(const ByteSpan & dac);
-    CHIP_ERROR SetPAI(const ByteSpan & pai);
-
-    MutableByteSpan GetMutableNOCCert() { return MutableByteSpan(mNOCCertBuffer, sizeof(mNOCCertBuffer)); }
-
-    CHIP_ERROR SetNOCCertBufferSize(size_t new_size);
-
-    ByteSpan GetNOCCert() const { return ByteSpan(mNOCCertBuffer, mNOCCertBufferSize); }
-
-    MutableByteSpan GetMutableICACert() { return MutableByteSpan(mICACertBuffer, sizeof(mICACertBuffer)); }
-
-    CHIP_ERROR SetICACertBufferSize(size_t new_size);
-
-    ByteSpan GetICACert() const { return ByteSpan(mICACertBuffer, mICACertBufferSize); }
-
-    Controller::DeviceControllerInteractionModelDelegate * GetInteractionModelDelegate() override { return mpIMDelegate; };
-
 private:
     enum class ConnectionState
     {
@@ -284,8 +239,9 @@ private:
         kYes,
         kNo,
     };
-    /* Node ID assigned to the CHIP device */
-    NodeId mDeviceId;
+
+    /* Compressed fabric ID and node ID assigned to the device. */
+    PeerId mPeerId;
 
     /** Address used to communicate with the device.
      */
@@ -308,8 +264,6 @@ private:
 
     SessionHolderWithDelegate mSecureSession;
 
-    Controller::DeviceControllerInteractionModelDelegate * mpIMDelegate = nullptr;
-
     uint8_t mSequenceNumber = 0;
 
     /**
@@ -330,25 +284,7 @@ private:
      */
     CHIP_ERROR LoadSecureSessionParametersIfNeeded(bool & didLoad);
 
-    void ReleaseDAC();
-    void ReleasePAI();
-
     FabricIndex mFabricIndex = kUndefinedFabricIndex;
-
-    // TODO: Offload Nonces and DAC/PAI into a new struct
-    uint8_t mCSRNonce[Controller::kOpCSRNonceLength];
-    uint8_t mAttestationNonce[kAttestationNonceLength];
-
-    uint8_t * mDAC   = nullptr;
-    uint16_t mDACLen = 0;
-    uint8_t * mPAI   = nullptr;
-    uint16_t mPAILen = 0;
-
-    uint8_t mNOCCertBuffer[Credentials::kMaxCHIPCertLength];
-    size_t mNOCCertBufferSize = 0;
-
-    uint8_t mICACertBuffer[Credentials::kMaxCHIPCertLength];
-    size_t mICACertBufferSize = 0;
 
     SessionIDAllocator * mIDAllocator = nullptr;
 };

@@ -134,7 +134,9 @@ try:
         'rich',
         'stringcase',
         'pyyaml',
-        'ipdb'
+        'ipdb',
+        'ipykernel',
+        'deprecation'
     ]
 
     if platform.system() == "Darwin":
@@ -162,6 +164,7 @@ try:
         'chip.clusters',
         'chip.tlv',
         'chip.setup_payload',
+        'chip.storage',
     ]
     #print ("Server: {}".format(args.server))
     if args.server:

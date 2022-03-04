@@ -86,15 +86,15 @@ pw_proto_library(locking_service
 
 pw_proto_library(wifi_service
   SOURCES
-    ${chip_dir}/examples/ipv6only-app/common/wifi_service/wifi_service.proto
+    ${chip_dir}/examples/common/pigweed/protos/wifi_service.proto
   INPUTS
-    ${chip_dir}/examples/ipv6only-app/common/wifi_service/wifi_service.options
+    ${chip_dir}/examples/common/pigweed/protos/wifi_service.options
   PREFIX
     wifi_service
   DEPS
     pw_protobuf.common_protos
   STRIP_PREFIX
-    ${chip_dir}/examples/ipv6only-app/common/wifi_service
+    ${chip_dir}/examples/common/pigweed/protos
 )
 
 endif(matter_enable_rpc)
@@ -112,13 +112,21 @@ list(
 )
 endif (matter_enable_rpc)
 
+if (matter_enable_ota_requestor)
+list(
+    APPEND ${list_chip_main_sources}
+    #OTARequestor
+    ${chip_dir}/src/app/clusters/ota-requestor/BDXDownloader.cpp
+    ${chip_dir}/src/app/clusters/ota-requestor/OTARequestor.cpp
+    ${chip_dir}/src/app/clusters/ota-requestor/ota-requestor-server.cpp
+)
+endif (matter_enable_ota_requestor)
+
 list(
     APPEND ${list_chip_main_sources}
 
-    ${chip_dir}/zzz_generated/all-clusters-app/zap-generated/CHIPClientCallbacks.cpp
     ${chip_dir}/zzz_generated/all-clusters-app/zap-generated/callback-stub.cpp
     ${chip_dir}/zzz_generated/all-clusters-app/zap-generated/IMClusterCommandHandler.cpp
-    ${chip_dir}/zzz_generated/all-clusters-app/zap-generated/CHIPClusters.cpp
 
     ${chip_dir}/examples/all-clusters-app/all-clusters-common/src/bridged-actions-stub.cpp
     ${chip_dir}/examples/all-clusters-app/all-clusters-common/src/static-supported-modes-manager.cpp
@@ -214,6 +222,8 @@ list(
     -DUSE_ZAP_CONFIG
     -DCHIP_HAVE_CONFIG_H
     -DMBEDTLS_CONFIG_FILE=<mbedtls_config.h>
+    -DCONFIG_ENABLE_ROTATING_DEVICE_ID=1
+    -DMATTER_ALL_CLUSTERS_APP=1
 )
 
 if (matter_enable_rpc)
@@ -228,6 +238,14 @@ list(
     -DCONFIG_ENABLE_PW_RPC=1
 )
 endif (matter_enable_rpc)
+
+if (matter_enable_ota_requestor)
+list(
+    APPEND chip_main_flags
+
+    -DCONFIG_ENABLE_OTA_REQUESTOR=1
+)
+endif (matter_enable_ota_requestor)
 
 list(
     APPEND chip_main_cpp_flags

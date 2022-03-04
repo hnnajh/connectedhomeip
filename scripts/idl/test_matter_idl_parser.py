@@ -56,11 +56,11 @@ class TestParser(unittest.TestCase):
         """)
 
         expected = Idl(enums=[
-            Enum(name='GlobalEnum', base_type=DataType(name='ENUM8'),
+            Enum(name='GlobalEnum', base_type='ENUM8',
                  entries=[
-                     EnumEntry(name="kValue1", code=1),
-                     EnumEntry(name="kOther", code=0x12),
-            ])]
+                     ConstantEntry(name="kValue1", code=1),
+                     ConstantEntry(name="kOther", code=0x12),
+                 ])]
         )
         self.assertEqual(actual, expected)
 
@@ -96,6 +96,8 @@ class TestParser(unittest.TestCase):
                 attribute int32u rwAttr[] = 123;
                 global attribute int32u grwAttr[] = 124;
                 readonly global attribute int32u groAttr[] = 125;
+                readonly nosubscribe attribute int8s nosub[] = 0xaa;
+                readonly attribute nullable int8s isNullable = 0xab;
             }
         """)
 
@@ -112,6 +114,10 @@ class TestParser(unittest.TestCase):
                             data_type=DataType(name="int32u"), code=124, name="grwAttr", is_list=True)),
                         Attribute(tags=set([AttributeTag.GLOBAL, AttributeTag.READABLE]), definition=Field(
                             data_type=DataType(name="int32u"), code=125, name="groAttr", is_list=True)),
+                        Attribute(tags=set([AttributeTag.NOSUBSCRIBE, AttributeTag.READABLE]), definition=Field(
+                            data_type=DataType(name="int8s"), code=0xAA, name="nosub", is_list=True)),
+                        Attribute(tags=set([AttributeTag.READABLE]), definition=Field(
+                            data_type=DataType(name="int8s"), code=0xAB, name="isNullable", attributes=set([FieldAttribute.NULLABLE]))),
                     ]
                     )])
         self.assertEqual(actual, expected)
@@ -146,6 +152,7 @@ class TestParser(unittest.TestCase):
 
                 command WithoutArg(): DefaultSuccess = 123;
                 command InOutStuff(InParam): OutParam = 222;
+                timed command TimedCommand(InParam): DefaultSuccess = 0xab;
             }
         """)
         expected = Idl(clusters=[
@@ -164,6 +171,9 @@ class TestParser(unittest.TestCase):
                                 input_param=None, output_param="DefaultSuccess"),
                         Command(name="InOutStuff", code=222,
                                 input_param="InParam", output_param="OutParam"),
+                        Command(name="TimedCommand", code=0xab,
+                                input_param="InParam", output_param="DefaultSuccess",
+                                attributes=set([CommandAttribute.TIMED_INVOKE])),
                     ],
                     )])
         self.assertEqual(actual, expected)
@@ -182,11 +192,33 @@ class TestParser(unittest.TestCase):
                     name="WithEnums",
                     code=0xab,
                     enums=[
-                        Enum(name="TestEnum", base_type=DataType(name="ENUM16"),
+                        Enum(name="TestEnum", base_type="ENUM16",
                              entries=[
-                                 EnumEntry(name="A", code=0x123),
-                                 EnumEntry(name="B", code=0x234),
-                        ])],
+                                 ConstantEntry(name="A", code=0x123),
+                                 ConstantEntry(name="B", code=0x234),
+                             ])],
+                    )])
+        self.assertEqual(actual, expected)
+
+    def test_cluster_bitmap(self):
+        actual = parseText("""
+            client cluster Test = 0xab {
+                bitmap TestBitmap : BITMAP32 {
+                    kFirst = 0x1;
+                    kSecond = 0x2;
+                }
+            }
+        """)
+        expected = Idl(clusters=[
+            Cluster(side=ClusterSide.CLIENT,
+                    name="Test",
+                    code=0xab,
+                    bitmaps=[
+                        Bitmap(name="TestBitmap", base_type="BITMAP32",
+                               entries=[
+                                   ConstantEntry(name="kFirst", code=0x1),
+                                   ConstantEntry(name="kSecond", code=0x2),
+                               ])],
                     )])
         self.assertEqual(actual, expected)
 

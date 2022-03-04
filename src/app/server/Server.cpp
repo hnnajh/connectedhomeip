@@ -17,6 +17,8 @@
 
 #include <app/server/Server.h>
 
+#include <access/examples/ExampleAccessControlDelegate.h>
+
 #include <app/EventManagement.h>
 #include <app/InteractionModelEngine.h>
 #include <app/server/Dnssd.h>
@@ -64,6 +66,25 @@ constexpr bool isRendezvousBypassed()
 #endif
 }
 
+void StopEventLoop(intptr_t arg)
+{
+    CHIP_ERROR err = chip::DeviceLayer::PlatformMgr().StopEventLoopTask();
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(AppServer, "Stopping event loop: %" CHIP_ERROR_FORMAT, err.Format());
+    }
+}
+
+void DispatchShutDownEvent(intptr_t arg)
+{
+    // The ShutDown event SHOULD be emitted on a best-effort basis by a Node prior to any orderly shutdown sequence.
+    chip::DeviceLayer::PlatformManagerDelegate * platformManagerDelegate = chip::DeviceLayer::PlatformMgr().GetDelegate();
+    if (platformManagerDelegate != nullptr)
+    {
+        platformManagerDelegate->OnShutDown();
+    }
+}
+
 } // namespace
 
 namespace chip {
@@ -87,19 +108,20 @@ Server::Server() :
             .idAllocator    = &mSessionIDAllocator,
             .fabricTable    = &mFabrics,
             .clientPool     = &mCASEClientPool,
-            .imDelegate     = nullptr,
         },
         .dnsCache          = nullptr,
         .devicePool        = &mDevicePool,
         .dnsResolver       = nullptr,
-    }), mCommissioningWindowManager(this), mGroupsProvider(mGroupsStorage),
-    mAttributePersister(mServerStorage)
+    }), mCommissioningWindowManager(this), mGroupsProvider(mDeviceStorage),
+    mAttributePersister(mDeviceStorage), mAccessControl(Access::Examples::GetAccessControlDelegate(&mDeviceStorage))
 {}
 
-CHIP_ERROR Server::Init(AppDelegate * delegate, uint16_t secureServicePort, uint16_t unsecureServicePort)
+CHIP_ERROR Server::Init(AppDelegate * delegate, uint16_t secureServicePort, uint16_t unsecureServicePort,
+                        Inet::InterfaceId interfaceId)
 {
     mSecuredServicePort   = secureServicePort;
     mUnsecuredServicePort = unsecureServicePort;
+    mInterfaceId          = interfaceId;
 
     CHIP_ERROR err = CHIP_NO_ERROR;
 
@@ -112,22 +134,22 @@ CHIP_ERROR Server::Init(AppDelegate * delegate, uint16_t secureServicePort, uint
     // handler.
     SetAttributePersistenceProvider(&mAttributePersister);
 
-#if CHIP_DEVICE_LAYER_TARGET_DARWIN
-    err = DeviceLayer::PersistedStorage::KeyValueStoreMgrImpl().Init("chip.store");
-    SuccessOrExit(err);
-#elif CHIP_DEVICE_LAYER_TARGET_LINUX
-    DeviceLayer::PersistedStorage::KeyValueStoreMgrImpl().Init(CHIP_CONFIG_KVS_PATH);
-#endif
-
     InitDataModelHandler(&mExchangeMgr);
 
-    err = mFabrics.Init(&mServerStorage);
+    err = mFabrics.Init(&mDeviceStorage);
     SuccessOrExit(err);
 
-    // Group data provider must be initialized after mServerStorage
+    app::DnssdServer::Instance().SetFabricTable(&mFabrics);
+
+    // Group data provider must be initialized after mDeviceStorage
     err = mGroupsProvider.Init();
     SuccessOrExit(err);
     SetGroupDataProvider(&mGroupsProvider);
+
+    // Access control must be initialized after mDeviceStorage.
+    err = mAccessControl.Init();
+    SuccessOrExit(err);
+    Access::SetAccessControl(mAccessControl);
 
     // Init transport before operations with secure session mgr.
     err = mTransports.Init(UdpListenParameters(DeviceLayer::UDPEndPointManager())
@@ -149,22 +171,16 @@ CHIP_ERROR Server::Init(AppDelegate * delegate, uint16_t secureServicePort, uint
 #endif
     );
 
+    err = mListener.Init(&mTransports);
+    SuccessOrExit(err);
+    mGroupsProvider.SetListener(&mListener);
+
 #if CONFIG_NETWORK_LAYER_BLE
     mBleLayer = DeviceLayer::ConnectivityMgr().GetBleLayer();
 #endif
     SuccessOrExit(err);
 
-// Enable Group Listening
-// TODO : Fix this once GroupDataProvider is implemented #Issue 11075
-// for (iterate through all GroupDataProvider multicast Address)
-// {
-#ifdef CHIP_ENABLE_GROUP_MESSAGING_TESTS
-    err = mTransports.MulticastGroupJoinLeave(Transport::PeerAddress::Multicast(0, 1234), true);
-    SuccessOrExit(err);
-#endif
-    //}
-
-    err = mSessions.Init(&DeviceLayer::SystemLayer(), &mTransports, &mMessageCounterManager);
+    err = mSessions.Init(&DeviceLayer::SystemLayer(), &mTransports, &mMessageCounterManager, &mDeviceStorage);
     SuccessOrExit(err);
 
     err = mExchangeMgr.Init(&mSessions);
@@ -172,7 +188,7 @@ CHIP_ERROR Server::Init(AppDelegate * delegate, uint16_t secureServicePort, uint
     err = mMessageCounterManager.Init(&mExchangeMgr);
     SuccessOrExit(err);
 
-    err = chip::app::InteractionModelEngine::GetInstance()->Init(&mExchangeMgr, nullptr);
+    err = chip::app::InteractionModelEngine::GetInstance()->Init(&mExchangeMgr);
     SuccessOrExit(err);
 
 #if CHIP_CONFIG_ENABLE_SERVER_IM_EVENT
@@ -219,24 +235,32 @@ CHIP_ERROR Server::Init(AppDelegate * delegate, uint16_t secureServicePort, uint
 #endif
     }
 
-#if CHIP_DEVICE_CONFIG_ENABLE_DNSSD
     app::DnssdServer::Instance().SetSecuredPort(mSecuredServicePort);
     app::DnssdServer::Instance().SetUnsecuredPort(mUnsecuredServicePort);
-#endif // CHIP_DEVICE_CONFIG_ENABLE_DNSSD
+    app::DnssdServer::Instance().SetInterfaceId(mInterfaceId);
 
     // TODO @bzbarsky-apple @cecille Move to examples
     // ESP32 and Mbed OS examples have a custom logic for enabling DNS-SD
-#if CHIP_DEVICE_CONFIG_ENABLE_DNSSD && !CHIP_DEVICE_LAYER_TARGET_ESP32 && !CHIP_DEVICE_LAYER_TARGET_MBED &&                        \
+#if !CHIP_DEVICE_LAYER_TARGET_ESP32 && !CHIP_DEVICE_LAYER_TARGET_MBED &&                                                           \
     (!CHIP_DEVICE_LAYER_TARGET_AMEBA || !CHIP_DEVICE_CONFIG_ENABLE_CHIPOBLE)
     // StartServer only enables commissioning mode if device has not been commissioned
     app::DnssdServer::Instance().StartServer();
 #endif
 
     err = mCASEServer.ListenForSessionEstablishment(&mExchangeMgr, &mTransports, chip::DeviceLayer::ConnectivityMgr().GetBleLayer(),
-                                                    &mSessions, &mFabrics, &mSessionIDAllocator);
+                                                    &mSessions, &mFabrics);
     SuccessOrExit(err);
 
     err = mCASESessionManager.Init();
+
+    // This code is necessary to restart listening to existing groups after a reboot
+    // Each manufacturer needs to validate that they can rejoin groups by placing this code at the appropriate location for them
+    //
+    // This is disabled for thread device because the same code is already present for thread devices in
+    // src/platform/OpenThread/GenericThreadStackManagerImpl_OpenThread_LwIP.cpp
+#if !CHIP_DEVICE_CONFIG_ENABLE_THREAD
+    RejoinExistingMulticastGroups();
+#endif // !CHIP_DEVICE_CONFIG_ENABLE_THREAD
 
 exit:
     if (err != CHIP_NO_ERROR)
@@ -250,14 +274,77 @@ exit:
     return err;
 }
 
+void Server::RejoinExistingMulticastGroups()
+{
+    ChipLogProgress(AppServer, "Joining Multicast groups");
+    CHIP_ERROR err = CHIP_NO_ERROR;
+    for (const FabricInfo & fabric : mFabrics)
+    {
+        Credentials::GroupDataProvider::GroupInfo groupInfo;
+
+        auto * iterator = mGroupsProvider.IterateGroupInfo(fabric.GetFabricIndex());
+        if (iterator)
+        {
+            // GroupDataProvider was able to allocate rescources for an iterator
+            while (iterator->Next(groupInfo))
+            {
+                err = mTransports.MulticastGroupJoinLeave(
+                    Transport::PeerAddress::Multicast(fabric.GetFabricIndex(), groupInfo.group_id), true);
+                if (err != CHIP_NO_ERROR)
+                {
+                    ChipLogError(AppServer, "Error when trying to join Group %" PRIu16 " of fabric index %u : %" CHIP_ERROR_FORMAT,
+                                 groupInfo.group_id, fabric.GetFabricIndex(), err.Format());
+
+                    // We assume the failure is caused by a network issue or a lack of rescources; neither of which will be solved
+                    // before the next join. Exit the loop to save rescources.
+                    iterator->Release();
+                    return;
+                }
+            }
+
+            iterator->Release();
+        }
+    }
+}
+
+void Server::DispatchShutDownAndStopEventLoop()
+{
+    chip::DeviceLayer::PlatformMgr().ScheduleWork(DispatchShutDownEvent);
+    chip::DeviceLayer::PlatformMgr().ScheduleWork(StopEventLoop);
+}
+
+void Server::ScheduleFactoryReset()
+{
+    chip::DeviceLayer::PlatformMgr().ScheduleWork(FactoryReset);
+}
+
+void Server::FactoryReset(intptr_t arg)
+{
+    // Delete all fabrics and emit Leave event.
+    GetInstance().GetFabricTable().DeleteAllFabrics();
+
+    // Emit Shutdown event, as shutdown will come after factory reset.
+    DispatchShutDownEvent(0);
+
+    // Flush all dispatched events.
+    chip::app::InteractionModelEngine::GetInstance()->GetReportingEngine().ScheduleUrgentEventDeliverySync();
+
+    chip::DeviceLayer::ConfigurationMgr().InitiateFactoryReset();
+}
+
 void Server::Shutdown()
 {
     chip::Dnssd::ServiceAdvertiser::Instance().Shutdown();
     chip::app::InteractionModelEngine::GetInstance()->Shutdown();
-    mExchangeMgr.Shutdown();
+    CHIP_ERROR err = mExchangeMgr.Shutdown();
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(AppServer, "Exchange Mgr shutdown: %" CHIP_ERROR_FORMAT, err.Format());
+    }
     mSessions.Shutdown();
     mTransports.Close();
     mCommissioningWindowManager.Shutdown();
+    mCASESessionManager.Shutdown();
     chip::Platform::MemoryShutdown();
 }
 

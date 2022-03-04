@@ -16,12 +16,15 @@
  *    limitations under the License.
  */
 
+#include "messaging/ExchangeContext.h"
 #include <app/AppBuildConfig.h>
 #include <app/InteractionModelEngine.h>
 #include <app/MessageDef/EventPathIB.h>
+#include <app/StatusResponse.h>
 #include <app/WriteHandler.h>
 #include <app/reporting/Engine.h>
 #include <app/util/MatterCallbacks.h>
+#include <credentials/GroupDataProvider.h>
 #include <lib/support/TypeTraits.h>
 
 namespace chip {
@@ -29,31 +32,76 @@ namespace app {
 
 using namespace Protocols::InteractionModel;
 
-CHIP_ERROR WriteHandler::Init(InteractionModelDelegate * apDelegate)
+CHIP_ERROR WriteHandler::Init()
 {
-    IgnoreUnusedVariable(apDelegate);
     VerifyOrReturnError(mpExchangeCtx == nullptr, CHIP_ERROR_INCORRECT_STATE);
 
-    System::PacketBufferHandle packet = System::PacketBufferHandle::New(chip::app::kMaxSecureSduLengthBytes);
-    VerifyOrReturnError(!packet.IsNull(), CHIP_ERROR_NO_MEMORY);
-
-    mMessageWriter.Init(std::move(packet));
-    ReturnErrorOnFailure(mWriteResponseBuilder.Init(&mMessageWriter));
-
-    mWriteResponseBuilder.CreateWriteResponses();
-    ReturnErrorOnFailure(mWriteResponseBuilder.GetError());
-
     MoveToState(State::Initialized);
+
+    mACLCheckCache.ClearValue();
+    mProcessingAttributePath.ClearValue();
 
     return CHIP_NO_ERROR;
 }
 
-void WriteHandler::Shutdown()
+void WriteHandler::Close()
 {
     VerifyOrReturn(mState != State::Uninitialized);
-    mMessageWriter.Reset();
-    mpExchangeCtx = nullptr;
+
+    if (mpExchangeCtx != nullptr)
+    {
+        mpExchangeCtx->SetDelegate(nullptr);
+        mpExchangeCtx = nullptr;
+    }
+
     ClearState();
+}
+
+void WriteHandler::Abort()
+{
+    if (mpExchangeCtx != nullptr)
+    {
+        // We might be a delegate for this exchange, and we don't want the
+        // OnExchangeClosing notification in that case.  Null out the delegate
+        // to avoid that.
+        //
+        // TODO: This makes all sorts of assumptions about what the delegate is
+        // (notice the "might" above!) that might not hold in practice.  We
+        // really need a better solution here....
+        mpExchangeCtx->SetDelegate(nullptr);
+        mpExchangeCtx->Abort();
+        mpExchangeCtx = nullptr;
+    }
+
+    ClearState();
+}
+
+Status WriteHandler::HandleWriteRequestMessage(Messaging::ExchangeContext * apExchangeContext,
+                                               System::PacketBufferHandle && aPayload, bool aIsTimedWrite)
+{
+    System::PacketBufferHandle packet = System::PacketBufferHandle::New(chip::app::kMaxSecureSduLengthBytes);
+    VerifyOrReturnError(!packet.IsNull(), Status::Failure);
+
+    System::PacketBufferTLVWriter messageWriter;
+    messageWriter.Init(std::move(packet));
+    VerifyOrReturnError(mWriteResponseBuilder.Init(&messageWriter) == CHIP_NO_ERROR, Status::Failure);
+
+    mWriteResponseBuilder.CreateWriteResponses();
+    VerifyOrReturnError(mWriteResponseBuilder.GetError() == CHIP_NO_ERROR, Status::Failure);
+
+    Status status = ProcessWriteRequest(std::move(aPayload), aIsTimedWrite);
+
+    // Do not send response on Group Write
+    if (status == Status::Success && !apExchangeContext->IsGroupExchangeContext())
+    {
+        CHIP_ERROR err = SendWriteResponse(std::move(messageWriter));
+        if (err != CHIP_NO_ERROR)
+        {
+            status = Status::Failure;
+        }
+    }
+
+    return status;
 }
 
 Status WriteHandler::OnWriteRequest(Messaging::ExchangeContext * apExchangeContext, System::PacketBufferHandle && aPayload,
@@ -61,45 +109,90 @@ Status WriteHandler::OnWriteRequest(Messaging::ExchangeContext * apExchangeConte
 {
     mpExchangeCtx = apExchangeContext;
 
-    Status status = ProcessWriteRequest(std::move(aPayload), aIsTimedWrite);
+    //
+    // Let's take over further message processing on this exchange from the IM.
+    // This is only relevant during chunked requests.
+    //
+    mpExchangeCtx->SetDelegate(this);
 
-    // Do not send response on Group Write
-    if (status == Status::Success && !apExchangeContext->IsGroupExchangeContext())
+    Status status = HandleWriteRequestMessage(apExchangeContext, std::move(aPayload), aIsTimedWrite);
+
+    // The write transaction will be alive only when the message was handled successfully and there are more chunks.
+    if (!(status == Status::Success && mHasMoreChunks))
     {
-        CHIP_ERROR err = SendWriteResponse();
-        if (err != CHIP_NO_ERROR)
-        {
-            status = Status::Failure;
-        }
+        Close();
     }
 
-    Shutdown();
     return status;
 }
 
-CHIP_ERROR WriteHandler::FinalizeMessage(System::PacketBufferHandle & packet)
+CHIP_ERROR WriteHandler::OnMessageReceived(Messaging::ExchangeContext * apExchangeContext, const PayloadHeader & aPayloadHeader,
+                                           System::PacketBufferHandle && aPayload)
+{
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    VerifyOrDieWithMsg(apExchangeContext == mpExchangeCtx, DataManagement,
+                       "Incoming exchange context should be same as the initial request.");
+    VerifyOrDieWithMsg(!apExchangeContext->IsGroupExchangeContext(), DataManagement,
+                       "OnMessageReceived should not be called on GroupExchangeContext");
+    if (!aPayloadHeader.HasMessageType(Protocols::InteractionModel::MsgType::WriteRequest))
+    {
+        ChipLogDetail(DataManagement, "Unexpected message type %d", aPayloadHeader.GetMessageType());
+        Close();
+        return CHIP_ERROR_INVALID_MESSAGE_TYPE;
+    }
+
+    Status status =
+        HandleWriteRequestMessage(apExchangeContext, std::move(aPayload), false /* chunked write should not be timed write */);
+    if (status == Status::Success)
+    {
+        // We have no more chunks, the write response has been sent in HandleWriteRequestMessage, so close directly.
+        if (!mHasMoreChunks)
+        {
+            Close();
+        }
+    }
+    else if (status != Protocols::InteractionModel::Status::Success)
+    {
+        err = StatusResponse::Send(status, apExchangeContext, false /*aExpectResponse*/);
+        Close();
+    }
+    return CHIP_NO_ERROR;
+}
+
+void WriteHandler::OnResponseTimeout(Messaging::ExchangeContext * apExchangeContext)
+{
+    ChipLogProgress(DataManagement, "Time out! failed to receive status response from Exchange: " ChipLogFormatExchange,
+                    ChipLogValueExchange(apExchangeContext));
+    Close();
+}
+
+CHIP_ERROR WriteHandler::FinalizeMessage(System::PacketBufferTLVWriter && aMessageWriter, System::PacketBufferHandle & packet)
 {
     VerifyOrReturnError(mState == State::AddStatus, CHIP_ERROR_INCORRECT_STATE);
     AttributeStatusIBs::Builder & attributeStatusIBs = mWriteResponseBuilder.GetWriteResponses().EndOfAttributeStatuses();
     ReturnErrorOnFailure(attributeStatusIBs.GetError());
     mWriteResponseBuilder.EndOfWriteResponseMessage();
     ReturnErrorOnFailure(mWriteResponseBuilder.GetError());
-    ReturnErrorOnFailure(mMessageWriter.Finalize(&packet));
+    ReturnErrorOnFailure(aMessageWriter.Finalize(&packet));
     return CHIP_NO_ERROR;
 }
 
-CHIP_ERROR WriteHandler::SendWriteResponse()
+CHIP_ERROR WriteHandler::SendWriteResponse(System::PacketBufferTLVWriter && aMessageWriter)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     System::PacketBufferHandle packet;
 
     VerifyOrExit(mState == State::AddStatus, err = CHIP_ERROR_INCORRECT_STATE);
 
-    err = FinalizeMessage(packet);
+    err = FinalizeMessage(std::move(aMessageWriter), packet);
     SuccessOrExit(err);
 
     VerifyOrExit(mpExchangeCtx != nullptr, err = CHIP_ERROR_INCORRECT_STATE);
-    err = mpExchangeCtx->SendMessage(Protocols::InteractionModel::MsgType::WriteResponse, std::move(packet));
+    mpExchangeCtx->SetResponseTimeout(kImMessageTimeout);
+    err = mpExchangeCtx->SendMessage(Protocols::InteractionModel::MsgType::WriteResponse, std::move(packet),
+                                     mHasMoreChunks ? Messaging::SendMessageFlags::kExpectResponse
+                                                    : Messaging::SendMessageFlags::kNone);
     SuccessOrExit(err);
 
     MoveToState(State::Sending);
@@ -120,9 +213,10 @@ CHIP_ERROR WriteHandler::ProcessAttributeDataIBs(TLV::TLVReader & aAttributeData
         chip::TLV::TLVReader dataReader;
         AttributeDataIB::Parser element;
         AttributePathIB::Parser attributePath;
-        ClusterInfo clusterInfo;
+        ConcreteDataAttributePath dataAttributePath;
         TLV::TLVReader reader = aAttributeDataIBsReader;
-        err                   = element.Init(reader);
+
+        err = element.Init(reader);
         SuccessOrExit(err);
 
         err = element.GetPath(&attributePath);
@@ -131,50 +225,58 @@ CHIP_ERROR WriteHandler::ProcessAttributeDataIBs(TLV::TLVReader & aAttributeData
         // We are using the feature that the parser won't touch the value if the field does not exist, since all fields in the
         // cluster info will be invalid / wildcard, it is safe ignore CHIP_END_OF_TLV directly.
 
-        err = attributePath.GetNode(&(clusterInfo.mNodeId));
-        if (CHIP_END_OF_TLV == err)
-        {
-            err = CHIP_NO_ERROR;
-        }
-        if (mpExchangeCtx->IsGroupExchangeContext())
-        {
-            // TODO retrieve Endpoint ID with GroupDataProvider using GroupId and FabricId
-            // Issue 11075
-
-            // Using endpoint 0 for test purposes
-            clusterInfo.mEndpointId = 0;
-        }
-        else
-        {
-            err = attributePath.GetEndpoint(&(clusterInfo.mEndpointId));
-            SuccessOrExit(err);
-        }
-
-        err = attributePath.GetCluster(&(clusterInfo.mClusterId));
+        err = attributePath.GetEndpoint(&(dataAttributePath.mEndpointId));
         SuccessOrExit(err);
 
-        err = attributePath.GetAttribute(&(clusterInfo.mAttributeId));
+        err = attributePath.GetCluster(&(dataAttributePath.mClusterId));
         SuccessOrExit(err);
 
-        err = attributePath.GetListIndex(&(clusterInfo.mListIndex));
-        if (CHIP_END_OF_TLV == err)
-        {
-            err = CHIP_NO_ERROR;
-        }
+        err = attributePath.GetAttribute(&(dataAttributePath.mAttributeId));
+        SuccessOrExit(err);
 
-        // We do not support Wildcard writes for now, reject all wildcard write requests.
-        VerifyOrExit(clusterInfo.IsValidAttributePath() && !clusterInfo.HasAttributeWildcard(),
-                     err = CHIP_ERROR_IM_MALFORMED_ATTRIBUTE_PATH);
+        err = attributePath.GetListIndex(dataAttributePath);
+        SuccessOrExit(err);
 
         err = element.GetData(&dataReader);
         SuccessOrExit(err);
 
+        if (!dataAttributePath.IsListOperation() && dataReader.GetType() == TLV::TLVType::kTLVType_Array)
         {
-            const ConcreteAttributePath concretePath =
-                ConcreteAttributePath(clusterInfo.mEndpointId, clusterInfo.mClusterId, clusterInfo.mAttributeId);
-            MatterPreAttributeWriteCallback(concretePath);
-            err = WriteSingleClusterData(subjectDescriptor, clusterInfo, dataReader, this);
-            MatterPostAttributeWriteCallback(concretePath);
+            dataAttributePath.mListOp = ConcreteDataAttributePath::ListOperation::ReplaceAll;
+        }
+
+        if (InteractionModelEngine::GetInstance()->HasConflictWriteRequests(this, dataAttributePath) ||
+            // Per chunking protocol, we are processing the list entries, but the initial empty list is not processed, so we reject
+            // it with Busy status code.
+            (dataAttributePath.IsListItemOperation() &&
+             (!mProcessingAttributePath.HasValue() || mProcessingAttributePath.Value() != dataAttributePath)))
+        {
+            err = AddStatus(dataAttributePath, StatusIB(Protocols::InteractionModel::Status::Busy));
+        }
+        else
+        {
+            mProcessingAttributePath.SetValue(dataAttributePath);
+            MatterPreAttributeWriteCallback(dataAttributePath);
+            TLV::TLVWriter backup;
+            DataVersion version = 0;
+            mWriteResponseBuilder.Checkpoint(backup);
+            err = element.GetDataVersion(&version);
+            if (CHIP_NO_ERROR == err)
+            {
+                dataAttributePath.mDataVersion.SetValue(version);
+            }
+            else if (CHIP_END_OF_TLV == err)
+            {
+                err = CHIP_NO_ERROR;
+            }
+            SuccessOrExit(err);
+            err = WriteSingleClusterData(subjectDescriptor, dataAttributePath, dataReader, this);
+            if (err != CHIP_NO_ERROR)
+            {
+                mWriteResponseBuilder.Rollback(backup);
+                err = AddStatus(dataAttributePath, StatusIB(err));
+            }
+            MatterPostAttributeWriteCallback(dataAttributePath);
         }
         SuccessOrExit(err);
     }
@@ -184,6 +286,102 @@ CHIP_ERROR WriteHandler::ProcessAttributeDataIBs(TLV::TLVReader & aAttributeData
         err = CHIP_NO_ERROR;
     }
 
+exit:
+    return err;
+}
+
+CHIP_ERROR WriteHandler::ProcessGroupAttributeDataIBs(TLV::TLVReader & aAttributeDataIBsReader)
+{
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    ReturnErrorCodeIf(mpExchangeCtx == nullptr, CHIP_ERROR_INTERNAL);
+    const Access::SubjectDescriptor subjectDescriptor =
+        mpExchangeCtx->GetSessionHandle()->AsIncomingGroupSession()->GetSubjectDescriptor();
+
+    while (CHIP_NO_ERROR == (err = aAttributeDataIBsReader.Next()))
+    {
+        chip::TLV::TLVReader dataReader;
+        AttributeDataIB::Parser element;
+        AttributePathIB::Parser attributePath;
+        ConcreteDataAttributePath dataAttributePath;
+        GroupId groupId;
+        FabricIndex fabric;
+        TLV::TLVReader reader = aAttributeDataIBsReader;
+
+        Credentials::GroupDataProvider::GroupEndpoint mapping;
+        Credentials::GroupDataProvider * groupDataProvider = Credentials::GetGroupDataProvider();
+        Credentials::GroupDataProvider::EndpointIterator * iterator;
+
+        err = element.Init(reader);
+        SuccessOrExit(err);
+
+        err = element.GetPath(&attributePath);
+        SuccessOrExit(err);
+
+        // We are using the feature that the parser won't touch the value if the field does not exist, since all fields in the
+        // cluster info will be invalid / wildcard, it is safe to ignore CHIP_END_OF_TLV.
+
+        err = attributePath.GetCluster(&(dataAttributePath.mClusterId));
+        SuccessOrExit(err);
+
+        err = attributePath.GetAttribute(&(dataAttributePath.mAttributeId));
+        SuccessOrExit(err);
+
+        err = attributePath.GetListIndex(dataAttributePath);
+        SuccessOrExit(err);
+
+        groupId = mpExchangeCtx->GetSessionHandle()->AsIncomingGroupSession()->GetGroupId();
+        fabric  = GetAccessingFabricIndex();
+
+        err = element.GetData(&dataReader);
+        SuccessOrExit(err);
+
+        ChipLogDetail(DataManagement,
+                      "Received group attribute write for Group=%" PRIu16 " Cluster=" ChipLogFormatMEI
+                      " attribute=" ChipLogFormatMEI,
+                      groupId, ChipLogValueMEI(dataAttributePath.mClusterId), ChipLogValueMEI(dataAttributePath.mAttributeId));
+
+        iterator = groupDataProvider->IterateEndpoints(fabric);
+        VerifyOrExit(iterator != nullptr, err = CHIP_ERROR_NO_MEMORY);
+
+        while (iterator->Next(mapping))
+        {
+            if (groupId != mapping.group_id)
+            {
+                continue;
+            }
+
+            dataAttributePath.mEndpointId = mapping.endpoint_id;
+
+            ChipLogDetail(DataManagement,
+                          "Processing group attribute write for endpoint=%" PRIu16 " Cluster=" ChipLogFormatMEI
+                          " attribute=" ChipLogFormatMEI,
+                          mapping.endpoint_id, ChipLogValueMEI(dataAttributePath.mClusterId),
+                          ChipLogValueMEI(dataAttributePath.mAttributeId));
+
+            chip::TLV::TLVReader tmpDataReader(dataReader);
+
+            MatterPreAttributeWriteCallback(dataAttributePath);
+            err = WriteSingleClusterData(subjectDescriptor, dataAttributePath, tmpDataReader, this);
+
+            if (err != CHIP_NO_ERROR)
+            {
+                ChipLogError(DataManagement,
+                             "Error when calling WriteSingleClusterData for Endpoint=%" PRIu16 " Cluster=" ChipLogFormatMEI
+                             " Attribute =" ChipLogFormatMEI " : %" CHIP_ERROR_FORMAT,
+                             mapping.endpoint_id, ChipLogValueMEI(dataAttributePath.mClusterId),
+                             ChipLogValueMEI(dataAttributePath.mAttributeId), err.Format());
+            }
+            MatterPostAttributeWriteCallback(dataAttributePath);
+        }
+
+        iterator->Release();
+    }
+
+    if (CHIP_END_OF_TLV == err)
+    {
+        err = CHIP_NO_ERROR;
+    }
 exit:
     return err;
 }
@@ -208,9 +406,6 @@ Status WriteHandler::ProcessWriteRequest(System::PacketBufferHandle && aPayload,
 
     reader.Init(std::move(aPayload));
 
-    err = reader.Next();
-    SuccessOrExit(err);
-
     err = writeRequestParser.Init(reader);
     SuccessOrExit(err);
 
@@ -228,8 +423,19 @@ Status WriteHandler::ProcessWriteRequest(System::PacketBufferHandle && aPayload,
     err = writeRequestParser.GetTimedRequest(&mIsTimedRequest);
     SuccessOrExit(err);
 
-    err = writeRequestParser.GetIsFabricFiltered(&mIsFabricFiltered);
+    err = writeRequestParser.GetMoreChunkedMessages(&mHasMoreChunks);
+    if (err == CHIP_ERROR_END_OF_TLV)
+    {
+        err = CHIP_NO_ERROR;
+    }
     SuccessOrExit(err);
+
+    if (mHasMoreChunks && (mpExchangeCtx->IsGroupExchangeContext() || mIsTimedRequest))
+    {
+        // Sanity check: group exchange context should only have one chunk.
+        // Also, timed requests should not have more than one chunk.
+        ExitNow(err = CHIP_ERROR_INVALID_MESSAGE_TYPE);
+    }
 
     err = writeRequestParser.GetWriteRequests(&AttributeDataIBsParser);
     SuccessOrExit(err);
@@ -243,18 +449,37 @@ Status WriteHandler::ProcessWriteRequest(System::PacketBufferHandle && aPayload,
     }
 
     AttributeDataIBsParser.GetReader(&AttributeDataIBsReader);
-    err = ProcessAttributeDataIBs(AttributeDataIBsReader);
+
+    if (mpExchangeCtx->IsGroupExchangeContext())
+    {
+        err = ProcessGroupAttributeDataIBs(AttributeDataIBsReader);
+    }
+    else
+    {
+        err = ProcessAttributeDataIBs(AttributeDataIBsReader);
+    }
+    SuccessOrExit(err);
+    SuccessOrExit(err = writeRequestParser.ExitContainer());
+
     if (err == CHIP_NO_ERROR)
     {
         status = Status::Success;
     }
 
 exit:
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(DataManagement, "Failed to process write request: %" CHIP_ERROR_FORMAT, err.Format());
+    }
     return status;
 }
 
-CHIP_ERROR WriteHandler::AddStatus(const AttributePathParams & aAttributePathParams,
-                                   const Protocols::InteractionModel::Status aStatus)
+CHIP_ERROR WriteHandler::AddStatus(const ConcreteDataAttributePath & aPath, const Protocols::InteractionModel::Status aStatus)
+{
+    return AddStatus(aPath, StatusIB(aStatus));
+}
+
+CHIP_ERROR WriteHandler::AddStatus(const ConcreteDataAttributePath & aPath, const StatusIB & aStatus)
 {
     AttributeStatusIBs::Builder & writeResponses   = mWriteResponseBuilder.GetWriteResponses();
     AttributeStatusIB::Builder & attributeStatusIB = writeResponses.CreateAttributeStatus();
@@ -262,13 +487,11 @@ CHIP_ERROR WriteHandler::AddStatus(const AttributePathParams & aAttributePathPar
 
     AttributePathIB::Builder & path = attributeStatusIB.CreatePath();
     ReturnErrorOnFailure(attributeStatusIB.GetError());
-    ReturnErrorOnFailure(path.Encode(aAttributePathParams));
+    ReturnErrorOnFailure(path.Encode(aPath));
 
-    StatusIB statusIB;
-    statusIB.mStatus                    = aStatus;
     StatusIB::Builder & statusIBBuilder = attributeStatusIB.CreateErrorStatus();
     ReturnErrorOnFailure(attributeStatusIB.GetError());
-    statusIBBuilder.EncodeStatusIB(statusIB);
+    statusIBBuilder.EncodeStatusIB(aStatus);
     ReturnErrorOnFailure(statusIBBuilder.GetError());
     attributeStatusIB.EndOfAttributeStatusIB();
     ReturnErrorOnFailure(attributeStatusIB.GetError());
@@ -279,17 +502,7 @@ CHIP_ERROR WriteHandler::AddStatus(const AttributePathParams & aAttributePathPar
 
 FabricIndex WriteHandler::GetAccessingFabricIndex() const
 {
-    FabricIndex fabric = kUndefinedFabricIndex;
-    if (mpExchangeCtx->GetSessionHandle()->IsGroupSession())
-    {
-        fabric = mpExchangeCtx->GetSessionHandle()->AsGroupSession()->GetFabricIndex();
-    }
-    else
-    {
-        fabric = mpExchangeCtx->GetSessionHandle()->AsSecureSession()->GetFabricIndex();
-    }
-
-    return fabric;
+    return mpExchangeCtx->GetSessionHandle()->GetFabricIndex();
 }
 
 const char * WriteHandler::GetStateStr() const

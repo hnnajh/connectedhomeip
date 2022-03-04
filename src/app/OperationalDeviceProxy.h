@@ -55,8 +55,6 @@ struct DeviceProxyInitParams
     FabricTable * fabricTable                = nullptr;
     CASEClientPoolDelegate * clientPool      = nullptr;
 
-    Controller::DeviceControllerInteractionModelDelegate * imDelegate = nullptr;
-
     Optional<ReliableMessageProtocolConfig> mrpLocalConfig = Optional<ReliableMessageProtocolConfig>::Missing();
 
     CHIP_ERROR Validate() const
@@ -170,8 +168,6 @@ public:
 
     CHIP_ERROR ShutdownSubscriptions() override;
 
-    Controller::DeviceControllerInteractionModelDelegate * GetInteractionModelDelegate() override { return mInitParams.imDelegate; }
-
     Messaging::ExchangeManager * GetExchangeManager() const override { return mInitParams.exchangeMgr; }
 
     chip::Optional<SessionHandle> GetSecureSession() const override { return mSecureSession.ToOptional(); }
@@ -195,6 +191,18 @@ public:
         }
 
         return Transport::PeerAddress::UDP(nodeData.mAddress[0], nodeData.mPort, interfaceId);
+    }
+
+    /**
+     * @brief Get the raw Fabric ID assigned to the device.
+     */
+    FabricIndex GetFabricIndex() const
+    {
+        if (mFabricInfo != nullptr)
+        {
+            return mFabricInfo->GetFabricIndex();
+        }
+        return kUndefinedFabricIndex;
     }
 
 private:

@@ -49,10 +49,15 @@ CHIP_ERROR PlatformManagerImpl::_InitChipStack()
 
     mRunLoopSem = dispatch_semaphore_create(0);
 
+    // Ensure there is a dispatch queue available
+    GetWorkQueue();
+
     // Call _InitChipStack() on the generic implementation base class
     // to finish the initialization process.
     err = Internal::GenericPlatformManagerImpl<PlatformManagerImpl>::_InitChipStack();
     SuccessOrExit(err);
+
+    mStartTime = System::SystemClock().GetMonotonicTimestamp();
 
     static_cast<System::LayerSocketsLoop &>(DeviceLayer::SystemLayer()).SetDispatchQueue(GetWorkQueue());
 
@@ -119,6 +124,11 @@ CHIP_ERROR PlatformManagerImpl::_Shutdown()
 
 CHIP_ERROR PlatformManagerImpl::_PostEvent(const ChipDeviceEvent * event)
 {
+    if (mWorkQueue == nullptr)
+    {
+        return CHIP_ERROR_INCORRECT_STATE;
+    }
+
     const ChipDeviceEvent eventCopy = *event;
     dispatch_async(mWorkQueue, ^{
         Impl()->DispatchEvent(&eventCopy);
@@ -137,14 +147,15 @@ CHIP_ERROR
 PlatformManagerImpl::_GetSupportedLocales(AttributeList<chip::CharSpan, kMaxLanguageTags> & supportedLocales)
 {
     // In Darwin simulation, return following hardcoded list of Strings that are valid values for the ActiveLocale.
-    supportedLocales.add(CharSpan("en-US", strlen("en-US")));
-    supportedLocales.add(CharSpan("de-DE", strlen("de-DE")));
-    supportedLocales.add(CharSpan("fr-FR", strlen("fr-FR")));
-    supportedLocales.add(CharSpan("en-GB", strlen("en-GB")));
-    supportedLocales.add(CharSpan("es-ES", strlen("es-ES")));
-    supportedLocales.add(CharSpan("zh-CN", strlen("zh-CN")));
-    supportedLocales.add(CharSpan("it-IT", strlen("it-IT")));
-    supportedLocales.add(CharSpan("ja-JP", strlen("ja-JP")));
+    supportedLocales.add(CharSpan::fromCharString("Test"));
+    supportedLocales.add(CharSpan::fromCharString("en-US"));
+    supportedLocales.add(CharSpan::fromCharString("de-DE"));
+    supportedLocales.add(CharSpan::fromCharString("fr-FR"));
+    supportedLocales.add(CharSpan::fromCharString("en-GB"));
+    supportedLocales.add(CharSpan::fromCharString("es-ES"));
+    supportedLocales.add(CharSpan::fromCharString("zh-CN"));
+    supportedLocales.add(CharSpan::fromCharString("it-IT"));
+    supportedLocales.add(CharSpan::fromCharString("ja-JP"));
 
     return CHIP_NO_ERROR;
 }

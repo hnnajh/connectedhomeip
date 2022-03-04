@@ -43,7 +43,7 @@ DEVICE_CONFIG = {
     'device0': {
         'type': 'MobileDevice',
         'base_image': 'connectedhomeip/chip-cirque-device-base',
-        'capability': ['Interactive', 'TrafficControl', 'Mount'],
+        'capability': ['TrafficControl', 'Mount'],
         'rcp_mode': True,
         'docker_network': 'Ipv6',
         'traffic_control': {'latencyMs': 100},
@@ -52,7 +52,7 @@ DEVICE_CONFIG = {
     'device1': {
         'type': 'CHIPEndDevice',
         'base_image': 'connectedhomeip/chip-cirque-device-base',
-        'capability': ['Thread', 'Interactive', 'TrafficControl', 'Mount'],
+        'capability': ['Thread', 'TrafficControl', 'Mount'],
         'rcp_mode': True,
         'docker_network': 'Ipv6',
         'traffic_control': {'latencyMs': 100},
@@ -81,7 +81,7 @@ class TestPythonController(CHIPVirtualHome):
                    if device['type'] == 'MobileDevice']
 
         for server in server_ids:
-            self.execute_device_cmd(server, "CHIPCirqueDaemon.py -- run {} --thread".format(
+            self.execute_device_cmd(server, "CHIPCirqueDaemon.py -- run gdb -return-child-result -q -ex \"set pagination off\" -ex run -ex \"bt 25\" --args {} --thread".format(
                 os.path.join(CHIP_REPO, "out/debug/standalone/chip-all-clusters-app")))
 
         self.reset_thread_devices(server_ids)
@@ -118,7 +118,7 @@ class TestPythonController(CHIPVirtualHome):
                 "Toggle on/off from 0 to 1",
                 "Received command for Endpoint=1 Cluster=0x0000_0006 Command=0x0000_0000",
                 "Toggle on/off from 1 to 0",
-                "No Cluster 0x0000_0006 on Endpoint 0xe9"]),
+                "No command 0x0000_0001 in Cluster 0x0000_0006 on Endpoint 0xe9"]),
                 "Datamodel test failed: cannot find matching string from device {}".format(device_id))
 
 
