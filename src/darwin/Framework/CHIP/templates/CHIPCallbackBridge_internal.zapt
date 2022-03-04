@@ -10,7 +10,6 @@
 typedef void (*CommandSuccessCallback)(void *, const chip::app::DataModel::NullObjectType &);
 using CHIPCommandSuccessCallbackType = CommandSuccessCallback;
 typedef void (*CHIPDefaultSuccessCallbackType)(void *);
-typedef void (*CHIPDefaultFailureCallbackType)(void *, EmberAfStatus);
 
 typedef void (*VendorIdAttributeCallback)(void *, chip::VendorId);
 typedef void (*NullableVendorIdAttributeCallback)(void *, const chip::app::DataModel::Nullable<chip::VendorId> &);
@@ -27,6 +26,16 @@ typedef void (*{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase name}}A
 typedef void (*Nullable{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase name}}AttributeCallback)(void *, const chip::app::DataModel::Nullable<chip::app::Clusters::{{asUpperCamelCase parent.name}}::{{asType label}}> &);
 {{/zcl_enums}}
 {{/zcl_clusters}}
+
+{{#chip_client_clusters}}
+{{#chip_server_cluster_attributes}}
+{{#unless isArray}}
+{{#if_is_struct type}}
+typedef void (*{{asUpperCamelCase parent.name}}{{asUpperCamelCase name}}StructAttributeCallback)(void *, {{zapTypeToDecodableClusterObjectType type ns=parent.name isArgument=true forceNotOptional=true}});
+{{/if_is_struct}}
+{{/unless}}
+{{/chip_server_cluster_attributes}}
+{{/chip_client_clusters}}
 
 {{#>CHIPCallbackBridge header="1" partial-type="Status"                         }}DefaultSuccessCallback{{/CHIPCallbackBridge}}
 {{#>CHIPCallbackBridge header="1" partial-type="CommandStatus"                  }}CommandSuccessCallback{{/CHIPCallbackBridge}}
@@ -61,8 +70,12 @@ typedef void (*Nullable{{asUpperCamelCase parent.name}}Cluster{{asUpperCamelCase
 
 {{#chip_client_clusters}}
 {{#chip_server_cluster_attributes}}
-{{#if isList}}
+{{#if isArray}}
 {{#>CHIPCallbackBridge header="1" ns=parent.name                                }}{{asUpperCamelCase ../../name}}{{asUpperCamelCase ../name}}ListAttributeCallback{{/CHIPCallbackBridge}}
+{{else}}
+  {{#if_is_struct type}}
+  {{#>CHIPCallbackBridge header="1" ns=parent.name                              }}{{asUpperCamelCase ../../name}}{{asUpperCamelCase ../name}}StructAttributeCallback{{/CHIPCallbackBridge}}
+  {{/if_is_struct}}
 {{/if}}
 {{/chip_server_cluster_attributes}}
 {{/chip_client_clusters}}

@@ -19,11 +19,14 @@
 #include <app-common/zap-generated/cluster-objects.h>
 #include <app/InteractionModelEngine.h>
 #include <app/tests/AppTestContext.h>
+#include <credentials/GroupDataProviderImpl.h>
 #include <lib/core/CHIPCore.h>
 #include <lib/core/CHIPTLV.h>
 #include <lib/core/CHIPTLVDebug.hpp>
 #include <lib/core/CHIPTLVUtilities.hpp>
 #include <lib/support/ErrorStr.h>
+#include <lib/support/TestGroupData.h>
+#include <lib/support/TestPersistentStorageDelegate.h>
 #include <lib/support/UnitTestRegistration.h>
 #include <messaging/ExchangeContext.h>
 #include <messaging/Flags.h>
@@ -72,11 +75,11 @@ class TestWriteClientCallback : public chip::app::WriteClient::Callback
 {
 public:
     void ResetCounter() { mOnSuccessCalled = mOnErrorCalled = mOnDoneCalled = 0; }
-    void OnResponse(const WriteClient * apWriteClient, const chip::app::ConcreteAttributePath & path, StatusIB status) override
+    void OnResponse(const WriteClient * apWriteClient, const chip::app::ConcreteDataAttributePath & path, StatusIB status) override
     {
         mOnSuccessCalled++;
     }
-    void OnError(const WriteClient * apWriteClient, const StatusIB &, CHIP_ERROR chipError) override { mOnErrorCalled++; }
+    void OnError(const WriteClient * apWriteClient, CHIP_ERROR chipError) override { mOnErrorCalled++; }
     void OnDone(WriteClient * apWriteClient) override { mOnDoneCalled++; }
 
     int mOnSuccessCalled = 0;
@@ -88,31 +91,21 @@ void TestWriteInteraction::AddAttributeDataIB(nlTestSuite * apSuite, void * apCo
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
     AttributePathParams attributePathParams;
+    bool attributeValue              = true;
     attributePathParams.mEndpointId  = 2;
     attributePathParams.mClusterId   = 3;
     attributePathParams.mAttributeId = 4;
 
-    err = aWriteClient.PrepareAttribute(attributePathParams);
-    NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
-
-    chip::TLV::TLVWriter * writer = aWriteClient.GetAttributeDataIBTLVWriter();
-
-    err = writer->PutBoolean(chip::TLV::ContextTag(to_underlying(AttributeDataIB::Tag::kData)), true);
-    NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
-
-    err = aWriteClient.FinishAttribute();
+    err = aWriteClient.EncodeAttribute(attributePathParams, attributeValue);
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 }
 
 void TestWriteInteraction::AddAttributeStatus(nlTestSuite * apSuite, void * apContext, WriteHandler & aWriteHandler)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
-    AttributePathParams attributePathParams;
-    attributePathParams.mEndpointId  = 2;
-    attributePathParams.mClusterId   = 3;
-    attributePathParams.mAttributeId = 4;
+    ConcreteAttributePath attributePath(2, 3, 4);
 
-    err = aWriteHandler.AddStatus(attributePathParams, Protocols::InteractionModel::Status::Success);
+    err = aWriteHandler.AddStatus(attributePath, Protocols::InteractionModel::Status::Success);
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 }
 
@@ -137,7 +130,12 @@ void TestWriteInteraction::GenerateWriteRequest(nlTestSuite * apSuite, void * ap
     NL_TEST_ASSERT(apSuite, attributeDataIBBuilder.GetError() == CHIP_NO_ERROR);
     AttributePathIB::Builder & attributePathBuilder = attributeDataIBBuilder.CreatePath();
     NL_TEST_ASSERT(apSuite, attributePathBuilder.GetError() == CHIP_NO_ERROR);
-    attributePathBuilder.Node(1).Endpoint(2).Cluster(3).Attribute(4).ListIndex(5).EndOfAttributePathIB();
+    attributePathBuilder.Node(1)
+        .Endpoint(2)
+        .Cluster(3)
+        .Attribute(4)
+        .ListIndex(DataModel::Nullable<ListIndex>())
+        .EndOfAttributePathIB();
     err = attributePathBuilder.GetError();
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 
@@ -161,7 +159,7 @@ void TestWriteInteraction::GenerateWriteRequest(nlTestSuite * apSuite, void * ap
 
     attributeDataIBsBuilder.EndOfAttributeDataIBs();
     NL_TEST_ASSERT(apSuite, attributeDataIBsBuilder.GetError() == CHIP_NO_ERROR);
-    writeRequestBuilder.IsFabricFiltered(false).EndOfWriteRequestMessage();
+    writeRequestBuilder.EndOfWriteRequestMessage();
     NL_TEST_ASSERT(apSuite, writeRequestBuilder.GetError() == CHIP_NO_ERROR);
 
     err = writer.Finalize(&aPayload);
@@ -184,7 +182,12 @@ void TestWriteInteraction::GenerateWriteResponse(nlTestSuite * apSuite, void * a
 
     AttributePathIB::Builder & attributePathBuilder = attributeStatusIBBuilder.CreatePath();
     NL_TEST_ASSERT(apSuite, attributePathBuilder.GetError() == CHIP_NO_ERROR);
-    attributePathBuilder.Node(1).Endpoint(2).Cluster(3).Attribute(4).ListIndex(5).EndOfAttributePathIB();
+    attributePathBuilder.Node(1)
+        .Endpoint(2)
+        .Cluster(3)
+        .Attribute(4)
+        .ListIndex(DataModel::Nullable<ListIndex>())
+        .EndOfAttributePathIB();
     err = attributePathBuilder.GetError();
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 
@@ -223,6 +226,8 @@ void TestWriteInteraction::TestWriteClient(nlTestSuite * apSuite, void * apConte
     err = writeClient.SendWriteRequest(ctx.GetSessionBobToAlice());
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 
+    ctx.DrainAndServiceIO();
+
     GenerateWriteResponse(apSuite, apContext, buf);
 
     err = writeClient.ProcessWriteResponseMessage(std::move(buf));
@@ -252,6 +257,9 @@ void TestWriteInteraction::TestWriteClientGroup(nlTestSuite * apSuite, void * ap
     err = writeClient.SendWriteRequest(groupSession);
 
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
+
+    ctx.DrainAndServiceIO();
+
     // The WriteClient should be shutdown once we SendWriteRequest for group.
     NL_TEST_ASSERT(apSuite, writeClient.mState == WriteClient::State::AwaitingDestruction);
 }
@@ -262,6 +270,22 @@ void TestWriteInteraction::TestWriteHandler(nlTestSuite * apSuite, void * apCont
 
     TestContext & ctx = *static_cast<TestContext *>(apContext);
 
+    //
+    // We have to enable async dispatch here to ensure that the exchange
+    // gets correctly closed out in the test below. Otherwise, the following happens:
+    //
+    // 1. WriteHandler generates a response upon OnWriteRequest being called.
+    // 2. Since there is no matching active client-side exchange for that request, the IM engine
+    //    handles it incorrectly and treats it like an unsolicited message.
+    // 3. It is invalid to receive a WriteResponse as an unsolicited message so it correctly sends back
+    //    a StatusResponse containing an error to that message.
+    // 4. Without unwinding the existing call stack, a response is received on the same exchange that the handler
+    //    generated a WriteResponse on. This exchange should have been closed in a normal execution model, but in
+    //    a synchronous model, the exchange is still open, and the status response is sent to the WriteHandler.
+    // 5. WriteHandler::OnMessageReceived is invoked, and it correctly asserts.
+    //
+    ctx.EnableAsyncDispatch();
+
     constexpr bool allBooleans[] = { true, false };
     for (auto messageIsTimed : allBooleans)
     {
@@ -271,47 +295,52 @@ void TestWriteInteraction::TestWriteHandler(nlTestSuite * apSuite, void * apCont
 
             app::WriteHandler writeHandler;
 
-            chip::app::InteractionModelDelegate IMdelegate;
             System::PacketBufferHandle buf = System::PacketBufferHandle::New(System::PacketBuffer::kMaxSize);
-            err                            = writeHandler.Init(&IMdelegate);
+            err                            = writeHandler.Init();
 
             GenerateWriteRequest(apSuite, apContext, messageIsTimed, buf);
 
             TestExchangeDelegate delegate;
             Messaging::ExchangeContext * exchange = ctx.NewExchangeToBob(&delegate);
-            Status status                         = writeHandler.OnWriteRequest(exchange, std::move(buf), transactionIsTimed);
+
+            Status status = writeHandler.OnWriteRequest(exchange, std::move(buf), transactionIsTimed);
             if (messageIsTimed == transactionIsTimed)
             {
                 NL_TEST_ASSERT(apSuite, status == Status::Success);
             }
             else
             {
-                NL_TEST_ASSERT(apSuite, status == Status::UnsupportedAccess);
-                // In the normal code flow, the exchange would now get closed
-                // when we send the error status on it (of if that fails when
-                // the stack unwinds).  In the success case it's been closed
-                // already by the WriteHandler sending the response on it, but
-                // if we are in the error case we need to make sure it gets
-                // closed.
+                //
+                // In a normal execution flow, the exchange manager would have closed out the exchange after the
+                // message dispatch call path had unwound. In this test however, we've manually allocated the exchange
+                // ourselves (as opposed to the exchange manager), so we need to take ownership of closing out the exchange.
+                //
+                // Note that this doesn't happen in the success case above, since that results in a call to send a message through
+                // the exchange context, which results in the exchange manager correctly closing it.
+                //
                 exchange->Close();
+                NL_TEST_ASSERT(apSuite, status == Status::UnsupportedAccess);
             }
+
+            ctx.DrainAndServiceIO();
+            ctx.DrainAndServiceIO();
 
             Messaging::ReliableMessageMgr * rm = ctx.GetExchangeManager().GetReliableMessageMgr();
             NL_TEST_ASSERT(apSuite, rm->TestGetCountRetransTable() == 0);
         }
     }
+
+    ctx.DisableAsyncDispatch();
 }
 
-CHIP_ERROR WriteSingleClusterData(const Access::SubjectDescriptor & aSubjectDescriptor, ClusterInfo & aClusterInfo,
+CHIP_ERROR WriteSingleClusterData(const Access::SubjectDescriptor & aSubjectDescriptor, const ConcreteDataAttributePath & aPath,
                                   TLV::TLVReader & aReader, WriteHandler * aWriteHandler)
 {
     TLV::TLVWriter writer;
     writer.Init(attributeDataTLV);
     writer.CopyElement(TLV::AnonymousTag(), aReader);
     attributeDataTLVLen = writer.GetLengthWritten();
-    return aWriteHandler->AddStatus(
-        AttributePathParams(aClusterInfo.mEndpointId, aClusterInfo.mClusterId, aClusterInfo.mAttributeId),
-        Protocols::InteractionModel::Status::Success);
+    return aWriteHandler->AddStatus(aPath, Protocols::InteractionModel::Status::Success);
 }
 
 void TestWriteInteraction::TestWriteRoundtripWithClusterObjects(nlTestSuite * apSuite, void * apContext)
@@ -326,7 +355,7 @@ void TestWriteInteraction::TestWriteRoundtripWithClusterObjects(nlTestSuite * ap
 
     TestWriteClientCallback callback;
     auto * engine = chip::app::InteractionModelEngine::GetInstance();
-    err           = engine->Init(&ctx.GetExchangeManager(), nullptr);
+    err           = engine->Init(&ctx.GetExchangeManager());
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 
     app::WriteClient writeClient(engine->GetExchangeManager(), &callback, Optional<uint16_t>::Missing());
@@ -348,13 +377,15 @@ void TestWriteInteraction::TestWriteRoundtripWithClusterObjects(nlTestSuite * ap
     // Spec A.11.2 strings SHALL NOT include a terminating null character to mark the end of a string.
     dataTx.e = chip::Span<const char>(charSpanData, strlen(charSpanData));
 
-    writeClient.EncodeAttributeWritePayload(attributePathParams, dataTx);
+    writeClient.EncodeAttribute(attributePathParams, dataTx);
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 
     NL_TEST_ASSERT(apSuite, callback.mOnSuccessCalled == 0);
 
     err = writeClient.SendWriteRequest(ctx.GetSessionBobToAlice());
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
+
+    ctx.DrainAndServiceIO();
 
     NL_TEST_ASSERT(apSuite, callback.mOnSuccessCalled == 1);
 
@@ -392,7 +423,7 @@ void TestWriteInteraction::TestWriteRoundtrip(nlTestSuite * apSuite, void * apCo
 
     TestWriteClientCallback callback;
     auto * engine = chip::app::InteractionModelEngine::GetInstance();
-    err           = engine->Init(&ctx.GetExchangeManager(), nullptr);
+    err           = engine->Init(&ctx.GetExchangeManager());
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
 
     app::WriteClient writeClient(engine->GetExchangeManager(), &callback, Optional<uint16_t>::Missing());
@@ -404,6 +435,8 @@ void TestWriteInteraction::TestWriteRoundtrip(nlTestSuite * apSuite, void * apCo
 
     err = writeClient.SendWriteRequest(ctx.GetSessionBobToAlice());
     NL_TEST_ASSERT(apSuite, err == CHIP_NO_ERROR);
+
+    ctx.DrainAndServiceIO();
 
     NL_TEST_ASSERT(apSuite, callback.mOnSuccessCalled == 1 && callback.mOnErrorCalled == 0 && callback.mOnDoneCalled == 1);
 
@@ -436,12 +469,49 @@ const nlTest sTests[] =
 // clang-format on
 
 // clang-format off
+
+/**
+ *  Set up the test suite.
+ */
+int Test_Setup(void * inContext)
+{
+    VerifyOrReturnError(CHIP_NO_ERROR == chip::Platform::MemoryInit(), FAILURE);
+
+    VerifyOrReturnError(TestContext::InitializeAsync(inContext) == SUCCESS, FAILURE);
+
+    constexpr chip::FabricIndex kFabricIndex1 = 1;
+    static const uint8_t kCompressedFabricId[] = { 0x29, 0x06, 0xC9, 0x08, 0xD1, 0x15, 0xD3, 0x62 };
+    VerifyOrReturnError(CHIP_NO_ERROR == chip::GroupTesting::InitProvider(), FAILURE);
+    VerifyOrReturnError(CHIP_NO_ERROR == chip::GroupTesting::InitData(kFabricIndex1, chip::ByteSpan(kCompressedFabricId)), FAILURE);
+
+    return SUCCESS;
+}
+
+/**
+ *  Tear down the test suite.
+ */
+int Test_Teardown(void * inContext)
+{
+    chip::Platform::MemoryShutdown();
+    chip::Credentials::GroupDataProvider * provider = chip::Credentials::GetGroupDataProvider();
+    if (nullptr != provider)
+    {
+        provider->Finish();
+    }
+
+
+    VerifyOrReturnError(TestContext::Finalize(inContext) == SUCCESS, FAILURE);
+
+
+    return SUCCESS;
+}
+
 nlTestSuite sSuite =
 {
     "TestWriteInteraction",
     &sTests[0],
-    TestContext::Initialize,
-    TestContext::Finalize
+    &Test_Setup,
+    &Test_Teardown
 };
 // clang-format on
 

@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2021 Project CHIP Authors
+ *    Copyright (c) 2021-2022 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -89,9 +89,8 @@ using HKDF_sha_crypto = HKDF_sha;
 // The session establishment fails if the response is not received within timeout window.
 static constexpr ExchangeContext::Timeout kSigma_Response_Timeout = System::Clock::Seconds16(30);
 
-CASESession::CASESession()
+CASESession::CASESession() : PairingSession(Transport::SecureSession::Type::kCASE)
 {
-    SetSecureSessionType(Transport::SecureSession::Type::kCASE);
     mTrustedRootId = CertificateKeyId();
 }
 
@@ -111,14 +110,18 @@ void CASESession::Clear()
 
     mState = kInitialized;
 
-    CloseExchange();
+    AbortExchange();
 }
 
-void CASESession::CloseExchange()
+void CASESession::AbortExchange()
 {
     if (mExchangeCtxt != nullptr)
     {
-        mExchangeCtxt->Close();
+        // The only time we reach this is if we are getting destroyed in the
+        // middle of our handshake.  In that case, there is no point trying to
+        // do MRP resends of the last message we sent, so abort the exchange
+        // instead of just closing it.
+        mExchangeCtxt->Abort();
         mExchangeCtxt = nullptr;
     }
 }
@@ -265,8 +268,7 @@ void CASESession::OnResponseTimeout(ExchangeContext * ec)
 {
     VerifyOrReturn(ec != nullptr, ChipLogError(SecureChannel, "CASESession::OnResponseTimeout was called by null exchange"));
     VerifyOrReturn(mExchangeCtxt == ec, ChipLogError(SecureChannel, "CASESession::OnResponseTimeout exchange doesn't match"));
-    ChipLogError(SecureChannel, "CASESession timed out while waiting for a response from the peer. Current state was %" PRIu8,
-                 mState);
+    ChipLogError(SecureChannel, "CASESession timed out while waiting for a response from the peer. Current state was %u", mState);
     // Discard the exchange so that Clear() doesn't try closing it.  The
     // exchange will handle that.
     DiscardExchange();
@@ -1472,7 +1474,7 @@ CHIP_ERROR CASESession::ParseSigma1(TLV::ContiguousBufferTLVReader & tlvReader, 
 }
 
 CHIP_ERROR CASESession::ValidateReceivedMessage(ExchangeContext * ec, const PayloadHeader & payloadHeader,
-                                                System::PacketBufferHandle & msg)
+                                                const System::PacketBufferHandle & msg)
 {
     VerifyOrReturnError(ec != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 

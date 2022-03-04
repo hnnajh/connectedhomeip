@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <access/SubjectDescriptor.h>
 #include <app/ClusterInfo.h>
 #include <app/ConcreteAttributePath.h>
 #include <app/MessageDef/AttributeReportIBs.h>
@@ -76,11 +77,19 @@ public:
     /**
      * EncodeValue encodes the value field of the report, it should be called exactly once.
      */
-    template <typename... Ts>
-    CHIP_ERROR EncodeValue(AttributeReportIBs::Builder & aAttributeReportIBs, Ts &&... aArgs)
+    template <typename T, std::enable_if_t<!DataModel::IsFabricScoped<T>::value, bool> = true, typename... Ts>
+    CHIP_ERROR EncodeValue(AttributeReportIBs::Builder & aAttributeReportIBs, T && item, Ts &&... aArgs)
     {
         return DataModel::Encode(*(aAttributeReportIBs.GetAttributeReport().GetAttributeData().GetWriter()),
-                                 TLV::ContextTag(to_underlying(AttributeDataIB::Tag::kData)), std::forward<Ts>(aArgs)...);
+                                 TLV::ContextTag(to_underlying(AttributeDataIB::Tag::kData)), item, std::forward<Ts>(aArgs)...);
+    }
+
+    template <typename T, std::enable_if_t<DataModel::IsFabricScoped<T>::value, bool> = true, typename... Ts>
+    CHIP_ERROR EncodeValue(AttributeReportIBs::Builder & aAttributeReportIBs, FabricIndex accessingFabricIndex, T && item,
+                           Ts &&... aArgs)
+    {
+        return DataModel::EncodeForRead(*(aAttributeReportIBs.GetAttributeReport().GetAttributeData().GetWriter()),
+                                        TLV::ContextTag(to_underlying(AttributeDataIB::Tag::kData)), accessingFabricIndex, item);
     }
 };
 
@@ -103,9 +112,14 @@ public:
         template <typename T, std::enable_if_t<DataModel::IsFabricScoped<T>::value, bool> = true>
         CHIP_ERROR Encode(T && aArg) const
         {
-            // If the fabric index does not match that present in the request, skip encoding this list item.
-            VerifyOrReturnError(aArg.MatchesFabricIndex(mAttributeValueEncoder.mAccessingFabricIndex), CHIP_NO_ERROR);
-            return mAttributeValueEncoder.EncodeListItem(std::forward<T>(aArg));
+            VerifyOrReturnError(aArg.GetFabricIndex() != kUndefinedFabricIndex, CHIP_ERROR_INVALID_FABRIC_ID);
+
+            // If we are encoding for a fabric filtered attribute read and the fabric index does not match that present in the
+            // request, skip encoding this list item.
+            VerifyOrReturnError(!mAttributeValueEncoder.mIsFabricFiltered ||
+                                    aArg.GetFabricIndex() == mAttributeValueEncoder.mAccessingFabricIndex,
+                                CHIP_NO_ERROR);
+            return mAttributeValueEncoder.EncodeListItem(mAttributeValueEncoder.mAccessingFabricIndex, std::forward<T>(aArg));
         }
 
         template <typename T, std::enable_if_t<!DataModel::IsFabricScoped<T>::value, bool> = true>
@@ -150,11 +164,11 @@ public:
     };
 
     AttributeValueEncoder(AttributeReportIBs::Builder & aAttributeReportIBsBuilder, FabricIndex aAccessingFabricIndex,
-                          const ConcreteAttributePath & aPath, DataVersion aDataVersion,
+                          const ConcreteAttributePath & aPath, DataVersion aDataVersion, bool aIsFabricFiltered = false,
                           const AttributeEncodeState & aState = AttributeEncodeState()) :
         mAttributeReportIBsBuilder(aAttributeReportIBsBuilder),
         mAccessingFabricIndex(aAccessingFabricIndex), mPath(aPath.mEndpointId, aPath.mClusterId, aPath.mAttributeId),
-        mDataVersion(aDataVersion), mEncodeState(aState)
+        mDataVersion(aDataVersion), mIsFabricFiltered(aIsFabricFiltered), mEncodeState(aState)
     {}
 
     /**
@@ -300,6 +314,7 @@ private:
     const FabricIndex mAccessingFabricIndex;
     ConcreteDataAttributePath mPath;
     DataVersion mDataVersion;
+    bool mIsFabricFiltered = false;
     AttributeEncodeState mEncodeState;
     ListIndex mCurrentEncodingListIndex = kInvalidListIndex;
 };
@@ -307,15 +322,27 @@ private:
 class AttributeValueDecoder
 {
 public:
-    AttributeValueDecoder(TLV::TLVReader & aReader, FabricIndex aAccessingFabricIndex) :
-        mReader(aReader), mAccessingFabricIndex(aAccessingFabricIndex)
+    AttributeValueDecoder(TLV::TLVReader & aReader, const Access::SubjectDescriptor & aSubjectDescriptor) :
+        mReader(aReader), mSubjectDescriptor(aSubjectDescriptor)
     {}
 
-    template <typename T>
+    template <typename T, typename std::enable_if_t<!DataModel::IsFabricScoped<T>::value, bool> = true>
     CHIP_ERROR Decode(T & aArg)
     {
         mTriedDecode = true;
         return DataModel::Decode(mReader, aArg);
+    }
+
+    template <typename T, typename std::enable_if_t<DataModel::IsFabricScoped<T>::value, bool> = true>
+    CHIP_ERROR Decode(T & aArg)
+    {
+        mTriedDecode = true;
+        // The WriteRequest comes with no fabric index, this will happen when receiving a write request on a PASE session before
+        // AddNOC.
+        VerifyOrReturnError(AccessingFabricIndex() != kUndefinedFabricIndex, CHIP_IM_GLOBAL_STATUS(UnsupportedAccess));
+        ReturnErrorOnFailure(DataModel::Decode(mReader, aArg));
+        aArg.SetFabricIndex(AccessingFabricIndex());
+        return CHIP_NO_ERROR;
     }
 
     bool TriedDecode() const { return mTriedDecode; }
@@ -323,12 +350,17 @@ public:
     /**
      * The accessing fabric index for this write interaction.
      */
-    FabricIndex AccessingFabricIndex() const { return mAccessingFabricIndex; }
+    FabricIndex AccessingFabricIndex() const { return mSubjectDescriptor.fabricIndex; }
+
+    /**
+     * The accessing subject descriptor for this write interaction.
+     */
+    const Access::SubjectDescriptor & GetSubjectDescriptor() const { return mSubjectDescriptor; }
 
 private:
     TLV::TLVReader & mReader;
     bool mTriedDecode = false;
-    const FabricIndex mAccessingFabricIndex;
+    const Access::SubjectDescriptor mSubjectDescriptor;
 };
 
 class AttributeAccessInterface
@@ -348,12 +380,18 @@ public:
      *
      * @param [in] aPath indicates which exact data is being read.
      * @param [in] aEncoder the AttributeValueEncoder to use for encoding the
-     *             data.  If this function returns scucess and no attempt is
-     *             made to encode data using aEncoder, the
-     *             AttributeAccessInterface did not try to provide any data.  In
-     *             this case, normal attribute access will happen for the read.
-     *             This may involve reading from the attribute store or external
-     *             attribute callbacks.
+     *             data.
+     *
+     * The implementation can do one of three things:
+     *
+     * 1) Return a failure.  This is treated as a failed read and the error is
+     *    returned to the client, by converting it to a StatusIB.
+     * 2) Return success and attempt to encode data using aEncoder.  The data is
+     *    returned to the client.
+     * 3) Return success and not attempt to encode any data using aEncoder.  In
+     *    this case, Ember attribute access will happen for the read. This may
+     *    involve reading from the attribute store or external attribute
+     *    callbacks.
      */
     virtual CHIP_ERROR Read(const ConcreteReadAttributePath & aPath, AttributeValueEncoder & aEncoder) = 0;
 
@@ -362,12 +400,18 @@ public:
      *
      * @param [in] aPath indicates which exact data is being written.
      * @param [in] aDecoder the AttributeValueDecoder to use for decoding the
-     *             data.  If this function returns scucess and no attempt is
-     *             made to decode data using aDecoder, the
-     *             AttributeAccessInterface did not try to write any data.  In
-     *             this case, normal attribute access will happen for the write.
-     *             This may involve writing to the attribute store or external
-     *             attribute callbacks.
+     *             data.
+     *
+     * The implementation can do one of three things:
+     *
+     * 1) Return a failure.  This is treated as a failed write and the error is
+     *    sent to the client, by converting it to a StatusIB.
+     * 2) Return success and attempt to decode from aDecoder.  This is
+     *    treated as a successful write.
+     * 3) Return success and not attempt to decode from aDecoder.  In
+     *    this case, Ember attribute access will happen for the write. This may
+     *    involve writing to the attribute store or external attribute
+     *    callbacks.
      */
     virtual CHIP_ERROR Write(const ConcreteDataAttributePath & aPath, AttributeValueDecoder & aDecoder) { return CHIP_NO_ERROR; }
 

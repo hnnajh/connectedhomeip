@@ -80,8 +80,13 @@ See `examples/lighting-app/efr32/README.md`
 
 -   Build or download the Gecko Bootloader binary. Bootloader should be built
     with the Gecko SDK version 3.2.1 or earlier, type "external SPI" configured
-    with a single slot of at least 1000 KB. Using the commander tool upload the
-    bootloader to the device running the requestor application.
+    with a single slot of at least 1000 KB. Pre-built binaries should be
+    available in
+
+           third_party/efr32_sdk/repo/platform/bootloader/sample-apps/bootloader-storage-spiflash-single
+
+-   Using the commander tool upload the bootloader to the device running the
+    requestor application.
 
 -   Create a bootable image file:
 
@@ -90,19 +95,20 @@ See `examples/lighting-app/efr32/README.md`
 -   In a terminal start the provider app passing to it the path to the bootable
     image file created in the previous step:
 
+           rm -r /tmp/chip_*
            ./out/debug/chip-ota-provider-app -f chip-efr32-ota-requestor-example.gbl
 
 -   In a separate terminal run the chip-tool commands to provision the Provider:
 
-             rm -r /tmp/chip_*
              ./out/chip-tool pairing onnetwork 1 20202021
+             ./out/chip-tool accesscontrol write acl '[{"fabricIndex": 1, "privilege": 5, "authMode": 2, "subjects": [112233], "targets": null}, {"fabricIndex": 1, "privilege": 3, "authMode": 2, "subjects": null, "targets": null}]' 1 0
 
 -   If the Requestor had been previously commissioned hold Button 0 for six
     seconds to factory-reset the device.
 
 -   In the chip-tool terminal enter:
 
-            ./out/chip-tool pairing ble-thread 2 hex:<operationalDataset> 73141520   3840
+            ./out/chip-tool pairing ble-thread 2 hex:<operationalDataset> 20202021 3840
 
 where operationalDataset is obtained from the OpenThread Border Router.
 

@@ -1,8 +1,6 @@
-
-
 /*
  *
- *    Copyright (c) 2020-2021 Project CHIP Authors
+ *    Copyright (c) 2020-2022 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -76,7 +74,6 @@ public:
     static const Key kConfigKey_SetupDiscriminator;
     static const Key kConfigKey_RegulatoryLocation;
     static const Key kConfigKey_CountryCode;
-    static const Key kConfigKey_ActiveLocale;
     static const Key kConfigKey_Breadcrumb;
     static const Key kConfigKey_ProductId;
     static const Key kConfigKey_ProductName;
@@ -89,6 +86,9 @@ public:
     static const Key kConfigKey_LocalConfigDisabled;
     static const Key kConfigKey_Reachable;
     static const Key kConfigKey_UniqueId;
+    static const Key kConfigKey_Spake2pIterationCount;
+    static const Key kConfigKey_Spake2pSalt;
+    static const Key kConfigKey_Spake2pVerifier;
 
     static const char kGroupKeyNamePrefix[];
 

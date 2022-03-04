@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2021 Project CHIP Authors
+ *    Copyright (c) 2021-2022 Project CHIP Authors
  *    All rights reserved.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -75,8 +75,6 @@ public:
     CASESession();
     CASESession(CASESession &&)      = default;
     CASESession(const CASESession &) = default;
-    CASESession & operator=(const CASESession &) = default;
-    CASESession & operator=(CASESession &&) = default;
 
     virtual ~CASESession();
 
@@ -218,7 +216,7 @@ private:
     void OnSuccessStatusReport() override;
     CHIP_ERROR OnFailureStatusReport(Protocols::SecureChannel::GeneralStatusCode generalCode, uint16_t protocolCode) override;
 
-    void CloseExchange();
+    void AbortExchange();
 
     /**
      * Clear our reference to our exchange context pointer so that it can close
@@ -231,7 +229,7 @@ private:
     CHIP_ERROR SetEffectiveTime();
 
     CHIP_ERROR ValidateReceivedMessage(Messaging::ExchangeContext * ec, const PayloadHeader & payloadHeader,
-                                       System::PacketBufferHandle & msg);
+                                       const System::PacketBufferHandle & msg);
 
     SessionEstablishmentDelegate * mDelegate = nullptr;
 

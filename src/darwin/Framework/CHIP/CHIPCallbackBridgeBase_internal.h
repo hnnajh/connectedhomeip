@@ -25,6 +25,7 @@
 #include <platform/CHIPDeviceLayer.h>
 
 typedef CHIP_ERROR (^CHIPActionBlock)(chip::Callback::Cancelable * success, chip::Callback::Cancelable * failure);
+typedef void (*CHIPDefaultFailureCallbackType)(void *, CHIP_ERROR);
 
 template <class T> class CHIPCallbackBridge {
 public:
@@ -35,6 +36,10 @@ public:
         , mSuccess(OnSuccessFn, this)
         , mFailure(OnFailureFn, this)
     {
+        mRequestTime = [NSDate date];
+        // Generate a unique cookie to track this operation
+        mCookie = [NSString stringWithFormat:@"Response Time: %s+%u", typeid(T).name(), arc4random()];
+        ChipLogDetail(Controller, "%s", mCookie.UTF8String);
         __block CHIP_ERROR err = CHIP_NO_ERROR;
         dispatch_sync(chip::DeviceLayer::PlatformMgrImpl().GetWorkQueue(), ^{
             err = action(mSuccess.Cancel(), mFailure.Cancel());
@@ -52,7 +57,7 @@ public:
 
     virtual ~CHIPCallbackBridge() {};
 
-    static void OnFailureFn(void * context, uint8_t status) { DispatchFailure(context, [CHIPError errorForZCLErrorCode:status]); }
+    static void OnFailureFn(void * context, CHIP_ERROR error) { DispatchFailure(context, [CHIPError errorForCHIPErrorCode:error]); }
 
     static void DispatchSuccess(void * context, id value) { DispatchCallbackResult(context, nil, value); }
 
@@ -80,6 +85,8 @@ private:
         }
 
         dispatch_async(callbackBridge->mQueue, ^{
+            ChipLogDetail(Controller, "%s %f seconds", callbackBridge->mCookie.UTF8String,
+                -[callbackBridge->mRequestTime timeIntervalSinceNow]);
             callbackBridge->mHandler(value, error);
 
             if (!callbackBridge->mKeepAlive) {
@@ -92,5 +99,9 @@ private:
     bool mKeepAlive;
 
     chip::Callback::Callback<T> mSuccess;
-    chip::Callback::Callback<DefaultFailureCallback> mFailure;
+    chip::Callback::Callback<CHIPDefaultFailureCallbackType> mFailure;
+
+    // Measure the time it took for the callback to trigger
+    NSDate * mRequestTime;
+    NSString * mCookie;
 };

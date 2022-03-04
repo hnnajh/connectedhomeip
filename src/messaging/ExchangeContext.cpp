@@ -87,16 +87,30 @@ void ExchangeContext::SetResponseTimeout(Timeout timeout)
 #if CONFIG_DEVICE_LAYER && CHIP_DEVICE_CONFIG_ENABLE_SED
 void ExchangeContext::UpdateSEDPollingMode()
 {
-    if (GetSessionHandle()->AsSecureSession()->GetPeerAddress().GetTransportType() != Transport::Type::kBle)
+    Transport::PeerAddress address;
+
+    switch (GetSessionHandle()->GetSessionType())
     {
-        if (!IsResponseExpected() && !IsSendExpected() && (mExchangeMgr->GetNumActiveExchanges() == 1))
-        {
-            chip::DeviceLayer::ConnectivityMgr().RequestSEDFastPollingMode(false);
-        }
-        else
-        {
-            chip::DeviceLayer::ConnectivityMgr().RequestSEDFastPollingMode(true);
-        }
+    case Transport::Session::SessionType::kSecure:
+        address = GetSessionHandle()->AsSecureSession()->GetPeerAddress();
+        break;
+    case Transport::Session::SessionType::kUnauthenticated:
+        address = GetSessionHandle()->AsUnauthenticatedSession()->GetPeerAddress();
+        break;
+    default:
+        return;
+    }
+
+    VerifyOrReturn(address.GetTransportType() != Transport::Type::kBle);
+    UpdateSEDPollingMode(IsResponseExpected() || IsSendExpected() || IsMessageNotAcked());
+}
+
+void ExchangeContext::UpdateSEDPollingMode(bool fastPollingMode)
+{
+    if (fastPollingMode != IsRequestingFastPollingMode())
+    {
+        SetRequestingFastPollingMode(fastPollingMode);
+        DeviceLayer::ConnectivityMgr().RequestSEDFastPollingMode(fastPollingMode);
     }
 }
 #endif
@@ -125,8 +139,10 @@ CHIP_ERROR ExchangeContext::SendMessage(Protocols::Id protocolId, uint8_t msgTyp
     // an error arising below. at the end, we have to close it.
     ExchangeHandle ref(*this);
 
-    // If session requires MRP and NoAutoRequestAck send flag is not specificed, request reliable transmission.
-    bool reliableTransmissionRequested = GetSessionHandle()->RequireMRP() && !sendFlags.Has(SendMessageFlags::kNoAutoRequestAck);
+    // If session requires MRP, NoAutoRequestAck send flag is not specified and is not a group exchange context, request reliable
+    // transmission.
+    bool reliableTransmissionRequested =
+        GetSessionHandle()->RequireMRP() && !sendFlags.Has(SendMessageFlags::kNoAutoRequestAck) && !IsGroupExchangeContext();
 
     // If a response message is expected...
     if (sendFlags.Has(SendMessageFlags::kExpectResponse) && !IsGroupExchangeContext())
@@ -218,8 +234,7 @@ void ExchangeContext::Close()
     VerifyOrDie(mExchangeMgr != nullptr && GetReferenceCount() > 0);
 
 #if defined(CHIP_EXCHANGE_CONTEXT_DETAIL_LOGGING)
-    ChipLogDetail(ExchangeManager, "ec id: %d [" ChipLogFormatExchange "], %s", (this - mExchangeMgr->mContextPool.begin()),
-                  ChipLogValueExchange(this), __func__);
+    ChipLogDetail(ExchangeManager, "ec - close[" ChipLogFormatExchange "], %s", ChipLogValueExchange(this), __func__);
 #endif
 
     DoClose(false);
@@ -235,8 +250,7 @@ void ExchangeContext::Abort()
     VerifyOrDie(mExchangeMgr != nullptr && GetReferenceCount() > 0);
 
 #if defined(CHIP_EXCHANGE_CONTEXT_DETAIL_LOGGING)
-    ChipLogDetail(ExchangeManager, "ec id: %d [" ChipLogFormatExchange "], %s", (this - mExchangeMgr->mContextPool.begin()),
-                  ChipLogValueExchange(this), __func__);
+    ChipLogDetail(ExchangeManager, "ec - abort[" ChipLogFormatExchange "], %s", ChipLogValueExchange(this), __func__);
 #endif
 
     DoClose(true);
@@ -279,6 +293,11 @@ ExchangeContext::~ExchangeContext()
     VerifyOrDie(mExchangeMgr != nullptr && GetReferenceCount() == 0);
     VerifyOrDie(!IsAckPending());
 
+#if CONFIG_DEVICE_LAYER && CHIP_DEVICE_CONFIG_ENABLE_SED
+    // Make sure that the exchange withdraws the request for Sleepy End Device fast-polling mode.
+    UpdateSEDPollingMode(false);
+#endif
+
     // Ideally, in this scenario, the retransmit table should
     // be clear of any outstanding messages for this context and
     // the boolean parameter passed to DoClose() should not matter.
@@ -317,6 +336,13 @@ bool ExchangeContext::MatchExchange(const SessionHandle & session, const PacketH
 
 void ExchangeContext::OnSessionReleased()
 {
+    if (mFlags.Has(Flags::kFlagClosed))
+    {
+        // Exchange is already being closed. It may occur when closing an exchange after sending
+        // RemoveFabric response which triggers removal of all sessions for the given fabric.
+        return;
+    }
+
     ExchangeHandle ref(*this);
 
     if (IsResponseExpected())
@@ -422,12 +448,8 @@ CHIP_ERROR ExchangeContext::HandleMessage(uint32_t messageCounter, const Payload
         MessageHandled();
     });
 
-    // TODO : Remove this bypass for group as to perform the MessagePermitted function Issue # 12101
-    if (!IsGroupExchangeContext())
-    {
-        ReturnErrorOnFailure(
-            mDispatch.OnMessageReceived(messageCounter, payloadHeader, peerAddress, msgFlags, GetReliableMessageContext()));
-    }
+    ReturnErrorOnFailure(
+        mDispatch.OnMessageReceived(messageCounter, payloadHeader, peerAddress, msgFlags, GetReliableMessageContext()));
 
     if (IsAckPending() && !mDelegate)
     {

@@ -40,6 +40,10 @@
 #include "sl_system_kernel.h"
 #include <app/server/Server.h>
 
+#ifdef EFR32_OTA_ENABLED
+#include "OTAConfig.h"
+#endif // EFR32_OTA_ENABLED
+
 #ifdef HEAP_MONITORING
 #include "MemMonitoring.h"
 #endif
@@ -150,13 +154,25 @@ int main(void)
         appError(ret);
     }
 
+#if CHIP_DEVICE_CONFIG_THREAD_FTD
     ret = ConnectivityMgr().SetThreadDeviceType(ConnectivityManager::kThreadDeviceType_Router);
+#else // CHIP_DEVICE_CONFIG_THREAD_FTD
+#if CHIP_DEVICE_CONFIG_ENABLE_SED
+    ret = ConnectivityMgr().SetThreadDeviceType(ConnectivityManager::kThreadDeviceType_SleepyEndDevice);
+#endif // CHIP_DEVICE_CONFIG_ENABLE_SED
+    ret = ConnectivityMgr().SetThreadDeviceType(ConnectivityManager::kThreadDeviceType_MinimalEndDevice);
+#endif // CHIP_DEVICE_CONFIG_THREAD_FTD
     if (ret != CHIP_NO_ERROR)
     {
         EFR32_LOG("ConnectivityMgr().SetThreadDeviceType() failed");
         appError(ret);
     }
 #endif // CHIP_ENABLE_OPENTHREAD
+
+    chip::DeviceLayer::PlatformMgr().LockChipStack();
+    // Init ZCL Data Model
+    chip::Server::GetInstance().Init();
+    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
 
     EFR32_LOG("Starting Platform Manager Event Loop");
     ret = PlatformMgr().StartEventLoopTask();
@@ -165,6 +181,7 @@ int main(void)
         EFR32_LOG("PlatformMgr().StartEventLoopTask() failed");
         appError(ret);
     }
+
 #ifdef WF200_WIFI
     // Start wfx bus communication task.
     wfx_bus_start();
@@ -191,6 +208,11 @@ int main(void)
      * starting up a rsi task - which will initialize the SPI interface.
      */
 #endif
+#ifdef EFR32_OTA_ENABLED
+    chip::DeviceLayer::PlatformMgr().LockChipStack();
+    OTAConfig::Init();
+    chip::DeviceLayer::PlatformMgr().UnlockChipStack();
+#endif // EFR32_OTA_ENABLED
 
     EFR32_LOG("Starting App Task");
     ret = GetAppTask().StartAppTask();

@@ -20,7 +20,6 @@
 
 #include "../../config/PersistentStorage.h"
 #include "../common/CHIPCommand.h"
-#include <app/chip-zcl-zpro-codec.h>
 #include <lib/core/CHIPEncoding.h>
 
 class ModelCommand : public CHIPCommand
@@ -28,30 +27,31 @@ class ModelCommand : public CHIPCommand
 public:
     using ChipDevice = ::chip::OperationalDeviceProxy;
 
-    ModelCommand(const char * commandName) :
-        CHIPCommand(commandName), mOnDeviceConnectedCallback(OnDeviceConnectedFn, this),
+    ModelCommand(const char * commandName, CredentialIssuerCommands * credsIssuerConfig) :
+        CHIPCommand(commandName, credsIssuerConfig), mOnDeviceConnectedCallback(OnDeviceConnectedFn, this),
         mOnDeviceConnectionFailureCallback(OnDeviceConnectionFailureFn, this)
     {}
 
     void AddArguments()
     {
-        AddArgument("node-id", 0, UINT64_MAX, &mNodeId);
-        AddArgument("endpoint-id", CHIP_ZCL_ENDPOINT_MIN, CHIP_ZCL_ENDPOINT_MAX, &mEndPointId);
-        AddArgument("timedInteractionTimeoutMs", 0, UINT16_MAX, &mTimedInteractionTimeoutMs);
+        AddArgument("node-id/group-id", 0, UINT64_MAX, &mNodeId);
+        AddArgument("endpoint-id-ignored-for-group-commands", 0, UINT16_MAX, &mEndPointId);
     }
 
     /////////// CHIPCommand Interface /////////
     CHIP_ERROR RunCommand() override;
     chip::System::Clock::Timeout GetWaitDuration() const override { return chip::System::Clock::Seconds16(10); }
 
-    virtual CHIP_ERROR SendCommand(ChipDevice * device, uint8_t endPointId) = 0;
+    virtual CHIP_ERROR SendCommand(ChipDevice * device, std::vector<chip::EndpointId> endPointIds) = 0;
 
-protected:
-    chip::Optional<uint16_t> mTimedInteractionTimeoutMs;
+    virtual CHIP_ERROR SendGroupCommand(chip::GroupId groupId, chip::FabricIndex fabricIndex, chip::NodeId senderNodeId)
+    {
+        return CHIP_ERROR_BAD_REQUEST;
+    };
 
 private:
     chip::NodeId mNodeId;
-    uint8_t mEndPointId;
+    std::vector<chip::EndpointId> mEndPointId;
 
     static void OnDeviceConnectedFn(void * context, ChipDevice * device);
     static void OnDeviceConnectionFailureFn(void * context, PeerId peerId, CHIP_ERROR error);

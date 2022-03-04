@@ -96,8 +96,7 @@ class AsyncCommandTransaction:
     def _handleError(self, imError: int, chipError: int, exception: Exception):
         if exception:
             self._future.set_exception(exception)
-        elif chipError != 0 and chipError != 0xCA:
-            # 0xCA is CHIP_IM_STATUS_CODE_RECEIVED
+        elif chipError != 0:
             self._future.set_exception(
                 chip.exceptions.ChipStackError(chipError))
         else:
@@ -162,21 +161,7 @@ def SendCommand(future: Future, eventLoop, responseType: Type, device, commandPa
         transaction), device, c_uint16(0 if timedRequestTimeoutMs is None else timedRequestTimeoutMs), commandPath.EndpointId, commandPath.ClusterId, commandPath.CommandId, payloadTLV, len(payloadTLV))
 
 
-_deviceController = None
-
-
-def SetDeviceController(deviceCtrl):
-    global _deviceController
-    _deviceController = deviceCtrl
-
-
-def GetDeviceController():
-    global _deviceController
-    return _deviceController
-
-
-def Init(devCtrl):
-    SetDeviceController(devCtrl)
+def Init():
     handle = chip.native.GetLibraryHandle()
 
     # Uses one of the type decorators as an indicator for everything being

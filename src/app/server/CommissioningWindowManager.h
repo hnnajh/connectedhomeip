@@ -1,6 +1,6 @@
 /*
  *
- *    Copyright (c) 2021 Project CHIP Authors
+ *    Copyright (c) 2021-2022 Project CHIP Authors
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -54,8 +54,8 @@ public:
         CommissioningWindowAdvertisement advertisementMode = chip::CommissioningWindowAdvertisement::kAllSupported);
 
     CHIP_ERROR OpenEnhancedCommissioningWindow(uint16_t commissioningTimeoutSeconds, uint16_t discriminator,
-                                               PASEVerifier & verifier, uint32_t iterations, chip::ByteSpan salt,
-                                               uint16_t passcodeID);
+                                               Spake2pVerifier & verifier, uint32_t iterations, chip::ByteSpan salt,
+                                               PasscodeId passcodeID);
 
     void CloseCommissioningWindow();
 
@@ -78,9 +78,14 @@ private:
 
     CHIP_ERROR StartAdvertisement();
 
-    CHIP_ERROR StopAdvertisement();
+    CHIP_ERROR StopAdvertisement(bool aShuttingDown);
 
     CHIP_ERROR OpenCommissioningWindow();
+
+    // Helper for Shutdown and Cleanup.  Does not do anything with
+    // advertisements, because Shutdown and Cleanup want to handle those
+    // differently.
+    void ResetState();
 
     AppDelegate * mAppDelegate = nullptr;
     Server * mServer           = nullptr;
@@ -101,12 +106,12 @@ private:
     uint8_t mFailedCommissioningAttempts = 0;
 
     bool mUseECM = false;
-    PASEVerifier mECMPASEVerifier;
+    Spake2pVerifier mECMPASEVerifier;
     uint16_t mECMDiscriminator = 0;
-    uint16_t mECMPasscodeID    = 0;
+    PasscodeId mECMPasscodeID  = kDefaultCommissioningPasscodeId;
     uint32_t mECMIterations    = 0;
     uint32_t mECMSaltLength    = 0;
-    uint8_t mECMSalt[kPBKDFMaximumSaltLen];
+    uint8_t mECMSalt[kSpake2p_Max_PBKDF_Salt_Length];
 };
 
 } // namespace chip

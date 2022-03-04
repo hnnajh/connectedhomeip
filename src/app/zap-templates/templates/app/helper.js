@@ -39,6 +39,8 @@ zclHelper['isEvent'] = function(db, event_name, packageId) {
 // This list of attributes is taken from section '11.2. Global Attributes' of the
 // Data Model specification.
 const kGlobalAttributes = [
+  0xfff8, // ServerGeneratedCommandList
+  0xfff9, // ClientGeneratedCommandList
   0xfffb, // AttributeList
   0xfffc, // ClusterRevision
   0xfffd, // FeatureMap
@@ -111,6 +113,7 @@ var endpointClusterWithInit = [
   'IAS Zone',
   'Identify',
   'Level Control',
+  'Localization Configuration',
   'Occupancy Sensing',
   'On/Off',
   'Pump Configuration and Control',
@@ -118,9 +121,16 @@ var endpointClusterWithInit = [
   'Time Format Localization',
   'Thermostat',
 ];
-var endpointClusterWithAttributeChanged = [ 'Identify', 'Door Lock', 'Pump Configuration and Control' ];
-var endpointClusterWithPreAttribute =
-    [ 'IAS Zone', 'Door Lock', 'Thermostat User Interface Configuration', 'Time Format Localization' ];
+var endpointClusterWithAttributeChanged = [
+  'Bridged Device Basic',
+  'Door Lock',
+  'Identify',
+  'Pump Configuration and Control',
+  'Window Covering',
+];
+var endpointClusterWithPreAttribute = [
+  'IAS Zone', 'Door Lock', 'Thermostat User Interface Configuration', 'Time Format Localization', 'Localization Configuration'
+];
 var endpointClusterWithMessageSent = [ 'IAS Zone' ];
 
 /**
@@ -176,6 +186,37 @@ function chip_endpoint_generated_functions()
   return ret.concat('\n');
 }
 
+function chip_endpoint_generated_commands_list(options)
+{
+  let ret = [];
+  this.clusterList.forEach((c) => {
+    let clientGeneratedCommands = [];
+    let serverGeneratedCommands = [];
+
+    c.commands.forEach((cmd) => {
+      if (cmd.mask.includes('incoming_server')) {
+        clientGeneratedCommands.push(`${cmd.commandId} /* ${cmd.name} */`);
+      }
+      if (cmd.mask.includes('incoming_client')) {
+        serverGeneratedCommands.push(`${cmd.commandId} /* ${cmd.name} */`);
+      }
+    });
+
+    if (clientGeneratedCommands.length > 0 || serverGeneratedCommands.length > 0) {
+      ret.push({ text : `  /* ${c.comment} */\\` });
+    }
+    if (clientGeneratedCommands.length > 0) {
+      clientGeneratedCommands.push('chip::kInvalidCommandId /* end of list */')
+      ret.push({ text : `  /*   client_generated */ \\\n  ${clientGeneratedCommands.join(', \\\n  ')}, \\` });
+    }
+    if (serverGeneratedCommands.length > 0) {
+      serverGeneratedCommands.push('chip::kInvalidCommandId /* end of list */')
+      ret.push({ text : `  /*   server_generated */ \\\n  ${serverGeneratedCommands.join(', \\\n  ')}, \\` });
+    }
+  })
+  return templateUtil.collectBlocks(ret, options, this);
+}
+
 /**
  * Return endpoint config GENERATED_CLUSTER MACRO
  * To be used as a replacement of endpoint_cluster_list since this one
@@ -183,7 +224,8 @@ function chip_endpoint_generated_functions()
  */
 function chip_endpoint_cluster_list()
 {
-  let ret = '{ \\\n';
+  let ret           = '{ \\\n';
+  let totalCommands = 0;
   this.clusterList.forEach((c) => {
     let mask          = '';
     let functionArray = c.functions;
@@ -221,10 +263,57 @@ function chip_endpoint_cluster_list()
     } else {
       mask = c.mask.map((m) => `ZAP_CLUSTER_MASK(${m.toUpperCase()})`).join(' | ')
     }
-    ret = ret.concat(`  { ${c.clusterId}, ZAP_ATTRIBUTE_INDEX(${c.attributeIndex}), ${c.attributeCount}, ${c.attributeSize}, ${
-        mask}, ${functionArray} }, /* ${c.comment} */ \\\n`)
+
+    let clientGeneratedCommands = c.commands.reduce(((acc, cmd) => (acc + (cmd.mask.includes('incoming_server') ? 1 : 0))), 0);
+    let serverGeneratedCommands = c.commands.reduce(((acc, cmd) => (acc + (cmd.mask.includes('incoming_client') ? 1 : 0))), 0);
+
+    let clientGeneratedCommandsListVal = "nullptr";
+    let serverGeneratedCommandsListVal = "nullptr";
+
+    if (clientGeneratedCommands > 0) {
+      clientGeneratedCommands++; // Leaves space for the terminator
+      clientGeneratedCommandsListVal = `ZAP_GENERATED_COMMANDS_INDEX( ${totalCommands} )`;
+    }
+
+    if (serverGeneratedCommands > 0) {
+      serverGeneratedCommands++; // Leaves space for the terminator
+      serverGeneratedCommandsListVal = `ZAP_GENERATED_COMMANDS_INDEX( ${totalCommands + clientGeneratedCommands} )`;
+    }
+
+    ret = ret.concat(`  { \\
+      /* ${c.comment} */ \\
+      .clusterId = ${c.clusterId},  \\
+      .attributes = ZAP_ATTRIBUTE_INDEX(${c.attributeIndex}), \\
+      .attributeCount = ${c.attributeCount}, \\
+      .clusterSize = ${c.attributeSize}, \\
+      .mask = ${mask}, \\
+      .functions = ${functionArray}, \\
+      .clientGeneratedCommandList = ${clientGeneratedCommandsListVal} ,\\
+      .serverGeneratedCommandList = ${serverGeneratedCommandsListVal} ,\\
+    },\\\n`)
+
+    totalCommands = totalCommands + clientGeneratedCommands + serverGeneratedCommands;
   })
   return ret.concat('}\n');
+}
+
+/**
+ * Return the number of data versions we need for our fixed endpoints.
+ *
+ * This is just the count of server clusters on those endpoints.
+ */
+function chip_endpoint_data_version_count()
+{
+  let serverCount = 0;
+  for (const ep of this.endpoints) {
+    let epType = this.endpointTypes.find(type => type.id == ep.endpointTypeRef);
+    for (const cluster of epType.clusters) {
+      if (cluster.side == "server") {
+        ++serverCount;
+      }
+    }
+  }
+  return serverCount;
 }
 
 //  End of Endpoint-config specific helpers
@@ -244,9 +333,9 @@ function asPrintFormat(type)
       case 'bool':
         return '%d';
       case 'int8_t':
-        return '%" PRId8 "';
+        return '%d';
       case 'uint8_t':
-        return '%" PRIu8 "';
+        return '%u';
       case 'int16_t':
         return '%" PRId16 "';
       case 'uint16_t':
@@ -336,7 +425,7 @@ function hasSpecificAttributes(options)
 function asLowerCamelCase(label)
 {
   let str = string.toCamelCase(label, true);
-  // Check for the case when were:
+  // Check for the case when we're:
   // 1. A single word (that's the regexp at the beginning, which matches the
   //    word-splitting regexp in string.toCamelCase).
   // 2. Starting with multiple capital letters in a row.
@@ -390,26 +479,50 @@ function nsValueToNamespace(ns)
  */
 async function zapTypeToClusterObjectType(type, isDecodable, options)
 {
+  // Use the entryType as a type
+  if (type == 'array' && this.entryType) {
+    type = this.entryType;
+  }
+
   let passByReference = false;
   async function fn(pkgId)
   {
     const ns          = options.hash.ns ? ('chip::app::Clusters::' + nsValueToNamespace(options.hash.ns) + '::') : '';
     const typeChecker = async (method) => zclHelper[method](this.global.db, type, pkgId).then(zclType => zclType != 'unknown');
 
-    if (await typeChecker('isEnum')) {
+    const types = {
+      isEnum : await typeChecker('isEnum'),
+      isBitmap : await typeChecker('isBitmap'),
+      isEvent : await typeChecker('isEvent'),
+      isStruct : await typeChecker('isStruct'),
+    };
+
+    const typesCount = Object.values(types).filter(isType => isType).length;
+    if (typesCount > 1) {
+      let error = type + ' is ambiguous: \n';
+      Object.entries(types).forEach(([ key, value ]) => {
+        if (value) {
+          error += '\t' + key + ': ' + value + '\n';
+        }
+      });
+      throw error;
+    }
+
+    if (types.isEnum) {
       return ns + type;
     }
 
-    if (await typeChecker('isBitmap')) {
+    if (types.isBitmap) {
       return 'chip::BitFlags<' + ns + type + '>';
     }
 
-    if (await typeChecker('isStruct')) {
+    if (types.isStruct) {
       passByReference = true;
       return ns + 'Structs::' + type + '::' + (isDecodable ? 'DecodableType' : 'Type');
     }
 
-    if (await typeChecker('isEvent')) {
+    if (types.isEvent) {
+      passByReference = true;
       return ns + 'Events::' + type + '::' + (isDecodable ? 'DecodableType' : 'Type');
     }
 
@@ -417,7 +530,7 @@ async function zapTypeToClusterObjectType(type, isDecodable, options)
   }
 
   let typeStr = await templateUtil.ensureZclPackageId(this).then(fn.bind(this));
-  if ((this.isList || this.isArray || this.entryType) && !options.hash.forceNotList) {
+  if ((this.isArray || this.entryType) && !options.hash.forceNotList) {
     passByReference = true;
     // If we did not have a namespace provided, we can assume we're inside
     // chip::app.
@@ -520,7 +633,7 @@ async function _zapTypeToPythonClusterObjectType(type, options)
   }
 
   let promise = templateUtil.ensureZclPackageId(this).then(fn.bind(this));
-  if ((this.isList || this.isArray || this.entryType) && !options.hash.forceNotList) {
+  if ((this.isArray || this.entryType) && !options.hash.forceNotList) {
     promise = promise.then(typeStr => `typing.List[${typeStr}]`);
   }
 
@@ -600,7 +713,7 @@ async function _getPythonFieldDefault(type, options)
   }
 
   let promise = templateUtil.ensureZclPackageId(this).then(fn.bind(this));
-  if ((this.isList || this.isArray || this.entryType) && !options.hash.forceNotList) {
+  if ((this.isArray || this.entryType) && !options.hash.forceNotList) {
     promise = promise.then(typeStr => `field(default_factory=lambda: [])`);
   }
 
@@ -623,14 +736,6 @@ function getPythonFieldDefault(type, options)
   return _getPythonFieldDefault.call(this, type, options)
 }
 
-async function getResponseCommandName(responseRef, options)
-{
-  let pkgId = await templateUtil.ensureZclPackageId(this);
-
-  const { db, sessionId } = this.global;
-  return queryCommand.selectCommandById(db, responseRef, pkgId).then(response => asUpperCamelCase(response.name));
-}
-
 // Allow-list of enums that we generate as enums, not enum classes.  The goal is
 // to drive this down to 0.
 function isWeaklyTypedEnum(label)
@@ -646,15 +751,6 @@ function isWeaklyTypedEnum(label)
     "ColorMode",
     "ContentLaunchStatus",
     "ContentLaunchStreamingType",
-    "DoorLockEventSource",
-    "DoorLockEventType",
-    "DoorLockOperatingMode",
-    "DoorLockOperationEventCode",
-    "DoorLockProgrammingEventCode",
-    "DoorLockState",
-    "DoorLockUserStatus",
-    "DoorLockUserType",
-    "DoorState",
     "EnhancedColorMode",
     "HardwareFaultType",
     "HueDirection",
@@ -671,7 +767,6 @@ function isWeaklyTypedEnum(label)
     "LevelControlOptions",
     "MoveMode",
     "NetworkFaultType",
-    "NodeOperationalCertStatus",
     "OnOffDelayedAllOffEffectVariant",
     "OnOffDyingLightEffectVariant",
     "OnOffEffectIdentifier",
@@ -721,24 +816,56 @@ async function zcl_events_fields_by_event_name(name, options)
   return templateUtil.templatePromise(this.global, promise)
 }
 
+// Must be used inside zcl_clusters
+async function zcl_commands_that_need_timed_invoke(options)
+{
+  const { db }  = this.global;
+  let packageId = await templateUtil.ensureZclPackageId(this);
+  let commands  = await queryCommand.selectCommandsByClusterId(db, this.id, packageId);
+  commands      = commands.filter(cmd => cmd.mustUseTimedInvoke);
+  return templateUtil.collectBlocks(commands, options, this);
+}
+
+// Allows conditioning generation on whether the given type is a fabric-scoped
+// struct.
+async function if_is_fabric_scoped_struct(type, options)
+{
+  let packageId = await templateUtil.ensureZclPackageId(this);
+  let st        = await zclQuery.selectStructByName(this.global.db, type, packageId);
+
+  if (st) {
+    // TODO: Should know whether a struct is fabric-scoped without sniffing its
+    // members.
+    let fields = await zclQuery.selectAllStructItemsById(this.global.db, st.id);
+    if (fields.find((i) => i.type.toLowerCase() == "fabric_idx")) {
+      return options.fn(this);
+    }
+  }
+
+  return options.inverse(this);
+}
+
 //
 // Module exports
 //
-exports.asPrintFormat                       = asPrintFormat;
-exports.asReadType                          = asReadType;
-exports.chip_endpoint_generated_functions   = chip_endpoint_generated_functions
-exports.chip_endpoint_cluster_list          = chip_endpoint_cluster_list
-exports.asTypedLiteral                      = asTypedLiteral;
-exports.asLowerCamelCase                    = asLowerCamelCase;
-exports.asUpperCamelCase                    = asUpperCamelCase;
-exports.hasProperty                         = hasProperty;
-exports.hasSpecificAttributes               = hasSpecificAttributes;
-exports.asMEI                               = asMEI;
-exports.zapTypeToEncodableClusterObjectType = zapTypeToEncodableClusterObjectType;
-exports.zapTypeToDecodableClusterObjectType = zapTypeToDecodableClusterObjectType;
-exports.zapTypeToPythonClusterObjectType    = zapTypeToPythonClusterObjectType;
-exports.getResponseCommandName              = getResponseCommandName;
-exports.isWeaklyTypedEnum                   = isWeaklyTypedEnum;
-exports.getPythonFieldDefault               = getPythonFieldDefault;
-exports.incrementDepth                      = incrementDepth;
-exports.zcl_events_fields_by_event_name     = zcl_events_fields_by_event_name;
+exports.asPrintFormat                         = asPrintFormat;
+exports.asReadType                            = asReadType;
+exports.chip_endpoint_generated_functions     = chip_endpoint_generated_functions
+exports.chip_endpoint_cluster_list            = chip_endpoint_cluster_list
+exports.chip_endpoint_data_version_count      = chip_endpoint_data_version_count;
+exports.chip_endpoint_generated_commands_list = chip_endpoint_generated_commands_list
+exports.asTypedLiteral                        = asTypedLiteral;
+exports.asLowerCamelCase                      = asLowerCamelCase;
+exports.asUpperCamelCase                      = asUpperCamelCase;
+exports.hasProperty                           = hasProperty;
+exports.hasSpecificAttributes                 = hasSpecificAttributes;
+exports.asMEI                                 = asMEI;
+exports.zapTypeToEncodableClusterObjectType   = zapTypeToEncodableClusterObjectType;
+exports.zapTypeToDecodableClusterObjectType   = zapTypeToDecodableClusterObjectType;
+exports.zapTypeToPythonClusterObjectType      = zapTypeToPythonClusterObjectType;
+exports.isWeaklyTypedEnum                     = isWeaklyTypedEnum;
+exports.getPythonFieldDefault                 = getPythonFieldDefault;
+exports.incrementDepth                        = incrementDepth;
+exports.zcl_events_fields_by_event_name       = zcl_events_fields_by_event_name;
+exports.zcl_commands_that_need_timed_invoke   = zcl_commands_that_need_timed_invoke;
+exports.if_is_fabric_scoped_struct            = if_is_fabric_scoped_struct

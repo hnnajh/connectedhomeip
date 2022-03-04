@@ -88,7 +88,7 @@ CHIP_ERROR ConfigurationManagerImpl::Init()
 
     if (!PosixConfig::ConfigValueExists(PosixConfig::kCounterKey_BootReason))
     {
-        err = StoreBootReason(DiagnosticDataProvider::BootReasonType::Unspecified);
+        err = StoreBootReason(BootReasonType::Unspecified);
         SuccessOrExit(err);
     }
 
@@ -103,12 +103,6 @@ CHIP_ERROR ConfigurationManagerImpl::Init()
     {
         uint32_t location = to_underlying(chip::app::Clusters::GeneralCommissioning::RegulatoryLocationType::kIndoor);
         err               = WriteConfigValue(PosixConfig::kConfigKey_LocationCapability, location);
-        SuccessOrExit(err);
-    }
-
-    if (!PosixConfig::ConfigValueExists(PosixConfig::kConfigKey_ActiveLocale))
-    {
-        err = WriteConfigValueStr(PosixConfig::kConfigKey_ActiveLocale, "en-US", strlen("en-US"));
         SuccessOrExit(err);
     }
 

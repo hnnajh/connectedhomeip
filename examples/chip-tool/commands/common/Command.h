@@ -19,6 +19,8 @@
 #pragma once
 
 #include <app/data-model/Nullable.h>
+#include <commands/clusters/ComplexArgument.h>
+#include <commands/clusters/CustomArgument.h>
 #include <controller/CHIPDeviceController.h>
 #include <inet/InetInterface.h>
 #include <lib/core/Optional.h>
@@ -32,10 +34,6 @@
 #include <vector>
 
 class Command;
-
-// Limits on endpoint values.
-#define CHIP_ZCL_ENDPOINT_MIN 0x00
-#define CHIP_ZCL_ENDPOINT_MAX 0xF0
 
 template <typename T, typename... Args>
 std::unique_ptr<Command> make_unique(Args &&... args)
@@ -64,12 +62,16 @@ enum ArgumentType
     Number_int64,
     Float,
     Double,
-    Boolean,
+    Bool,
     String,
     CharString,
     OctetString,
     Attribute,
-    Address
+    Address,
+    Complex,
+    Custom,
+    Vector16,
+    Vector32,
 };
 
 struct Argument
@@ -128,9 +130,11 @@ public:
     size_t AddArgument(const char * name, chip::ByteSpan * value, uint8_t flags = 0);
     size_t AddArgument(const char * name, chip::Span<const char> * value, uint8_t flags = 0);
     size_t AddArgument(const char * name, AddressWithInterface * out, uint8_t flags = 0);
+    size_t AddArgument(const char * name, ComplexArgument * value);
+    size_t AddArgument(const char * name, CustomArgument * value);
     size_t AddArgument(const char * name, int64_t min, uint64_t max, bool * out, uint8_t flags = 0)
     {
-        return AddArgument(name, min, max, reinterpret_cast<void *>(out), Boolean, flags);
+        return AddArgument(name, min, max, reinterpret_cast<void *>(out), Bool, flags);
     }
     size_t AddArgument(const char * name, int64_t min, uint64_t max, int8_t * out, uint8_t flags = 0)
     {
@@ -168,10 +172,21 @@ public:
     size_t AddArgument(const char * name, float min, float max, float * out, uint8_t flags = 0);
     size_t AddArgument(const char * name, double min, double max, double * out, uint8_t flags = 0);
 
+    size_t AddArgument(const char * name, int64_t min, uint64_t max, std::vector<uint16_t> * value);
+    size_t AddArgument(const char * name, int64_t min, uint64_t max, std::vector<uint32_t> * value);
+
     template <typename T, typename = std::enable_if_t<std::is_enum<T>::value>>
     size_t AddArgument(const char * name, int64_t min, uint64_t max, T * out, uint8_t flags = 0)
     {
         return AddArgument(name, min, max, reinterpret_cast<std::underlying_type_t<T> *>(out), flags);
+    }
+
+    template <typename T>
+    size_t AddArgument(const char * name, int64_t min, uint64_t max, chip::BitFlags<T> * out, uint8_t flags = 0)
+    {
+        // This is a terrible hack that relies on BitFlags only having the one
+        // mValue member.
+        return AddArgument(name, min, max, reinterpret_cast<T *>(out), flags);
     }
 
     template <typename T>

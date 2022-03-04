@@ -17,10 +17,12 @@
 
 #pragma once
 
+#include <access/SubjectDescriptor.h>
 #include <app/ClusterInfo.h>
 #include <app/util/basic-types.h>
 #include <lib/core/CHIPCore.h>
 #include <lib/core/CHIPTLV.h>
+#include <lib/core/Optional.h>
 #include <system/SystemPacketBuffer.h>
 
 constexpr size_t kNumPriorityLevel = 3;
@@ -140,6 +142,8 @@ public:
     PriorityLevel mPriority = PriorityLevel::Invalid;
     Type mUrgent            = Type::kNotUrgent; /**< A flag denoting if the event is time sensitive.  When kUrgent is set, it causes
                                                        the event log to be flushed. */
+    // kUndefinedFabricIndex 0 means not fabric associated at all
+    FabricIndex mFabricIndex = kUndefinedFabricIndex;
 };
 
 /**
@@ -161,6 +165,7 @@ struct EventLoadOutContext
     size_t mEventCount                   = 0;
     ClusterInfo * mpInterestedEventPaths = nullptr;
     bool mFirst                          = true;
+    Access::SubjectDescriptor mSubjectDescriptor;
 };
 } // namespace app
 } // namespace chip
