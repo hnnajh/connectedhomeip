@@ -87,6 +87,13 @@ CHIP_ERROR GenericPlatformManagerImpl<ImplClass>::_InitChipStack()
     {
         ChipLogError(DeviceLayer, "UDP initialization failed: %" CHIP_ERROR_FORMAT, err.Format());
     }
+
+    err = TCPEndPointManager()->Init(SystemLayer());
+    if (err != CHIP_NO_ERROR)
+    {
+        ChipLogError(DeviceLayer, "TCP initialization failed: %" CHIP_ERROR_FORMAT, err.Format());
+    }
+
     SuccessOrExit(err);
 
     // TODO Perform dynamic configuration of the core CHIP objects based on stored settings.

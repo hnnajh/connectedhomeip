@@ -62,7 +62,10 @@ public:
     /**
      * @returns true if and only if the object is in the Initialized state.
      */
-    bool IsInitialized() const { return mState == State::Initialized; }
+    bool IsInitialized() const {
+        //ChipLogError(Inet, "[TEST] IsInitialized State:%hhu", mState);
+        return mState == State::Initialized;
+    }
 
     /*
      * State transitions.
@@ -104,6 +107,7 @@ public:
 private:
     bool Transition(State from, State to)
     {
+        //ChipLogError(Inet, "[TEST] From:%hhu, To:%hhu", from, to);
         if (mState == from)
         {
             mState = to;

@@ -65,7 +65,7 @@ CHIP_ERROR GlobalMinimalMdnsServer::StartServer(chip::Inet::EndPointManager<chip
     GlobalMinimalMdnsServer::Server().ShutdownEndpoints();
 
     UniquePtr<ListenIterator> endpoints = GetAddressPolicy()->GetListenEndpoints();
-
+    ChipLogError(Inet, "[TEST] before listening");
     return GlobalMinimalMdnsServer::Server().Listen(udpEndPointManager, endpoints.get(), port);
 }
 

@@ -476,6 +476,7 @@ CHIP_ERROR MinMdnsResolver::Init(chip::Inet::EndPointManager<chip::Inet::UDPEndP
         return CHIP_NO_ERROR;
     }
 
+    ChipLogError(Inet, "[TEST] before starting server minmdns");
     return GlobalMinimalMdnsServer::Instance().StartServer(udpEndPointManager, kMdnsPort);
 }
 

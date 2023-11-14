@@ -43,6 +43,7 @@
 
 #include <transport/TransportMgr.h>
 #include <transport/raw/UDP.h>
+#include <transport/raw/TCP.h>
 #if CONFIG_DEVICE_LAYER
 #include <platform/CHIPDeviceLayer.h>
 #endif
@@ -55,11 +56,13 @@
 namespace chip {
 
 inline constexpr size_t kMaxDeviceTransportBlePendingPackets = 1;
+constexpr size_t kMaxTcpActiveConnectionCount = 4;
+constexpr size_t kMaxTcpPendingPackets        = 4;
 
-using DeviceTransportMgr = TransportMgr<Transport::UDP /* IPv6 */
+using DeviceTransportMgr = TransportMgr<Transport::TCP<kMaxTcpActiveConnectionCount, kMaxTcpPendingPackets> /* IPv6 */
 #if INET_CONFIG_ENABLE_IPV4
                                         ,
-                                        Transport::UDP /* IPv4 */
+                                        Transport::TCP<kMaxTcpActiveConnectionCount, kMaxTcpPendingPackets> /* IPv4 */
 #endif
 #if CONFIG_NETWORK_LAYER_BLE
                                         ,

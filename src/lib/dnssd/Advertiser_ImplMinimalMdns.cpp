@@ -370,7 +370,9 @@ CHIP_ERROR AdvertiserMinMdns::Init(chip::Inet::EndPointManager<chip::Inet::UDPEn
     // GlobalMinimalMdnsServer (used for testing).
     mResponseSender.SetServer(&GlobalMinimalMdnsServer::Server());
 
+    ChipLogError(Inet, "[TEST] before starting server");
     ReturnErrorOnFailure(GlobalMinimalMdnsServer::Instance().StartServer(udpEndPointManager, kMdnsPort));
+    ChipLogError(Inet, "[TEST] after starting server");
 
     ChipLogProgress(Discovery, "CHIP minimal mDNS started advertising.");
 

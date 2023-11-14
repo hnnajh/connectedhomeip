@@ -136,7 +136,7 @@
  *
  */
 #ifndef INET_CONFIG_ENABLE_TCP_ENDPOINT
-#define INET_CONFIG_ENABLE_TCP_ENDPOINT                     0
+#define INET_CONFIG_ENABLE_TCP_ENDPOINT                     1
 #endif // INET_CONFIG_ENABLE_TCP_ENDPOINT
 
 /**

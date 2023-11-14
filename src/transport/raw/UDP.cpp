@@ -46,7 +46,7 @@ CHIP_ERROR UDP::Init(UdpListenParameters & params)
     {
         Close();
     }
-
+    ChipLogError(Inet, "[TEST] #5 initailize endpoint");
     err = params.GetEndPointManager()->NewEndPoint(&mUDPEndPoint);
     SuccessOrExit(err);
 

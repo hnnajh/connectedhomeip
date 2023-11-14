@@ -47,7 +47,7 @@ public:
     virtual bool MessagePermitted(Protocols::Id protocol, uint8_t type) = 0;
 
     // TODO: remove IsReliableTransmissionAllowed, this function should be provided over session.
-    virtual bool IsReliableTransmissionAllowed() const { return true; }
+    virtual bool IsReliableTransmissionAllowed() const { return false; }
 };
 
 } // namespace Messaging

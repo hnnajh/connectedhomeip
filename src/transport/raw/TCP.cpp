@@ -77,17 +77,20 @@ CHIP_ERROR TCPBase::Init(TcpListenParameters & params)
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
 
-    VerifyOrExit(mState == State::kNotReady, err = CHIP_ERROR_INCORRECT_STATE);
+    //VerifyOrExit(mState == State::kNotReady, err = CHIP_ERROR_INCORRECT_STATE);
 
 #if INET_CONFIG_ENABLE_TCP_ENDPOINT
+    ChipLogError(Inet, "[TEST] #3 initailize endpoint");
     err = params.GetEndPointManager()->NewEndPoint(&mListenSocket);
 #else
     err = CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE;
 #endif
     SuccessOrExit(err);
 
+    ChipLogError(Inet, "[TEST] before bind");
     err = mListenSocket->Bind(params.GetAddressType(), Inet::IPAddress::Any, params.GetListenPort(),
                               params.GetInterfaceId().IsPresent());
+    ChipLogError(Inet, "[TEST] after bind: %s", ErrorStr(err));
     SuccessOrExit(err);
 
     err = mListenSocket->Listen(kListenBacklogSize);
@@ -226,6 +229,7 @@ CHIP_ERROR TCPBase::SendAfterConnect(const PeerAddress & addr, System::PacketBuf
 
 #if INET_CONFIG_ENABLE_TCP_ENDPOINT
     Inet::TCPEndPoint * endPoint = nullptr;
+    ChipLogError(Inet, "[TEST] #4 initailize endpoint");
     ReturnErrorOnFailure(mListenSocket->GetEndPointManager().NewEndPoint(&endPoint));
     auto EndPointDeletor = [](Inet::TCPEndPoint * e) { e->Free(); };
     std::unique_ptr<Inet::TCPEndPoint, decltype(EndPointDeletor)> endPointHolder(endPoint, EndPointDeletor);

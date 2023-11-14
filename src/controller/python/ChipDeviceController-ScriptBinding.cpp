@@ -246,7 +246,7 @@ void pychip_Storage_ShutdownAdapter(chip::Controller::Python::StorageAdapter * s
 PyChipError pychip_DeviceController_StackInit(Controller::Python::StorageAdapter * storageAdapter, bool enableServerInteractions)
 {
     VerifyOrDie(storageAdapter != nullptr);
-
+    ChipLogError(Inet, "[TEST] pychip_DeviceController_StackInit");
     FactoryInitParams factoryParams;
 
     factoryParams.fabricIndependentStorage = storageAdapter;
@@ -389,6 +389,7 @@ PyChipError pychip_DeviceController_ConnectIP(chip::Controller::DeviceCommission
     VerifyOrReturnError(chip::Inet::IPAddress::FromString(peerAddrStr, peerAddr), ToPyChipError(CHIP_ERROR_INVALID_ARGUMENT));
 
     // TODO: IP rendezvous should use TCP connection.
+    ChipLogError(Discovery, "[TEST] pychip_DeviceController_ConnectIP");
     addr.SetTransportType(chip::Transport::Type::kUdp).SetIPAddress(peerAddr);
     params.SetPeerAddress(addr).SetDiscriminator(0);
 
@@ -580,6 +581,7 @@ PyChipError pychip_DeviceController_EstablishPASESessionIP(chip::Controller::Dev
     chip::Transport::PeerAddress addr;
     RendezvousParameters params = chip::RendezvousParameters().SetSetupPINCode(setupPINCode);
     VerifyOrReturnError(chip::Inet::IPAddress::FromString(peerAddrStr, peerAddr), ToPyChipError(CHIP_ERROR_INVALID_ARGUMENT));
+    ChipLogError(Discovery, "[TEST] pychip_DeviceController_EstablishPASESessionIP");
     addr.SetTransportType(chip::Transport::Type::kUdp).SetIPAddress(peerAddr);
     if (port != 0)
     {

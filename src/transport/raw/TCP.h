@@ -180,6 +180,8 @@ public:
      */
     void CloseActiveConnections();
 
+    uint16_t GetBoundPort() { return 0; }
+
 private:
     friend class TCPTest;
 

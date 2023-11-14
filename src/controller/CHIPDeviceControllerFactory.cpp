@@ -49,7 +49,7 @@ namespace Controller {
 
 CHIP_ERROR DeviceControllerFactory::Init(FactoryInitParams params)
 {
-
+    ChipLogError(Inet, "[TEST] DeviceControllerFactory::Init(FactoryInitParams params)");
     // SystemState is only set the first time init is called, after that it is managed
     // internally. If SystemState is set then init has already completed.
     if (mSystemState != nullptr)
@@ -75,14 +75,15 @@ CHIP_ERROR DeviceControllerFactory::Init(FactoryInitParams params)
 
 CHIP_ERROR DeviceControllerFactory::InitSystemState()
 {
+    ChipLogError(Inet, "[TEST] InitSystemState");
     FactoryInitParams params;
     if (mSystemState != nullptr)
     {
         params.systemLayer        = mSystemState->SystemLayer();
         params.udpEndPointManager = mSystemState->UDPEndPointManager();
-#if INET_CONFIG_ENABLE_TCP_ENDPOINT
+
         params.tcpEndPointManager = mSystemState->TCPEndPointManager();
-#endif
+
 #if CONFIG_NETWORK_LAYER_BLE
         params.bleLayer = mSystemState->BleLayer();
 #endif
@@ -116,13 +117,17 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
 
     DeviceControllerSystemStateParams stateParams;
 #if CONFIG_DEVICE_LAYER
+    ChipLogError(Inet, "[TEST] before DeviceLayer::PlatformMgr().InitChipStack()");
     ReturnErrorOnFailure(DeviceLayer::PlatformMgr().InitChipStack());
+    ChipLogError(Inet, "[TEST] after DeviceLayer::PlatformMgr().InitChipStack()");
 
     stateParams.systemLayer        = &DeviceLayer::SystemLayer();
+
+    ChipLogError(Inet, "[TEST] before DeviceLayer::UDPEndPointManager()");
     stateParams.udpEndPointManager = DeviceLayer::UDPEndPointManager();
-#if INET_CONFIG_ENABLE_TCP_ENDPOINT
+
     stateParams.tcpEndPointManager = DeviceLayer::TCPEndPointManager();
-#endif
+    ChipLogError(Inet, "[TEST] after DeviceLayer::UDPEndPointManager()");
 #else
     stateParams.systemLayer        = params.systemLayer;
     stateParams.tcpEndPointManager = params.tcpEndPointManager;
@@ -152,14 +157,15 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
     //
     // The logic below expects IPv6 to be at index 0 of this tuple. Please do not alter that.
     //
-    ReturnErrorOnFailure(stateParams.transportMgr->Init(Transport::UdpListenParameters(stateParams.udpEndPointManager)
+    ChipLogError(Controller, "Warning: [TEST] about to init");
+    ReturnErrorOnFailure(stateParams.transportMgr->Init(Transport::TcpListenParameters(stateParams.tcpEndPointManager)
                                                             .SetAddressType(Inet::IPAddressType::kIPv6)
-                                                            .SetListenPort(params.listenPort)
+
 #if INET_CONFIG_ENABLE_IPV4
                                                             ,
-                                                        Transport::UdpListenParameters(stateParams.udpEndPointManager)
+                                                        Transport::TcpListenParameters(stateParams.tcpEndPointManager)
                                                             .SetAddressType(Inet::IPAddressType::kIPv4)
-                                                            .SetListenPort(params.listenPort)
+
 #endif
 #if CONFIG_NETWORK_LAYER_BLE
                                                             ,
@@ -228,7 +234,9 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
 
     InitDataModelHandler();
 
+    ChipLogError(Inet, "[TEST] before init udpendpoint manager");
     ReturnErrorOnFailure(Dnssd::Resolver::Instance().Init(stateParams.udpEndPointManager));
+    ChipLogError(Inet, "[TEST] after init udpendpoint manager");
 
     if (params.enableServerInteractions)
     {

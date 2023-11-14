@@ -208,6 +208,7 @@ CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::UDPEndPoin
     while (it->Next(&interfaceId, &addressType))
     {
         chip::Inet::UDPEndPoint * listenUdp;
+        ChipLogError(Inet, "[TEST] #1 initailize endpoint");
         ReturnErrorOnFailure(udpEndPointManager->NewEndPoint(&listenUdp));
         std::unique_ptr<chip::Inet::UDPEndPoint, EndpointInfo::EndPointDeletor> endPointHolder(listenUdp, {});
 
@@ -235,6 +236,7 @@ CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::UDPEndPoin
         //   - has a *DRAWBACK* of unicast queries being considered LEGACY by mdns since they do
         //     not originate from 5353 and the answers will include a query section.
         chip::Inet::UDPEndPoint * unicastQueryUdp;
+        ChipLogError(Inet, "[TEST] #2 initailize endpoint");
         ReturnErrorOnFailure(udpEndPointManager->NewEndPoint(&unicastQueryUdp));
         std::unique_ptr<chip::Inet::UDPEndPoint, EndpointInfo::EndPointDeletor> endPointHolderUnicast(unicastQueryUdp, {});
         ReturnErrorOnFailure(unicastQueryUdp->Bind(addressType, chip::Inet::IPAddress::Any, 0, interfaceId));

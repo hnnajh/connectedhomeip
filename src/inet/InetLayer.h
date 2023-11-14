@@ -61,6 +61,7 @@ public:
     CHIP_ERROR Init(System::Layer & systemLayer)
     {
         RegisterLayerErrorFormatter();
+        ChipLogError(Inet, "[TEST] setting initializing");
         VerifyOrReturnError(mLayerState.SetInitializing(), CHIP_ERROR_INCORRECT_STATE);
         VerifyOrReturnError(systemLayer.IsInitialized(), CHIP_ERROR_INCORRECT_STATE);
         mSystemLayer = &systemLayer;
@@ -71,6 +72,7 @@ public:
     void Shutdown()
     {
         // Return to uninitialized state to permit re-initialization.
+        ChipLogError(Inet, "[TEST] shutdowning state");
         mLayerState.ResetFromInitialized();
         mSystemLayer = nullptr;
     }
@@ -80,6 +82,7 @@ public:
     CHIP_ERROR NewEndPoint(EndPoint ** retEndPoint)
     {
         assertChipStackLockedByCurrentThread();
+        ChipLogError(Inet, "[TEST] is initialized");
         VerifyOrReturnError(mLayerState.IsInitialized(), CHIP_ERROR_INCORRECT_STATE);
 
         *retEndPoint = CreateEndPoint();
