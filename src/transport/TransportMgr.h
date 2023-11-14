@@ -51,6 +51,19 @@ public:
      * @param msgBuf    the buffer containing a full CHIP message (except for the optional length field).
      */
     virtual void OnMessageReceived(const Transport::PeerAddress & source, System::PacketBufferHandle && msgBuf) = 0;
+
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    /**
+     * @brief
+     *   Handle connection completion.
+     *
+     * @param conObj    the connection object
+     * @param conErr    the connection error on the attempt.
+     */
+    virtual void HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr){};
+
+    virtual void HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr){};
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 };
 
 template <typename... TransportTypes>

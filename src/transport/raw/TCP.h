@@ -103,23 +103,41 @@ class DLL_EXPORT TCPBase : public Base
     {
         kNotReady    = 0, /**< State before initialization. */
         kInitialized = 1, /**< State after class is listening and ready. */
+        kConnecting  = 3, /**< Connection with peer has been initiated. */
+        kConnected   = 4, /**< Connected with peer and ready for Send/Receive. */
+        kClosed      = 5, /**< Connection is closed. */
     };
 
 protected:
+    enum class ShouldAbort : uint8_t
+    {
+        Yes,
+        No
+    };
+
+    enum class SuppressCallback : uint8_t
+    {
+        Yes,
+        No
+    };
+
     /**
      *  State for each active connection
      */
     struct ActiveConnectionState
     {
-        void Init(Inet::TCPEndPoint * endPoint)
+
+        void Init(Inet::TCPEndPoint * endPoint, const PeerAddress & peerAddr)
         {
             mEndPoint = endPoint;
+            mPeerAddr = peerAddr;
             mReceived = nullptr;
         }
 
         void Free()
         {
             mEndPoint->Free();
+            mPeerAddr = PeerAddress::Uninitialized();
             mEndPoint = nullptr;
             mReceived = nullptr;
         }
@@ -128,8 +146,14 @@ protected:
         // Associated endpoint.
         Inet::TCPEndPoint * mEndPoint;
 
+        // Peer Node Address
+        PeerAddress mPeerAddr;
+
         // Buffers received but not yet consumed.
         System::PacketBufferHandle mReceived;
+
+        // Current state of the connection
+        State mConnectionState;
     };
 
 public:
@@ -153,6 +177,8 @@ public:
      */
     CHIP_ERROR Init(TcpListenParameters & params);
 
+    void SetConnectTimeout(const uint32_t connTimeoutMsecs) { mConnectTimeout = connTimeoutMsecs; }
+
     /**
      * Close the open endpoint without destroying the object
      */
@@ -160,12 +186,25 @@ public:
 
     CHIP_ERROR SendMessage(const PeerAddress & address, System::PacketBufferHandle && msgBuf) override;
 
+    CHIP_ERROR ConnectToPeer(const PeerAddress & address) override;
+
     void Disconnect(const PeerAddress & address) override;
+
+    // Close an active connection (corresponding to the passed TCPEndPoint)
+    // and release from the pool.
+    void Disconnect(Inet::TCPEndPoint * endPoint, bool shouldAbort = 0);
 
     bool CanSendToPeer(const PeerAddress & address) override
     {
         return (mState == State::kInitialized) && (address.GetTransportType() == Type::kTcp) &&
             (address.GetIPAddress().Type() == mEndpointType);
+    }
+
+    const Optional<PeerAddress> GetConnectionPeerAddress(const Inet::TCPEndPoint * con)
+    {
+        ActiveConnectionState * activeConState = FindActiveConnection(con);
+
+        return activeConState != nullptr ? MakeOptional<PeerAddress>(activeConState->mPeerAddr) : Optional<PeerAddress>::Missing();
     }
 
     /**
@@ -185,6 +224,11 @@ public:
 private:
     friend class TCPTest;
 
+    /**
+     * Allocate an unused connection from the pool
+     *
+     */
+    ActiveConnectionState * AllocateConnection();
     /**
      * Find an active connection to the given peer or return nullptr if
      * no active connection exists.
@@ -227,38 +271,48 @@ private:
      */
     CHIP_ERROR ProcessSingleMessage(const PeerAddress & peerAddress, ActiveConnectionState * state, uint16_t messageSize);
 
-    // Release an active connection (corresponding to the passed TCPEndPoint)
-    // from the pool.
-    void ReleaseActiveConnection(Inet::TCPEndPoint * endPoint);
+    /**
+     * Initiate a connection to the given peer. On connection completion,
+     * HandleTCPConnectComplete callback would be called.
+     *
+     */
+    CHIP_ERROR StartConnect(const PeerAddress & addr);
+
+    /**
+     * Gracefully Close or Abort a given connection.
+     *
+     */
+    void CloseConnectionInternal(ActiveConnectionState * connection, CHIP_ERROR err, SuppressCallback suppressCallback);
+
+    // Close the listening socket endpoint
+    void CloseListeningSocket();
 
     // Callback handler for TCPEndPoint. TCP message receive handler.
     // @see TCPEndpoint::OnDataReceivedFunct
-    static CHIP_ERROR OnTcpReceive(Inet::TCPEndPoint * endPoint, System::PacketBufferHandle && buffer);
+    static CHIP_ERROR HandleTCPEndPointDataReceived(Inet::TCPEndPoint * endPoint, System::PacketBufferHandle && buffer);
 
     // Callback handler for TCPEndPoint. Called when a connection has been completed.
     // @see TCPEndpoint::OnConnectCompleteFunct
-    static void OnConnectionComplete(Inet::TCPEndPoint * endPoint, CHIP_ERROR err);
+    static void HandleTCPEndPointConnectComplete(Inet::TCPEndPoint * endPoint, CHIP_ERROR err);
 
     // Callback handler for TCPEndPoint. Called when a connection has been closed.
     // @see TCPEndpoint::OnConnectionClosedFunct
-    static void OnConnectionClosed(Inet::TCPEndPoint * endPoint, CHIP_ERROR err);
-
-    // Callback handler for TCPEndPoint. Callend when a peer closes the connection.
-    // @see TCPEndpoint::OnPeerCloseFunct
-    static void OnPeerClosed(Inet::TCPEndPoint * endPoint);
+    static void HandleTCPEndPointConnectionClosed(Inet::TCPEndPoint * endPoint, CHIP_ERROR err);
 
     // Callback handler for TCPEndPoint. Called when a connection is received on the listening port.
     // @see TCPEndpoint::OnConnectionReceivedFunct
-    static void OnConnectionReceived(Inet::TCPEndPoint * listenEndPoint, Inet::TCPEndPoint * endPoint,
-                                     const Inet::IPAddress & peerAddress, uint16_t peerPort);
+    static void HandleIncomingConnection(Inet::TCPEndPoint * listenEndPoint, Inet::TCPEndPoint * endPoint,
+                                         const Inet::IPAddress & peerAddress, uint16_t peerPort);
 
-    // Called on accept error
+    // Callback handler for handling accept error
     // @see TCPEndpoint::OnAcceptErrorFunct
-    static void OnAcceptError(Inet::TCPEndPoint * endPoint, CHIP_ERROR err);
+    static void HandleAcceptError(Inet::TCPEndPoint * endPoint, CHIP_ERROR err);
 
     Inet::TCPEndPoint * mListenSocket = nullptr;                       ///< TCP socket used by the transport
     Inet::IPAddressType mEndpointType = Inet::IPAddressType::kUnknown; ///< Socket listening type
     State mState                      = State::kNotReady;              ///< State of the TCP transport
+
+    uint32_t mConnectTimeout;
 
     // Number of active and 'pending connection' endpoints
     size_t mUsedEndPointCount = 0;
@@ -279,9 +333,10 @@ public:
     {
         for (size_t i = 0; i < kActiveConnectionsSize; ++i)
         {
-            mConnectionsBuffer[i].Init(nullptr);
+            mConnectionsBuffer[i].Init(nullptr, PeerAddress::Uninitialized());
         }
     }
+
     ~TCP() override { mPendingPackets.ReleaseAll(); }
 
 private:

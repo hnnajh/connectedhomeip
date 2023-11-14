@@ -39,9 +39,21 @@ public:
 
     void Close();
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR ConnectToPeer(const Transport::PeerAddress & address);
+
     void Disconnect(const Transport::PeerAddress & address);
 
+    void HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr) override;
+
+    void HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr) override;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
+    void SetSystemLayer(System::Layer * systemLayer) { mTransport->SetSystemLayer(systemLayer); }
+
     void SetSessionManager(TransportMgrDelegate * sessionManager) { mSessionManager = sessionManager; }
+
+    TransportMgrDelegate * GetSessionManager() { return mSessionManager; };
 
     CHIP_ERROR MulticastGroupJoinLeave(const Transport::PeerAddress & address, bool join);
 

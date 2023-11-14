@@ -24,6 +24,7 @@
 #pragma once
 
 #include <inet/IPAddress.h>
+#include <inet/TCPEndPoint.h>
 #include <inet/UDPEndPoint.h>
 #include <lib/core/CHIPError.h>
 #include <system/SystemPacketBuffer.h>
@@ -38,6 +39,10 @@ class RawTransportDelegate
 public:
     virtual ~RawTransportDelegate() {}
     virtual void HandleMessageReceived(const Transport::PeerAddress & peerAddress, System::PacketBufferHandle && msg) = 0;
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    virtual void HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr){};
+    virtual void HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr){};
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 };
 
 /**
@@ -58,6 +63,8 @@ public:
      */
     void SetDelegate(RawTransportDelegate * delegate) { mDelegate = delegate; }
 
+    void SetSystemLayer(System::Layer * systemLayer) { mSystemLayer = systemLayer; }
+
     /**
      * @brief Send a message to the specified target.
      *
@@ -77,11 +84,28 @@ public:
      */
     virtual bool CanListenMulticast() { return false; }
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    /**
+     * Connect to the specified peer.
+     * The Base class default implementation turns around and calls back the
+     * connection complete handler by posting a work task for that.
+     */
+    virtual CHIP_ERROR ConnectToPeer(const PeerAddress & address)
+    {
+        mConnCbContext.peerAddr   = address;
+        mConnCbContext.appContext = this;
+        VerifyOrReturnError(mSystemLayer, CHIP_ERROR_INCORRECT_STATE);
+
+        mSystemLayer->ScheduleWork(HandleConnectionCallback, reinterpret_cast<void *>(&mConnCbContext));
+
+        return CHIP_NO_ERROR;
+    }
+
     /**
      * Handle disconnection from the specified peer if currently connected to it.
      */
     virtual void Disconnect(const PeerAddress & address) {}
-
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     /**
      * Enable Listening for multicast messages ( IPV6 UDP only)
      */
@@ -93,6 +117,11 @@ public:
     virtual void Close() {}
 
 protected:
+struct ConnCallbackContext
+    {
+        Transport::PeerAddress peerAddr;
+        void * appContext;
+    };
     /**
      * Method used by subclasses to notify that a packet has been received after
      * any associated headers have been decoded.
@@ -102,7 +131,32 @@ protected:
         mDelegate->HandleMessageReceived(source, std::move(buffer));
     }
 
-    RawTransportDelegate * mDelegate;
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    // Called by a task invoked from ConnectToPeer(..) to loop back
+    // immediately.
+    static void HandleConnectionCallback(System::Layer * systemLayer, void * context)
+    {
+        ConnCallbackContext * cbContext = reinterpret_cast<ConnCallbackContext *>(context);
+        Base * base                     = reinterpret_cast<Base *>(cbContext->appContext);
+
+        // Short-circuit Call back with a null connection object
+        base->HandleConnectionComplete(nullptr, CHIP_NO_ERROR);
+    }
+
+    void HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+    {
+        mDelegate->HandleConnectionComplete(conObj, conErr);
+    }
+
+    void HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+    {
+        mDelegate->HandleConnectionClosed(conObj, conErr);
+    }
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
+    RawTransportDelegate * mDelegate = nullptr;
+    System::Layer * mSystemLayer     = nullptr;
+    ConnCallbackContext mConnCbContext;
 };
 
 } // namespace Transport

@@ -444,6 +444,8 @@ CHIP_ERROR CASESession::Init(SessionManager & sessionManager, Credentials::Certi
     ReturnErrorOnFailure(mCommissioningHash.Begin());
 
     mDelegate = delegate;
+    mSessionManager = &sessionManager;
+
     ReturnErrorOnFailure(AllocateSecureSession(sessionManager, sessionEvictionHint));
 
     mValidContext.Reset();
@@ -451,6 +453,9 @@ CHIP_ERROR CASESession::Init(SessionManager & sessionManager, Credentials::Certi
     mValidContext.mRequiredKeyPurposes.Set(KeyPurposeFlags::kServerAuth);
     mValidContext.mValidityPolicy = policy;
 
+    ChipLogError(Inet, "[TEST] setting callbacks");
+    // Set callbacks for connection in sessionmanager
+    sessionManager.SetConnectionCallbacks(HandleConnectionComplete, HandleConnectionClosed, this);
     return CHIP_NO_ERROR;
 }
 
@@ -530,8 +535,23 @@ CHIP_ERROR CASESession::EstablishSession(SessionManager & sessionManager, Fabric
     ChipLogProgress(SecureChannel, "Initiating session on local FabricIndex %u from 0x" ChipLogFormatX64 " -> 0x" ChipLogFormatX64,
                     static_cast<unsigned>(mFabricIndex), ChipLogValueX64(mLocalNodeId), ChipLogValueX64(mPeerNodeId));
 
-    err = SendSigma1();
-    SuccessOrExit(err);
+    // TODO: Need to look into unifying this call to invoke ConnectToPeer() for
+    //  all transports, including MRP.
+    //  For UDP based transports, this call would short-circuit back into
+    //  HandleConnectionComplete() callback.
+    //  Currently, TestCASESession is organized such that it requires synchronous
+    //  calls back from EstablishSession() over UDP. So, bifurcate TCP and MRP
+    //  calls here, for now.
+    if (mExchangeCtxt->GetSessionHandle()->AsUnauthenticatedSession()->GetPeerAddress().GetTransportType() == Transport::Type::kTcp)
+    {
+        err = sessionManager.ConnectToPeer(mExchangeCtxt->GetSessionHandle()->AsUnauthenticatedSession()->GetPeerAddress());
+        SuccessOrExit(err);
+    }
+    else
+    {
+        err = SendSigma1();
+        SuccessOrExit(err);
+    }
 
 exit:
     if (err != CHIP_NO_ERROR)
@@ -539,6 +559,39 @@ exit:
         Clear();
     }
     return err;
+}
+
+void CASESession::HandleConnectionComplete(void * context, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+{
+    CHIP_ERROR err = CHIP_NO_ERROR;
+
+    VerifyOrReturn(context != nullptr);
+    // VerifyOrReturn(peerAddr.GetTransportType() == Transport::Type::kTcp);
+
+    CASESession * caseSession = reinterpret_cast<CASESession *>(context);
+
+    // Send Sigma1 after connection is established for sessions over TCP
+    err = caseSession->SendSigma1();
+    if (err != CHIP_NO_ERROR)
+    {
+        caseSession->Clear();
+    }
+}
+
+void CASESession::HandleConnectionClosed(void * context, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+{
+    // CHIP_ERROR err = CHIP_NO_ERROR;
+
+    VerifyOrReturn(context != nullptr);
+    CASESession * caseSession = reinterpret_cast<CASESession *>(context);
+    if (conErr == CHIP_NO_ERROR)
+    {
+        caseSession->Clear();
+    }
+    else
+    {
+        // Connection establishment failed
+    }
 }
 
 void CASESession::OnResponseTimeout(ExchangeContext * ec)
@@ -2105,6 +2158,7 @@ CHIP_ERROR CASESession::ValidateReceivedMessage(ExchangeContext * ec, const Payl
 CHIP_ERROR CASESession::OnMessageReceived(ExchangeContext * ec, const PayloadHeader & payloadHeader,
                                           System::PacketBufferHandle && msg)
 {
+    ChipLogError(Inet, "[TEST] onMessageREceived on CASESEssion");
     CHIP_ERROR err                            = ValidateReceivedMessage(ec, payloadHeader, msg);
     Protocols::SecureChannel::MsgType msgType = static_cast<Protocols::SecureChannel::MsgType>(payloadHeader.GetMessageType());
     SuccessOrExit(err);

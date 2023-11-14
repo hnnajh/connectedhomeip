@@ -294,6 +294,9 @@ void Resolver::OnOperationalNodeResolved(const Dnssd::ResolvedNodeData & nodeDat
 
         for (size_t i = 0; i < nodeData.resolutionData.numIPs; i++)
         {
+            char ipAddress[100];
+            nodeData.resolutionData.ipAddress[i].ToString(ipAddress, 100);
+            ChipLogError(Discovery, "[TEST] address[%zu]=%s", i , ipAddress);
 #if !INET_CONFIG_ENABLE_IPV4
             if (!nodeData.resolutionData.ipAddress[i].IsIPv6())
             {

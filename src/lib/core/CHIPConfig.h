@@ -1601,5 +1601,19 @@ extern const char CHIP_NON_PRODUCTION_MARKER[];
 #endif
 
 /**
+ * @def CHIP_CONFIG_TCP_SUPPORT_ENABLED
+ *
+ *  @brief
+ *    Enable (1) or disable (0) support for TCP as a transport protocol for
+ *    operational communications.
+ *
+ *  When enabled, the node would advertise this support via DNS-SD advertisements to allow peers
+ *  to know and select the appropriate transport for session establishment.
+ */
+#ifndef CHIP_CONFIG_TCP_SUPPORT_ENABLED
+#define CHIP_CONFIG_TCP_SUPPORT_ENABLED (INET_CONFIG_ENABLE_TCP_ENDPOINT)
+#endif
+
+/**
  * @}
  */

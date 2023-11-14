@@ -108,6 +108,13 @@ CHIP_ERROR SessionManager::Init(System::Layer * systemLayer, TransportMgrBase * 
 
     mTransportMgr->SetSessionManager(this);
 
+    mTransportMgr->SetSystemLayer(systemLayer);
+
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    mConnCompleteCb = nullptr;
+    mConnClosedCb   = nullptr;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
     return CHIP_NO_ERROR;
 }
 
@@ -581,6 +588,65 @@ void SessionManager::OnMessageReceived(const PeerAddress & peerAddress, System::
         UnauthenticatedMessageDispatch(partialPacketHeader, peerAddress, std::move(msg));
     }
 }
+
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+void SessionManager::SetConnectionCallbacks(OnConnectionCompleteCallback connCompleteCb, OnConnectionClosedCallback connClosedCb,
+                                            void * connContext)
+{
+    mConnCompleteCb = connCompleteCb;
+    mConnClosedCb   = connClosedCb;
+    mConnContext    = connContext;
+}
+
+void SessionManager::HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+{
+    if (mConnCompleteCb != nullptr)
+    {
+        ChipLogProgress(Inet, "Calling Connection Complete callback");
+        mConnCompleteCb(mConnContext, conObj, conErr);
+    }
+    else
+    {
+        ChipLogProgress(Inet, "Connection Complete callback missing");
+    }
+}
+
+void SessionManager::HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+{
+    if (mConnClosedCb != nullptr)
+    {
+        mConnClosedCb(mConnContext, conObj, conErr);
+    }
+    else
+    {
+        ChipLogProgress(Inet, "Connection Closed callback missing");
+    }
+}
+
+CHIP_ERROR SessionManager::ConnectToPeer(const PeerAddress & peerAddress)
+{
+    if (mTransportMgr != nullptr)
+    {
+        ChipLogProgress(Inet, "Connecting to peer ");
+        return mTransportMgr->ConnectToPeer(peerAddress);
+    }
+
+    ChipLogError(Inet, "The transport manager is not initialized. Unable to connect to peer");
+
+    return CHIP_ERROR_INCORRECT_STATE;
+}
+
+CHIP_ERROR SessionManager::Disconnect(const PeerAddress & peerAddress)
+{
+    if (mTransportMgr != nullptr)
+    {
+        ChipLogProgress(Inet, "Disconnecting from peer ");
+        mTransportMgr->Disconnect(peerAddress);
+    }
+
+    return CHIP_NO_ERROR;
+}
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 void SessionManager::UnauthenticatedMessageDispatch(const PacketHeader & partialPacketHeader,
                                                     const Transport::PeerAddress & peerAddress, System::PacketBufferHandle && msg)

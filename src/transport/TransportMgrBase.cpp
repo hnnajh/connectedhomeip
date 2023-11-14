@@ -20,6 +20,7 @@
 #include <platform/LockTracker.h>
 #include <transport/TransportMgr.h>
 #include <transport/raw/Base.h>
+#include <transport/raw/TCP.h>
 
 namespace chip {
 
@@ -28,10 +29,17 @@ CHIP_ERROR TransportMgrBase::SendMessage(const Transport::PeerAddress & address,
     return mTransport->SendMessage(address, std::move(msgBuf));
 }
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+CHIP_ERROR TransportMgrBase::ConnectToPeer(const Transport::PeerAddress & address)
+{
+    return mTransport->ConnectToPeer(address);
+}
+
 void TransportMgrBase::Disconnect(const Transport::PeerAddress & address)
 {
     mTransport->Disconnect(address);
 }
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 CHIP_ERROR TransportMgrBase::Init(Transport::Base * transport)
 {
@@ -41,6 +49,7 @@ CHIP_ERROR TransportMgrBase::Init(Transport::Base * transport)
     }
     mTransport = transport;
     mTransport->SetDelegate(this);
+
     ChipLogDetail(Inet, "TransportMgr initialized");
     return CHIP_NO_ERROR;
 }
@@ -82,5 +91,41 @@ void TransportMgrBase::HandleMessageReceived(const Transport::PeerAddress & peer
         ChipLogError(Inet, "message from %s is dropped since no corresponding handler is set in TransportMgr.", addrBuffer);
     }
 }
+
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+void TransportMgrBase::HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+{
+    if (mSessionManager != nullptr)
+    {
+        mSessionManager->HandleConnectionComplete(conObj, conErr);
+    }
+    else
+    {
+        Transport::TCPBase * tcp = reinterpret_cast<Transport::TCPBase *>(conObj->mAppState);
+
+        // Close connection here
+        if (tcp)
+        {
+            tcp->Disconnect(conObj);
+        }
+    }
+}
+
+void TransportMgrBase::HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
+{
+    if (mSessionManager != nullptr)
+    {
+        mSessionManager->HandleConnectionClosed(conObj, conErr);
+    }
+    else
+    {
+        Transport::TCPBase * tcp = reinterpret_cast<Transport::TCPBase *>(conObj->mAppState);
+        if (tcp)
+        {
+            tcp->Disconnect(conObj);
+        }
+    }
+}
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 } // namespace chip

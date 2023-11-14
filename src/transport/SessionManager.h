@@ -416,6 +416,25 @@ public:
      */
     void OnMessageReceived(const Transport::PeerAddress & source, System::PacketBufferHandle && msgBuf) override;
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR ConnectToPeer(const Transport::PeerAddress & peerAddress);
+
+    CHIP_ERROR Disconnect(const Transport::PeerAddress & peerAddress);
+
+    void HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr) override;
+
+    void HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr) override;
+
+    // Functors for callbacks into higher layers
+    using OnConnectionCompleteCallback = void (*)(void * appContext, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr);
+
+    using OnConnectionClosedCallback = void (*)(void * appContext, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr);
+
+    // Set the higher layer callbacks
+    void SetConnectionCallbacks(OnConnectionCompleteCallback connCompleteCb, OnConnectionClosedCallback connClosedCb,
+                                void * connContext);
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
     Optional<SessionHandle> CreateUnauthenticatedSession(const Transport::PeerAddress & peerAddress,
                                                          const ReliableMessageProtocolConfig & config)
     {
@@ -476,6 +495,12 @@ private:
     Transport::SecureSessionTable mSecureSessions;
     State mState; // < Initialization state of the object
     chip::Transport::GroupOutgoingCounters mGroupClientCounter;
+
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    OnConnectionCompleteCallback mConnCompleteCb = nullptr;
+    OnConnectionClosedCallback mConnClosedCb     = nullptr;
+    void * mConnContext                          = nullptr;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     SessionMessageDelegate * mCB = nullptr;
 

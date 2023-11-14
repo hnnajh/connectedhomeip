@@ -283,6 +283,11 @@ private:
 
     void InvalidateIfPendingEstablishmentOnFabric(FabricIndex fabricIndex);
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    static void HandleConnectionComplete(void * context, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr);
+    static void HandleConnectionClosed(void * context, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr);
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
 #if CONFIG_BUILD_FOR_HOST_UNIT_TEST
     void SetStopSigmaHandshakeAt(Optional<State> state) { mStopHandshakeAtState = state; }
 #endif // CONFIG_BUILD_FOR_HOST_UNIT_TEST

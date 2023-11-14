@@ -161,11 +161,54 @@ public:
         SetCallback(nullptr);
     }
 
+    void ConnectTest(TCPImpl & tcp, const IPAddress & addr)
+    {
+        // Connect and wait for seeing active connection
+        tcp.ConnectToPeer(Transport::PeerAddress::TCP(addr));
+        mContext.DriveIOUntil(chip::System::Clock::Seconds16(5), [&tcp]() { return tcp.HasActiveConnections(); });
+    }
+
     void FinalizeMessageTest(TCPImpl & tcp, const IPAddress & addr)
     {
         // Disconnect and wait for seeing peer close
         tcp.Disconnect(Transport::PeerAddress::TCP(addr));
         mContext.DriveIOUntil(chip::System::Clock::Seconds16(5), [&tcp]() { return !tcp.HasActiveConnections(); });
+    }
+
+     CHIP_ERROR ConnectToPeer(const Transport::PeerAddress & peerAddress) { return mTransportMgrBase.ConnectToPeer(peerAddress); }
+
+    void HandleConnectionComplete(TCPEndPoint * conObj, CHIP_ERROR conErr) override
+    {
+        if (mConnCompleteCb != nullptr)
+        {
+            mConnCompleteCb(this, conObj, conErr);
+        }
+        else
+        {
+            ChipLogProgress(Inet, "Connection Complete. App callback missing");
+        }
+    }
+
+    void HandleConnectionClosed(TCPEndPoint * conObj, CHIP_ERROR conErr) override
+    {
+        if (mConnClosedCb != nullptr)
+        {
+            mConnClosedCb(this, conObj, conErr);
+        }
+        else
+        {
+            ChipLogProgress(Inet, "Connection Closed. App callback missing");
+        }
+    }
+
+    using OnConnectionCompleteCallback = void (*)(void * context, TCPEndPoint * conObj, CHIP_ERROR conErr);
+
+    using OnConnectionClosedCallback = void (*)(void * context, TCPEndPoint * conObj, CHIP_ERROR conErr);
+
+    void SetConnectionCallbacks(OnConnectionCompleteCallback connCompleteCb, OnConnectionClosedCallback connClosedCb)
+    {
+        mConnCompleteCb = connCompleteCb;
+        mConnClosedCb   = connClosedCb;
     }
 
     int mReceiveHandlerCallCount = 0;
@@ -176,6 +219,8 @@ private:
     MessageReceivedCallback mCallback;
     void * mCallbackData;
     TransportMgrBase mTransportMgrBase;
+    OnConnectionCompleteCallback mConnCompleteCb = nullptr;
+    OnConnectionClosedCallback mConnClosedCb     = nullptr;
 };
 
 /////////////////////////// Init test
@@ -216,6 +261,17 @@ void CheckMessageTest(nlTestSuite * inSuite, void * inContext, const IPAddress &
     gMockTransportMgrDelegate.FinalizeMessageTest(tcp, addr);
 }
 
+void ConnectToSelfTest(nlTestSuite * inSuite, void * inContext, const IPAddress & addr)
+{
+    TestContext & ctx = *reinterpret_cast<TestContext *>(inContext);
+    TCPImpl tcp;
+
+    MockTransportMgrDelegate gMockTransportMgrDelegate(inSuite, ctx);
+    gMockTransportMgrDelegate.InitializeMessageTest(tcp, addr);
+    gMockTransportMgrDelegate.ConnectTest(tcp, addr);
+    gMockTransportMgrDelegate.FinalizeMessageTest(tcp, addr);
+}
+
 #if INET_CONFIG_ENABLE_IPV4
 void CheckMessageTest4(nlTestSuite * inSuite, void * inContext)
 {
@@ -230,6 +286,22 @@ void CheckMessageTest6(nlTestSuite * inSuite, void * inContext)
     IPAddress addr;
     IPAddress::FromString("::1", addr);
     CheckMessageTest(inSuite, inContext, addr);
+}
+
+#if INET_CONFIG_ENABLE_IPV4
+void ConnectToSelfTest4(nlTestSuite * inSuite, void * inContext)
+{
+    IPAddress addr;
+    IPAddress::FromString("127.0.0.1", addr);
+    ConnectToSelfTest(inSuite, inContext, addr);
+}
+#endif // INET_CONFIG_ENABLE_IPV4
+
+void ConnectToSelfTest6(nlTestSuite * inSuite, void * inContext)
+{
+    IPAddress addr;
+    IPAddress::FromString("::1", addr);
+    ConnectToSelfTest(inSuite, inContext, addr);
 }
 
 // Generates a packet buffer or a chain of packet buffers for a single message.
@@ -463,10 +535,12 @@ static const nlTest sTests[] =
 #if INET_CONFIG_ENABLE_IPV4
     NL_TEST_DEF("Simple Init Test IPV4",        CheckSimpleInitTest4),
     NL_TEST_DEF("Message Self Test IPV4",       CheckMessageTest4),
+    NL_TEST_DEF("Connect To Self IPV4", ConnectToSelfTest4),
 #endif
 
-    NL_TEST_DEF("Simple Init Test IPV6",        CheckSimpleInitTest6),
-    NL_TEST_DEF("Message Self Test IPV6",       CheckMessageTest6),
+    NL_TEST_DEF("Simple Init Test IPV6",   CheckSimpleInitTest6),
+    NL_TEST_DEF("Message Self Test IPV6",  CheckMessageTest6),
+    NL_TEST_DEF("Connect To Self IPV6",    ConnectToSelfTest6),
     NL_TEST_DEF("ProcessReceivedBuffer Test",   chip::Transport::TCPTest::CheckProcessReceivedBuffer),
 
     NL_TEST_SENTINEL()
