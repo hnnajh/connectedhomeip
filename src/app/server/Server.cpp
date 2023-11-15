@@ -51,6 +51,7 @@
 #include <system/SystemPacketBuffer.h>
 #include <system/TLVPacketBufferBackingStore.h>
 #include <transport/SessionManager.h>
+#include <transport/raw/TCP.h>
 
 #if defined(CHIP_SUPPORT_ENABLE_STORAGE_API_AUDIT) || defined(CHIP_SUPPORT_ENABLE_STORAGE_LOAD_TEST_AUDIT)
 #include <lib/support/PersistentStorageAudit.h>
@@ -66,7 +67,7 @@ using chip::Inet::IPAddressType;
 using chip::Transport::BleListenParameters;
 #endif
 using chip::Transport::PeerAddress;
-using chip::Transport::UdpListenParameters;
+using chip::Transport::TcpListenParameters;
 
 namespace {
 
@@ -183,14 +184,13 @@ CHIP_ERROR Server::Init(const ServerInitParams & initParams)
     }
 
     // Init transport before operations with secure session mgr.
-    err = mTransports.Init(UdpListenParameters(DeviceLayer::UDPEndPointManager())
+    err = mTransports.Init(TcpListenParameters(DeviceLayer::TCPEndPointManager())
                                .SetAddressType(IPAddressType::kIPv6)
                                .SetListenPort(mOperationalServicePort)
-                               .SetNativeParams(initParams.endpointNativeParams)
 
 #if INET_CONFIG_ENABLE_IPV4
                                ,
-                           UdpListenParameters(DeviceLayer::UDPEndPointManager())
+                           TcpListenParameters(DeviceLayer::TCPEndPointManager())
                                .SetAddressType(IPAddressType::kIPv4)
                                .SetListenPort(mOperationalServicePort)
 #endif

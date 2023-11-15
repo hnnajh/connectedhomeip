@@ -143,7 +143,7 @@ CHIP_ERROR ExchangeManager::UnregisterUnsolicitedMessageHandlerForType(Protocols
 CHIP_ERROR ExchangeManager::RegisterUMH(Protocols::Id protocolId, int16_t msgType, UnsolicitedMessageHandler * handler)
 {
     UnsolicitedMessageHandlerSlot * selected = nullptr;
-
+    ChipLogError(Inet, "[TEST] RegisterUMH");
     for (auto & umh : UMHandlerPool)
     {
         if (!umh.IsInUse())
@@ -190,6 +190,7 @@ void ExchangeManager::OnMessageReceived(const PacketHeader & packetHeader, const
                                         System::PacketBufferHandle && msgBuf)
 {
     UnsolicitedMessageHandlerSlot * matchingUMH = nullptr;
+    ChipLogError(Inet, "[TEST] ExchangeManager::OnMessageReceived");
 
 #if CHIP_PROGRESS_LOGGING
     auto * protocolName = Protocols::GetProtocolName(payloadHeader.GetProtocolID());

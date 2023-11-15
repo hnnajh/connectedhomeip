@@ -66,6 +66,7 @@
 #include <app/TimerDelegates.h>
 #include <app/reporting/ReportSchedulerImpl.h>
 #include <transport/raw/UDP.h>
+#include <transport/raw/TCP.h>
 
 #if CHIP_CONFIG_ENABLE_ICD_SERVER
 #include <app/icd/ICDManager.h> // nogncheck
@@ -74,15 +75,17 @@
 namespace chip {
 
 inline constexpr size_t kMaxBlePendingPackets = 1;
+constexpr size_t kMaxTcpActiveConnectionCount = 4;
+constexpr size_t kMaxTcpPendingPackets        = 4;
 
 //
 // NOTE: Please do not alter the order of template specialization here as the logic
 //       in the Server impl depends on this.
 //
-using ServerTransportMgr = chip::TransportMgr<chip::Transport::UDP
+using ServerTransportMgr = chip::TransportMgr<chip::Transport::TCP<kMaxTcpActiveConnectionCount, kMaxTcpPendingPackets>
 #if INET_CONFIG_ENABLE_IPV4
                                               ,
-                                              chip::Transport::UDP
+                                              chip::Transport::TCP<kMaxTcpActiveConnectionCount, kMaxTcpPendingPackets>
 #endif
 #if CONFIG_NETWORK_LAYER_BLE
                                               ,

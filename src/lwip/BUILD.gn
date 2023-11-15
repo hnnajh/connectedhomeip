@@ -193,7 +193,9 @@ if (current_os == "zephyr" || current_os == "mbed") {
 
     sources = []
 
-    if (lwip_platform == "standalone") {
+    if (lwip_platform == "external") {
+      public += [ "${lwip_platform}/lwippools.h" ]
+    } else if (lwip_platform == "standalone") {
       public += [ "standalone/arch/sys_arch.h" ]
       sources += [ "standalone/sys_arch.c" ]
     } else if (lwip_platform == "cyw30739") {

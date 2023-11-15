@@ -76,6 +76,7 @@ CHIP_ERROR CASEServer::OnUnsolicitedMessageReceived(const PayloadHeader & payloa
 CHIP_ERROR CASEServer::OnMessageReceived(Messaging::ExchangeContext * ec, const PayloadHeader & payloadHeader,
                                          System::PacketBufferHandle && payload)
 {
+    ChipLogError(Inet, "[TEST] CASEServer::OnMessageReceived");
     if (GetSession().GetState() != CASESession::State::kInitialized)
     {
         // We are in the middle of CASE handshake
