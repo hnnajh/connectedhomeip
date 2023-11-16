@@ -563,6 +563,7 @@ exit:
 
 void CASESession::HandleConnectionComplete(void * context, Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
 {
+    ChipLogError(Inet, "[TEST] CASESession::HandleConnectionComplete");
     CHIP_ERROR err = CHIP_NO_ERROR;
 
     VerifyOrReturn(context != nullptr);
