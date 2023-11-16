@@ -256,11 +256,8 @@ CHIP_ERROR DnsHandler(int argc, char ** argv)
         sShellDnsSubcommands.ForEachCommand(PrintCommandHelp, nullptr);
         return CHIP_NO_ERROR;
     }
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    sResolverProxy.Init(DeviceLayer::TCPEndPointManager());
-#else
+
     sResolverProxy.Init(DeviceLayer::UDPEndPointManager());
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     sResolverProxy.SetCommissioningDelegate(&sDnsShellResolverDelegate);
 
     return sShellDnsSubcommands.ExecCommand(argc, argv);

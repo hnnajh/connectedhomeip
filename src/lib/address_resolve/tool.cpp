@@ -84,11 +84,7 @@ PrintOutNodeListener gListener;
 CHIP_ERROR Initialize()
 {
     ReturnErrorOnFailure(DeviceLayer::PlatformMgr().InitChipStack());
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    ReturnErrorOnFailure(Dnssd::Resolver::Instance().Init(DeviceLayer::TCPEndPointManager()));
-#else
     ReturnErrorOnFailure(Dnssd::Resolver::Instance().Init(DeviceLayer::UDPEndPointManager()));
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     ReturnErrorOnFailure(AddressResolve::Resolver::Instance().Init(&DeviceLayer::SystemLayer()));
     return CHIP_NO_ERROR;
 }

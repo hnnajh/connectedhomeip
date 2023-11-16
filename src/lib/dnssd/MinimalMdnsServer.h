@@ -54,11 +54,7 @@ public:
     }
 
     /// Calls Server().Listen() on all available interfaces
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    CHIP_ERROR StartServer(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager, uint16_t port);
-#else
     CHIP_ERROR StartServer(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager, uint16_t port);
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     void ShutdownServer();
 
     void SetQueryDelegate(MdnsPacketDelegate * delegate) { mQueryDelegate = delegate; }

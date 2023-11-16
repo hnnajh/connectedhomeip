@@ -53,26 +53,6 @@ public:
     ~ResolverProxy() override;
 
     // Resolver interface.
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    CHIP_ERROR Init(Inet::EndPointManager<Inet::TCPEndPoint> * tcpEndPoint = nullptr) override
-    {
-        ReturnErrorOnFailure(chip::Dnssd::Resolver::Instance().Init(tcpEndPoint));
-        VerifyOrReturnError(mDelegate == nullptr, CHIP_ERROR_INCORRECT_STATE);
-        mDelegate = chip::Platform::New<ResolverDelegateProxy>();
-
-        if (mDelegate != nullptr)
-        {
-            if (mPreInitCommissioningDelegate != nullptr)
-            {
-                ChipLogProgress(Discovery, "Setting commissioning delegate post init");
-                mDelegate->SetCommissioningDelegate(mPreInitCommissioningDelegate);
-                mPreInitCommissioningDelegate = nullptr;
-            }
-        }
-
-        return mDelegate != nullptr ? CHIP_NO_ERROR : CHIP_ERROR_NO_MEMORY;
-    }
-#else
     CHIP_ERROR Init(Inet::EndPointManager<Inet::UDPEndPoint> * udpEndPoint = nullptr) override
     {
         ReturnErrorOnFailure(chip::Dnssd::Resolver::Instance().Init(udpEndPoint));
@@ -91,7 +71,7 @@ public:
 
         return mDelegate != nullptr ? CHIP_NO_ERROR : CHIP_ERROR_NO_MEMORY;
     }
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
     bool IsInitialized() override { return Resolver::Instance().IsInitialized(); }
 
     void SetOperationalDelegate(OperationalResolveDelegate * delegate) override

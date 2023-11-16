@@ -118,11 +118,7 @@ CHIP_ERROR DeviceController::Init(ControllerInitParams params)
 
     VerifyOrReturnError(params.systemState->TransportMgr() != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    ReturnErrorOnFailure(mDNSResolver.Init(params.systemState->TCPEndPointManager()));
-#else
     ReturnErrorOnFailure(mDNSResolver.Init(params.systemState->UDPEndPointManager()));
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     mDNSResolver.SetCommissioningDelegate(this);
     RegisterDeviceDiscoveryDelegate(params.deviceDiscoveryDelegate);
 

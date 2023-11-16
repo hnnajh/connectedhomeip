@@ -34,11 +34,7 @@ CHIP_ERROR DeviceScanner::Start()
     ReturnErrorOnFailure(DeviceLayer::PlatformMgrImpl().StartBleScan(this));
 #endif // CONFIG_NETWORK_LAYER_BLE
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    ReturnErrorOnFailure(chip::Dnssd::Resolver::Instance().Init(DeviceLayer::TCPEndPointManager()));
-#else
     ReturnErrorOnFailure(chip::Dnssd::Resolver::Instance().Init(DeviceLayer::UDPEndPointManager()));
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     char serviceName[kMaxCommissionableServiceNameSize];
     auto filter = DiscoveryFilterType::kNone;

@@ -229,9 +229,7 @@ void TestDnssdBrowse(nlTestSuite * inSuite, void * inContext)
     server.SetDelegate(&delegate);
 
     auto endpoints = mdns::Minimal::GetAddressPolicy()->GetListenEndpoints();
-#if !CHIP_CONFIG_TCP_SUPPORT_ENABLED
     NL_TEST_ASSERT(inSuite, server.Listen(chip::DeviceLayer::UDPEndPointManager(), endpoints.get(), 5353) == CHIP_NO_ERROR);
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     NL_TEST_ASSERT(inSuite,
                    chip::Dnssd::ChipDnssdInit(TestDnssdBrowse_DnssdInitCallback, DnssdErrorCallback, &context) == CHIP_NO_ERROR);

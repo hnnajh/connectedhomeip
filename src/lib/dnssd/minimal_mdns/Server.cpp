@@ -27,9 +27,6 @@ namespace mdns {
 namespace Minimal {
 namespace {
 
-const uint16_t kConnectionBacklogMax = 1;
-using chip::Inet::TCPEndPoint;
-
 class ShutdownOnError
 {
 public:
@@ -52,47 +49,25 @@ private:
     ServerBase * mServer;
 };
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-/**
- * Extracts the Listening TCP Endpoint from an underlying ServerBase::EndpointInfo
- */
-class ListenSocketPickerDelegate : public ServerBase::BroadcastSendDelegate
-{
-public:
-    chip::Inet::TCPEndPoint * Accept(ServerBase::TcpEndpointInfo * info) override { return info->mListenTcp; }
-};
-#else
 /**
  * Extracts the Listening UDP Endpoint from an underlying ServerBase::EndpointInfo
  */
 class ListenSocketPickerDelegate : public ServerBase::BroadcastSendDelegate
 {
 public:
-    chip::Inet::UDPEndPoint * Accept(ServerBase::UdpEndpointInfo * info) override { return info->mListenUdp; }
+    chip::Inet::UDPEndPoint * Accept(ServerBase::EndpointInfo * info) override { return info->mListenUdp; }
 };
-#endif
 
 #if CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
 /**
  * Extracts the Querying UDP Endpoint from an underlying ServerBase::EndpointInfo
  */
 class QuerySocketPickerDelegate : public ServerBase::BroadcastSendDelegate
 {
 public:
-    chip::Inet::TCPEndPoint * Accept(ServerBase::TcpEndpointInfo * info) override { return info->mUnicastQueryTcp; }
+    chip::Inet::UDPEndPoint * Accept(ServerBase::EndpointInfo * info) override { return info->mUnicastQueryUdp; }
 };
-#else
-/**
- * Extracts the Querying UDP Endpoint from an underlying ServerBase::EndpointInfo
- */
-class QuerySocketPickerDelegate : public ServerBase::BroadcastSendDelegate
-{
-public:
-    chip::Inet::UDPEndPoint * Accept(ServerBase::UdpEndpointInfo * info) override { return info->mUnicastQueryUdp; }
-};
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 #else
 
@@ -120,8 +95,7 @@ public:
         mAddressType(type), mChild(child)
     {}
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    chip::Inet::TCPEndPoint * Accept(ServerBase::TcpEndpointInfo * info) override
+    chip::Inet::UDPEndPoint * Accept(ServerBase::EndpointInfo * info) override
     {
         if ((info->mInterfaceId != mInterface) && (info->mInterfaceId != chip::Inet::InterfaceId::Null()))
         {
@@ -135,22 +109,7 @@ public:
 
         return mChild->Accept(info);
     }
-#else
-    chip::Inet::TCPEndPoint * Accept(ServerBase::UdpEndpointInfo * info) override
-    {
-        if ((info->mInterfaceId != mInterface) && (info->mInterfaceId != chip::Inet::InterfaceId::Null()))
-        {
-            return nullptr;
-        }
 
-        if ((mAddressType != chip::Inet::IPAddressType::kAny) && (info->mAddressType != mAddressType))
-        {
-            return nullptr;
-        }
-
-        return mChild->Accept(info);
-    }
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 private:
     chip::Inet::InterfaceId mInterface;
     chip::Inet::IPAddressType mAddressType;
@@ -183,7 +142,6 @@ chip::Inet::IPAddress Get(chip::Inet::IPAddressType addressType)
 namespace {
 
 #if CHIP_ERROR_LOGGING
-#if !CHIP_CONFIG_TCP_SUPPORT_ENABLED
 const char * AddressTypeStr(chip::Inet::IPAddressType addressType)
 {
     switch (addressType)
@@ -198,7 +156,6 @@ const char * AddressTypeStr(chip::Inet::IPAddressType addressType)
         return "UNKNOWN";
     }
 }
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 #endif
 
 } // namespace
@@ -219,32 +176,14 @@ void ServerBase::ShutdownEndpoints()
     mEndpoints.ReleaseAll();
 }
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-void ServerBase::ShutdownEndpoint(TcpEndpointInfo & aEndpoint)
+void ServerBase::ShutdownEndpoint(EndpointInfo & aEndpoint)
 {
     mEndpoints.ReleaseObject(&aEndpoint);
 }
-#else
-void ServerBase::ShutdownEndpoint(UdpEndpointInfo & aEndpoint)
-{
-    mEndpoints.ReleaseObject(&aEndpoint);
-}
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 bool ServerBase::IsListening() const
 {
     bool listening = false;
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    mEndpoints.ForEachActiveObject([&](auto * endpoint) {
-        if (endpoint->mListenTcp != nullptr)
-        {
-            listening = true;
-            return chip::Loop::Break;
-        }
-        return chip::Loop::Continue;
-    });
-    return listening;
-#else
     mEndpoints.ForEachActiveObject([&](auto * endpoint) {
         if (endpoint->mListenUdp != nullptr)
         {
@@ -254,90 +193,8 @@ bool ServerBase::IsListening() const
         return chip::Loop::Continue;
     });
     return listening;
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 }
 
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager, ListenIterator * it,
-                      uint16_t port) {
-    ShutdownEndpoints(); // ensure everything starts fresh
-
-    chip::Inet::InterfaceId interfaceId = chip::Inet::InterfaceId::Null();
-    chip::Inet::IPAddressType addressType;
-
-    ShutdownOnError autoShutdown(this);
-
-    while (it->Next(&interfaceId, &addressType))
-    {
-        chip::Inet::TCPEndPoint * listenTcp;
-        ChipLogError(Inet, "[TEST] #1 initailize endpoint TCP");
-        ReturnErrorOnFailure(tcpEndPointManager->NewEndPoint(&listenTcp));
-        std::unique_ptr<chip::Inet::TCPEndPoint, TcpEndpointInfo::EndPointDeletor> endPointHolder(listenTcp, {});
-
-        ReturnErrorOnFailure(listenTcp->Bind(addressType, chip::Inet::IPAddress::Any, port));
-
-        listenTcp->OnDataReceived     = OnTcpPacketReceived;
-        ReturnErrorOnFailure(listenTcp->Listen(kConnectionBacklogMax));
-
-        /*
-        CHIP_ERROR err = listenTcp->JoinMulticastGroup(interfaceId, BroadcastIpAddresses::Get(addressType));
-
-        if (err != CHIP_NO_ERROR)
-        {
-            char interfaceName[chip::Inet::InterfaceId::kMaxIfNameLength];
-            interfaceId.GetInterfaceName(interfaceName, sizeof(interfaceName));
-
-            // Log only as non-fatal error. Failure to join will mean we reply to unicast queries only.
-            ChipLogError(DeviceLayer, "MDNS failed to join multicast group on %s for address type %s: %" CHIP_ERROR_FORMAT,
-                         interfaceName, AddressTypeStr(addressType), err.Format());
-
-            endPointHolder.reset();
-        }
-        //*/
-#if CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
-        // Separate TCP endpoint for unicast queries, bound to 0 (i.e. pick random ephemeral port)
-        //   - helps in not having conflicts on port 5353, will receive unicast replies directly
-        //   - has a *DRAWBACK* of unicast queries being considered LEGACY by mdns since they do
-        //     not originate from 5353 and the answers will include a query section.
-        chip::Inet::TCPEndPoint * unicastQueryTcp;
-        ChipLogError(Inet, "[TEST] #2 initailize endpoint");
-        ReturnErrorOnFailure(tcpEndPointManager->NewEndPoint(&unicastQueryTcp));
-        std::unique_ptr<chip::Inet::TCPEndPoint, TcpEndpointInfo::EndPointDeletor> endPointHolderUnicast(unicastQueryTcp, {});
-        ReturnErrorOnFailure(unicastQueryTcp->Bind(addressType, chip::Inet::IPAddress::Any, 0));
-        unicastQueryTcp->OnDataReceived     = OnTcpPacketReceived;
-        ReturnErrorOnFailure(unicastQueryTcp->Listen(kConnectionBacklogMax));
-#endif
-
-#if CHIP_MINMDNS_USE_EPHEMERAL_UNICAST_PORT
-        if (endPointHolder || endPointHolderUnicast)
-        {
-            // If allocation fails, the rref will not be consumed, so that the endpoint will also be freed correctly
-            mEndpoints.CreateObject(interfaceId, addressType, std::move(endPointHolder), std::move(endPointHolderUnicast));
-        }
-#else
-        if (endPointHolder)
-        {
-            // If allocation fails, the rref will not be consumed, so that the endpoint will also be freed correctly
-            mEndpoints.CreateObject(interfaceId, addressType, std::move(endPointHolder));
-        }
-#endif
-
-        // If at least one IPv6 interface is used by the mDNS server, notify the application that DNS-SD is ready.
-        if (!mIsInitialized && addressType == chip::Inet::IPAddressType::kIPv6)
-        {
-#if !CHIP_DEVICE_LAYER_NONE
-            chip::DeviceLayer::ChipDeviceEvent event{};
-            event.Type = chip::DeviceLayer::DeviceEventType::kDnssdInitialized;
-            chip::DeviceLayer::PlatformMgr().PostEventOrDie(&event);
-#endif
-            mIsInitialized = true;
-        }
-    }
-
-    return autoShutdown.ReturnSuccess();
-}
-
-#else
 CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager, ListenIterator * it,
                               uint16_t port)
 {
@@ -351,9 +208,9 @@ CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::UDPEndPoin
     while (it->Next(&interfaceId, &addressType))
     {
         chip::Inet::UDPEndPoint * listenUdp;
-        ChipLogError(Inet, "[TEST] #1 initailize endpoint UDP");
+        ChipLogError(Inet, "[TEST] #1 initailize endpoint");
         ReturnErrorOnFailure(udpEndPointManager->NewEndPoint(&listenUdp));
-        std::unique_ptr<chip::Inet::UDPEndPoint, UdpEndpointInfo::EndPointDeletor> endPointHolder(listenUdp, {});
+        std::unique_ptr<chip::Inet::UDPEndPoint, EndpointInfo::EndPointDeletor> endPointHolder(listenUdp, {});
 
         ReturnErrorOnFailure(listenUdp->Bind(addressType, chip::Inet::IPAddress::Any, port, interfaceId));
 
@@ -381,7 +238,7 @@ CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::UDPEndPoin
         chip::Inet::UDPEndPoint * unicastQueryUdp;
         ChipLogError(Inet, "[TEST] #2 initailize endpoint");
         ReturnErrorOnFailure(udpEndPointManager->NewEndPoint(&unicastQueryUdp));
-        std::unique_ptr<chip::Inet::UDPEndPoint, UdpEndpointInfo::EndPointDeletor> endPointHolderUnicast(unicastQueryUdp, {});
+        std::unique_ptr<chip::Inet::UDPEndPoint, EndpointInfo::EndPointDeletor> endPointHolderUnicast(unicastQueryUdp, {});
         ReturnErrorOnFailure(unicastQueryUdp->Bind(addressType, chip::Inet::IPAddress::Any, 0, interfaceId));
         ReturnErrorOnFailure(unicastQueryUdp->Listen(OnUdpPacketReceived, nullptr /*OnReceiveError*/, this));
 #endif
@@ -415,27 +272,10 @@ CHIP_ERROR ServerBase::Listen(chip::Inet::EndPointManager<chip::Inet::UDPEndPoin
     return autoShutdown.ReturnSuccess();
 }
 
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 CHIP_ERROR ServerBase::DirectSend(chip::System::PacketBufferHandle && data, const chip::Inet::IPAddress & addr, uint16_t port,
                                   chip::Inet::InterfaceId interface)
 {
     CHIP_ERROR err = CHIP_ERROR_NOT_CONNECTED;
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    mEndpoints.ForEachActiveObject([&](auto * info) {
-        if (info->mListenTcp == nullptr)
-        {
-            return chip::Loop::Continue;
-        }
-
-        if (info->mAddressType != addr.Type())
-        {
-            return chip::Loop::Continue;
-        }
-
-        err = info->mListenTcp->Send(std::move(data));
-        return chip::Loop::Break;
-    });
-#else
     mEndpoints.ForEachActiveObject([&](auto * info) {
         if (info->mListenUdp == nullptr)
         {
@@ -457,7 +297,6 @@ CHIP_ERROR ServerBase::DirectSend(chip::System::PacketBufferHandle && data, cons
         err = info->mListenUdp->SendTo(addr, port, std::move(data));
         return chip::Loop::Break;
     });
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     return err;
 }
@@ -494,9 +333,6 @@ CHIP_ERROR ServerBase::BroadcastSend(chip::System::PacketBufferHandle && data, u
 
 CHIP_ERROR ServerBase::BroadcastImpl(chip::System::PacketBufferHandle && data, uint16_t port, BroadcastSendDelegate * delegate)
 {
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    return CHIP_NO_ERROR;
-#else
     // Broadcast requires sending data multiple times, each of which may error
     // out, yet broadcast only has a single error code.
     //
@@ -589,42 +425,6 @@ CHIP_ERROR ServerBase::BroadcastImpl(chip::System::PacketBufferHandle && data, u
     }
 
     return CHIP_NO_ERROR;
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
-}
-
-CHIP_ERROR ServerBase::OnTcpPacketReceived(TCPEndPoint * endPoint, chip::System::PacketBufferHandle && buffer)
-{
-    ServerBase * srv = static_cast<ServerBase *>(endPoint->mAppState);
-    if (!srv->mDelegate)
-    {
-        return CHIP_NO_ERROR;
-    }
-
-    mdns::Minimal::BytesRange data(buffer->Start(), buffer->Start() + buffer->DataLength());
-    ChipLogError(Discovery, "[TEST] mDNS data: %d bytes", static_cast<int>(data.Size()));
-    return CHIP_NO_ERROR;
-    /*
-    if (data.Size() < HeaderRef::kSizeBytes)
-    {
-        ChipLogError(Discovery, "Packet to small for mDNS data: %d bytes", static_cast<int>(data.Size()));
-        return;
-    }
-
-    if (HeaderRef(const_cast<uint8_t *>(data.Start())).GetFlags().IsQuery())
-    {
-        // Only consider queries that are received on the same interface we are listening on.
-        // Without this, queries show up on all addresses on all interfaces, resulting
-        // in more replies than one would expect.
-        if (endPoint->GetBoundInterface() == info->Interface)
-        {
-            srv->mDelegate->OnQuery(data, info);
-        }
-    }
-    else
-    {
-        srv->mDelegate->OnResponse(data, info);
-    }
-    //*/
 }
 
 void ServerBase::OnUdpPacketReceived(chip::Inet::UDPEndPoint * endPoint, chip::System::PacketBufferHandle && buffer,

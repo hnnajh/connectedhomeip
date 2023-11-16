@@ -401,12 +401,8 @@ void DnssdServer::StartServer(Dnssd::CommissioningMode mode)
     ChipLogProgress(Discovery, "Updating services using commissioning mode %d", static_cast<int>(mode));
 
     DeviceLayer::PlatformMgr().AddEventHandler(OnPlatformEventWrapper, 0);
-    CHIP_ERROR err = CHIP_NO_ERROR;
-#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
-    err = Dnssd::ServiceAdvertiser::Instance().Init(chip::DeviceLayer::TCPEndPointManager());
-#else
-    err = Dnssd::ServiceAdvertiser::Instance().Init(chip::DeviceLayer::UDPEndPointManager());
-#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
+
+    CHIP_ERROR err = Dnssd::ServiceAdvertiser::Instance().Init(chip::DeviceLayer::UDPEndPointManager());
     if (err != CHIP_NO_ERROR)
     {
         ChipLogError(Discovery, "Failed to initialize advertiser: %" CHIP_ERROR_FORMAT, err.Format());
