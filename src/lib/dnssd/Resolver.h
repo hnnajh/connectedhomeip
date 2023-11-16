@@ -366,7 +366,11 @@ public:
      * The method must be called before other methods of this class.
      * If the resolver has already been initialized, the method exits immediately with no error.
      */
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    virtual CHIP_ERROR Init(Inet::EndPointManager<Inet::TCPEndPoint> * endPointManager) = 0;
+#else
     virtual CHIP_ERROR Init(Inet::EndPointManager<Inet::UDPEndPoint> * endPointManager) = 0;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     /**
      * Returns whether the resolver has completed the initialization.

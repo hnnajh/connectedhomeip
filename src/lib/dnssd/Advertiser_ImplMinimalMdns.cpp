@@ -180,7 +180,11 @@ public:
     ~AdvertiserMinMdns() override { ClearServices(); }
 
     // Service advertiser
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager) override;
+#else
     CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager) override;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     bool IsInitialized() override { return mIsInitialized; }
     void Shutdown() override;
     CHIP_ERROR RemoveServices() override;
@@ -352,7 +356,37 @@ void AdvertiserMinMdns::OnQuery(const QueryData & data)
         ChipLogError(Discovery, "Failed to reply to query: %" CHIP_ERROR_FORMAT, err.Format());
     }
 }
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+CHIP_ERROR AdvertiserMinMdns::Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager)
+{
+    // TODO: Per API documentation, Init() should be a no-op if mIsInitialized
+    // is true.  But we don't handle updates to our set of interfaces right now,
+    // so rely on the logic in this function to shut down and restart the
+    // GlobalMinimalMdnsServer to handle that.
+    GlobalMinimalMdnsServer::Server().ShutdownEndpoints();
 
+    if (!mIsInitialized)
+    {
+        UpdateCommissionableInstanceName();
+    }
+
+    // Re-set the server in the response sender in case this has been swapped in the
+    // GlobalMinimalMdnsServer (used for testing).
+    mResponseSender.SetServer(&GlobalMinimalMdnsServer::Server());
+
+    ChipLogError(Inet, "[TEST] before starting server TCP");
+    ReturnErrorOnFailure(GlobalMinimalMdnsServer::Instance().StartServer(tcpEndPointManager, kMdnsPort));
+    ChipLogError(Inet, "[TEST] after starting server TCP");
+
+    ChipLogProgress(Discovery, "CHIP minimal mDNS started advertising.");
+
+    AdvertiseRecords(BroadcastAdvertiseType::kStarted);
+
+    mIsInitialized = true;
+
+    return CHIP_NO_ERROR;
+}
+#else
 CHIP_ERROR AdvertiserMinMdns::Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager)
 {
     // TODO: Per API documentation, Init() should be a no-op if mIsInitialized
@@ -382,6 +416,7 @@ CHIP_ERROR AdvertiserMinMdns::Init(chip::Inet::EndPointManager<chip::Inet::UDPEn
 
     return CHIP_NO_ERROR;
 }
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 void AdvertiserMinMdns::Shutdown()
 {

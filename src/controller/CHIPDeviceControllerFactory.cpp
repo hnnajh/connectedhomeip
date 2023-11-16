@@ -235,7 +235,11 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
     InitDataModelHandler();
 
     ChipLogError(Inet, "[TEST] before init udpendpoint manager");
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    ReturnErrorOnFailure(Dnssd::Resolver::Instance().Init(stateParams.tcpEndPointManager));
+#else
     ReturnErrorOnFailure(Dnssd::Resolver::Instance().Init(stateParams.udpEndPointManager));
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     ChipLogError(Inet, "[TEST] after init udpendpoint manager");
 
     if (params.enableServerInteractions)

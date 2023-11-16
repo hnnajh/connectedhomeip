@@ -94,7 +94,11 @@ extern "C" PyChipError pychip_discovery_resolve(uint64_t fabricId, uint64_t node
     CHIP_ERROR result = CHIP_NO_ERROR;
 
     chip::python::ChipMainThreadScheduleAndWait([&] {
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+        result = Resolver::Instance().Init(chip::DeviceLayer::TCPEndPointManager());
+#else
         result = Resolver::Instance().Init(chip::DeviceLayer::UDPEndPointManager());
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
         ReturnOnFailure(result);
         Resolver::Instance().SetOperationalDelegate(&gPythonResolverDelegate);
 

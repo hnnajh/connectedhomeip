@@ -489,7 +489,12 @@ public:
 private:
     void DoReinit()
     {
+        CHIP_ERROR err = CHIP_NO_ERROR;
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+        CHIP_ERROR err = Dnssd::ServiceAdvertiser::Instance().Init(DeviceLayer::TCPEndPointManager());
+#else
         CHIP_ERROR err = Dnssd::ServiceAdvertiser::Instance().Init(DeviceLayer::UDPEndPointManager());
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
         if (err != CHIP_NO_ERROR)
         {
             ESP_LOGE(TAG, "Error initializing: %s", err.AsString());

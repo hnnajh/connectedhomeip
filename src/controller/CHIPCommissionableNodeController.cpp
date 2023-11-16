@@ -36,14 +36,22 @@ CHIP_ERROR CommissionableNodeController::DiscoverCommissioners(Dnssd::DiscoveryF
     {
 #if CONFIG_DEVICE_LAYER
         mDNSResolver.Shutdown(); // reset if already inited
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+        ReturnErrorOnFailure(mDNSResolver.Init(DeviceLayer::TCPEndPointManager()));
+#else
         ReturnErrorOnFailure(mDNSResolver.Init(DeviceLayer::UDPEndPointManager()));
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 #endif
         mDNSResolver.SetCommissioningDelegate(this);
         return mDNSResolver.DiscoverCommissioners(discoveryFilter);
     }
 
 #if CONFIG_DEVICE_LAYER
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    ReturnErrorOnFailure(mResolver->Init(DeviceLayer::TCPEndPointManager()));
+#else
     ReturnErrorOnFailure(mResolver->Init(DeviceLayer::UDPEndPointManager()));
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 #endif
     return mResolver->DiscoverCommissioners(discoveryFilter);
 }

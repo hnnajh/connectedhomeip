@@ -32,7 +32,11 @@ namespace {
 class MockResolver : public Resolver
 {
 public:
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager) override { return InitStatus; }
+#else
     CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager) override { return InitStatus; }
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     bool IsInitialized() override { return true; }
     void Shutdown() override {}
     void SetOperationalDelegate(OperationalResolveDelegate * delegate) override {}

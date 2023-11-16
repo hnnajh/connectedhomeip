@@ -59,16 +59,27 @@ GlobalMinimalMdnsServer & GlobalMinimalMdnsServer::Instance()
     return _instance;
 }
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+CHIP_ERROR GlobalMinimalMdnsServer::StartServer(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager,
+                                                uint16_t port)
+{
+    GlobalMinimalMdnsServer::Server().ShutdownEndpoints();
+
+    UniquePtr<ListenIterator> endpoints = GetAddressPolicy()->GetListenEndpoints();
+    ChipLogError(Inet, "[TEST] before listening TCP");
+    return GlobalMinimalMdnsServer::Server().Listen(tcpEndPointManager, endpoints.get(), port);
+}
+#else
 CHIP_ERROR GlobalMinimalMdnsServer::StartServer(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager,
                                                 uint16_t port)
 {
     GlobalMinimalMdnsServer::Server().ShutdownEndpoints();
 
     UniquePtr<ListenIterator> endpoints = GetAddressPolicy()->GetListenEndpoints();
-    ChipLogError(Inet, "[TEST] before listening");
+    ChipLogError(Inet, "[TEST] before listening UDP");
     return GlobalMinimalMdnsServer::Server().Listen(udpEndPointManager, endpoints.get(), port);
 }
-
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 void GlobalMinimalMdnsServer::ShutdownServer()
 {
     GlobalMinimalMdnsServer::Server().Shutdown();

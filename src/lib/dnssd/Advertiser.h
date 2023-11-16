@@ -305,7 +305,11 @@ public:
      * The method must be called before other methods of this class.
      * If the advertiser has already been initialized, the method exits immediately with no error.
      */
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    virtual CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager) = 0;
+#else
     virtual CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager) = 0;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     /**
      * Returns whether the advertiser has completed the initialization.

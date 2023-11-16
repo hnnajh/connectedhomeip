@@ -279,7 +279,11 @@ public:
     void OnMdnsPacketData(const BytesRange & data, const chip::Inet::IPPacketInfo * info) override;
 
     ///// Resolver implementation
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager) override;
+#else
     CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager) override;
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     bool IsInitialized() override;
     void Shutdown() override;
     void SetOperationalDelegate(OperationalResolveDelegate * delegate) override { mOperationalDelegate = delegate; }
@@ -465,6 +469,22 @@ void MinMdnsResolver::OnMdnsPacketData(const BytesRange & data, const chip::Inet
     ScheduleRetries();
 }
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+CHIP_ERROR MinMdnsResolver::Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * tcpEndPointManager)
+{
+    /// Note: we do not double-check the port as we assume the APP will always use
+    /// the same tcpEndPointManager and port for mDNS.
+    mSystemLayer = &tcpEndPointManager->SystemLayer();
+
+    if (GlobalMinimalMdnsServer::Server().IsListening())
+    {
+        return CHIP_NO_ERROR;
+    }
+
+    ChipLogError(Inet, "[TEST] before starting server minmdns");
+    return GlobalMinimalMdnsServer::Instance().StartServer(tcpEndPointManager, kMdnsPort);
+}
+#else
 CHIP_ERROR MinMdnsResolver::Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * udpEndPointManager)
 {
     /// Note: we do not double-check the port as we assume the APP will always use
@@ -479,7 +499,7 @@ CHIP_ERROR MinMdnsResolver::Init(chip::Inet::EndPointManager<chip::Inet::UDPEndP
     ChipLogError(Inet, "[TEST] before starting server minmdns");
     return GlobalMinimalMdnsServer::Instance().StartServer(udpEndPointManager, kMdnsPort);
 }
-
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 bool MinMdnsResolver::IsInitialized()
 {
     return GlobalMinimalMdnsServer::Server().IsListening();

@@ -26,11 +26,19 @@ namespace {
 class NoneAdvertiser : public ServiceAdvertiser
 {
 public:
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::TCPEndPoint> * inetLayet) override
+    {
+        ChipLogError(Discovery, "DNS-SD advertising not available. DNS-SD init disabled.");
+        return CHIP_ERROR_NOT_IMPLEMENTED;
+    }
+#else
     CHIP_ERROR Init(chip::Inet::EndPointManager<chip::Inet::UDPEndPoint> * inetLayet) override
     {
         ChipLogError(Discovery, "DNS-SD advertising not available. DNS-SD init disabled.");
         return CHIP_ERROR_NOT_IMPLEMENTED;
     }
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
     bool IsInitialized() override { return false; }
 

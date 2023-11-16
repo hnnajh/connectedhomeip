@@ -231,7 +231,11 @@ CHIP_ERROR Server::Init(const ServerInitParams & initParams)
     app::DnssdServer::Instance().SetFabricTable(&mFabrics);
     app::DnssdServer::Instance().SetCommissioningModeProvider(&mCommissioningWindowManager);
 
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    chip::Dnssd::Resolver::Instance().Init(DeviceLayer::TCPEndPointManager());
+#else
     chip::Dnssd::Resolver::Instance().Init(DeviceLayer::UDPEndPointManager());
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
 
 #if CHIP_CONFIG_ENABLE_SERVER_IM_EVENT
     // Initialize event logging subsystem
@@ -316,6 +320,7 @@ CHIP_ERROR Server::Init(const ServerInitParams & initParams)
     err = mCASESessionManager.Init(&DeviceLayer::SystemLayer(), caseSessionManagerConfig);
     SuccessOrExit(err);
 
+    ChipLogError(Inet, "[TEST] ListenForSessionEstablishment");
     err = mCASEServer.ListenForSessionEstablishment(&mExchangeMgr, &mSessions, &mFabrics, mSessionResumptionStorage,
                                                     &mCertificateValidityPolicy, mGroupsProvider);
     SuccessOrExit(err);

@@ -38,7 +38,11 @@ class DiscoveryImplPlatform : public ServiceAdvertiser, public Resolver
 {
 public:
     // Members that implement both ServiceAdveriser and Resolver interfaces.
+#if CHIP_CONFIG_TCP_SUPPORT_ENABLED
+    CHIP_ERROR Init(Inet::EndPointManager<Inet::TCPEndPoint> *) override { return InitImpl(); }
+#else
     CHIP_ERROR Init(Inet::EndPointManager<Inet::UDPEndPoint> *) override { return InitImpl(); }
+#endif // CHIP_CONFIG_TCP_SUPPORT_ENABLED
     bool IsInitialized() override;
     void Shutdown() override;
 
