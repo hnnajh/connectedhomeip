@@ -26,6 +26,7 @@ namespace chip {
 
 CHIP_ERROR TransportMgrBase::SendMessage(const Transport::PeerAddress & address, System::PacketBufferHandle && msgBuf)
 {
+    ChipLogError(Inet, "[TEST] TransportMgrBase::SendMessage");
     return mTransport->SendMessage(address, std::move(msgBuf));
 }
 
@@ -43,6 +44,7 @@ void TransportMgrBase::Disconnect(const Transport::PeerAddress & address)
 
 CHIP_ERROR TransportMgrBase::Init(Transport::Base * transport)
 {
+    ChipLogError(Inet, "[TEST] TransportMgrBase::Init");
     if (mTransport != nullptr)
     {
         return CHIP_ERROR_INCORRECT_STATE;
@@ -67,12 +69,14 @@ CHIP_ERROR TransportMgrBase::MulticastGroupJoinLeave(const Transport::PeerAddres
 
 void TransportMgrBase::HandleMessageReceived(const Transport::PeerAddress & peerAddress, System::PacketBufferHandle && msg)
 {
+    ChipLogError(Inet, "[TEST] TransportMgrBase::HandleMessageReceived");
     // This is the first point all incoming messages funnel through.  Ensure
     // that our message receipts are all synchronized correctly.
     assertChipStackLockedByCurrentThread();
 
     if (msg->HasChainedBuffer())
     {
+        ChipLogError(Inet, "[TEST] TransportMgrBase::HandleMessageReceived, has chanined buffer");
         // Something in the lower levels messed up.
         char addrBuffer[Transport::PeerAddress::kMaxToStringSize];
         peerAddress.ToString(addrBuffer);
@@ -82,10 +86,12 @@ void TransportMgrBase::HandleMessageReceived(const Transport::PeerAddress & peer
 
     if (mSessionManager != nullptr)
     {
+        ChipLogError(Inet, "[TEST] TransportMgrBase::HandleMessageReceived, session manager is NOT null");
         mSessionManager->OnMessageReceived(peerAddress, std::move(msg));
     }
     else
     {
+        ChipLogError(Inet, "[TEST] TransportMgrBase::HandleMessageReceived, session manager is NULL");
         char addrBuffer[Transport::PeerAddress::kMaxToStringSize];
         peerAddress.ToString(addrBuffer);
         ChipLogError(Inet, "message from %s is dropped since no corresponding handler is set in TransportMgr.", addrBuffer);
@@ -95,6 +101,7 @@ void TransportMgrBase::HandleMessageReceived(const Transport::PeerAddress & peer
 #if CHIP_CONFIG_TCP_SUPPORT_ENABLED
 void TransportMgrBase::HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
 {
+    ChipLogError(Inet, "[TEST] TransportMgrBase::HandleConnectionComplete");
     if (mSessionManager != nullptr)
     {
         mSessionManager->HandleConnectionComplete(conObj, conErr);
@@ -113,6 +120,7 @@ void TransportMgrBase::HandleConnectionComplete(Inet::TCPEndPoint * conObj, CHIP
 
 void TransportMgrBase::HandleConnectionClosed(Inet::TCPEndPoint * conObj, CHIP_ERROR conErr)
 {
+    ChipLogError(Inet, "[TEST] TransportMgrBase::HandleConnectionClosed");
     if (mSessionManager != nullptr)
     {
         mSessionManager->HandleConnectionClosed(conObj, conErr);

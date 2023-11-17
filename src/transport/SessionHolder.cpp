@@ -23,6 +23,7 @@ namespace chip {
 
 SessionHolder::~SessionHolder()
 {
+    ChipLogError(Inet, "[TEST] SessionHolder::~SessionHolder");
     Release();
 }
 

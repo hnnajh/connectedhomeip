@@ -303,6 +303,10 @@ private:
     // @see TCPEndpoint::OnConnectionReceivedFunct
     static void HandleIncomingConnection(Inet::TCPEndPoint * listenEndPoint, Inet::TCPEndPoint * endPoint,
                                          const Inet::IPAddress & peerAddress, uint16_t peerPort);
+    static void HandleTCPConnectionComplete(Inet::TCPEndPoint * endPoint, CHIP_ERROR aError);
+
+    // @see TCPEndpoint::HandleDataReceived
+    static CHIP_ERROR HandleDataReceived(Inet::TCPEndPoint * listenEndPoint, chip::System::PacketBufferHandle && data);
 
     // Callback handler for handling accept error
     // @see TCPEndpoint::OnAcceptErrorFunct

@@ -46,6 +46,7 @@
 #include <platform/LockTracker.h>
 #include <protocols/Protocols.h>
 #include <protocols/secure_channel/Constants.h>
+#include <lib/core/ErrorStr.h>
 
 using namespace chip::Encoding;
 using namespace chip::Inet;
@@ -173,9 +174,11 @@ CHIP_ERROR ExchangeContext::SendMessage(Protocols::Id protocolId, uint8_t msgTyp
         else
         {
 #endif
+            ChipLogError(Inet, "[TEST] ExchangeContext::SendMessage");
             err = mDispatch.SendMessage(GetExchangeMgr()->GetSessionManager(), session, mExchangeId, IsInitiator(),
                                         GetReliableMessageContext(), reliableTransmissionRequested, protocolId, msgType,
                                         std::move(msgBuf));
+            ChipLogError(Inet, "[TEST] ExchangeContext::SendMessage, error=%s", ErrorStr(err));
 #if CONFIG_BUILD_FOR_HOST_UNIT_TEST
         }
 #endif

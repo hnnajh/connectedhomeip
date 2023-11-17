@@ -444,6 +444,7 @@ public:
         {
             ephemeralInitiatorNodeID = static_cast<NodeId>(Crypto::GetRandU64());
         } while (!IsOperationalNodeId(ephemeralInitiatorNodeID));
+        ChipLogError(Inet, "[TEST] CreateUnauthenticatedSession ading an unauthenticated session");
         return mUnauthenticatedSessions.AllocInitiator(ephemeralInitiatorNodeID, peerAddress, config);
     }
 

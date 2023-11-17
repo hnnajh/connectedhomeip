@@ -32,7 +32,7 @@ void AssertChipStackLockedByCurrentThread(const char * file, int line)
     if (!chip::DeviceLayer::PlatformMgr().IsChipStackLockedByCurrentThread())
     {
         ChipLogError(DeviceLayer, "Chip stack locking error at '%s:%d'. Code is unsafe/racy", StringOrNullMarker(file), line);
-#if CHIP_STACK_LOCK_TRACKING_ERROR_FATAL
+#if !CHIP_STACK_LOCK_TRACKING_ERROR_FATAL
         chipDie();
 #endif
     }

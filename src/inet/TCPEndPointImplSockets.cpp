@@ -466,6 +466,7 @@ CHIP_ERROR TCPEndPointImplSockets::SetUserTimeoutImpl(uint32_t userTimeoutMillis
 
 CHIP_ERROR TCPEndPointImplSockets::DriveSendingImpl()
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::DriveSendingImpl");
     CHIP_ERROR err = CHIP_NO_ERROR;
 
 #ifdef MSG_NOSIGNAL
@@ -581,6 +582,7 @@ CHIP_ERROR TCPEndPointImplSockets::DriveSendingImpl()
 
 void TCPEndPointImplSockets::HandleConnectCompleteImpl()
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::HandleConnectCompleteImpl");
     // Wait for ability to read or write on this endpoint.
     CHIP_ERROR err = static_cast<System::LayerSockets &>(GetSystemLayer()).RequestCallbackOnPendingRead(mWatch);
     if (err == CHIP_NO_ERROR)
@@ -662,6 +664,7 @@ void TCPEndPointImplSockets::TCPUserTimeoutHandler()
 
 CHIP_ERROR TCPEndPointImplSockets::BindSrcAddrFromIntf(IPAddressType addrType, InterfaceId intfId)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::BindSrcAddrFromIntf");
     // If we are trying to make a TCP connection over a 'specified target interface',
     // then we bind the TCPEndPoint to an IP address on that target interface
     // and use that address as the source address for that connection. This is
@@ -778,6 +781,7 @@ void TCPEndPointImplSockets::HandlePendingIO(System::SocketEvents events, intptr
 
 void TCPEndPointImplSockets::HandlePendingIO(System::SocketEvents events)
 {
+    //ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::HandlePendingIO");
     // Prevent the end point from being freed while in the middle of a callback.
     Retain();
 
@@ -840,6 +844,7 @@ void TCPEndPointImplSockets::HandlePendingIO(System::SocketEvents events)
 
 void TCPEndPointImplSockets::ReceiveData()
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::ReceiveData");
     System::PacketBufferHandle rcvBuf;
     bool isNewBuf = true;
 
@@ -975,6 +980,7 @@ void TCPEndPointImplSockets::ReceiveData()
 
 void TCPEndPointImplSockets::HandleIncomingConnection()
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::HandleIncomingConnection");
     CHIP_ERROR err                 = CHIP_NO_ERROR;
     TCPEndPointImplSockets * conEP = nullptr;
     IPAddress peerAddr;
@@ -1034,6 +1040,7 @@ void TCPEndPointImplSockets::HandleIncomingConnection()
     // If all went well...
     if (err == CHIP_NO_ERROR)
     {
+        ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::HandleIncomingConnection, endpoint was created succcessfully");
         // Put the new end point into the Connected state.
         conEP->mSocket = conSocket;
         err            = static_cast<System::LayerSockets &>(GetSystemLayer()).StartWatchingSocket(conSocket, &conEP->mWatch);
@@ -1089,6 +1096,7 @@ void TCPEndPointImplSockets::HandleIncomingConnection()
  */
 CHIP_ERROR TCPEndPointImplSockets::CheckConnectionProgress(bool & isProgressing)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplSockets::CheckConnectionProgress");
     int currPendingBytesRaw = 0;
     uint32_t currPendingBytes; // Will be initialized once we know it's safe.
 

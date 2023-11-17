@@ -182,7 +182,12 @@ CHIP_ERROR Server::Init(const ServerInitParams & initParams)
     {
         deviceInfoprovider->SetStorageDelegate(mDeviceStorage);
     }
-
+#if INET_CONFIG_ENABLE_IPV4
+    ChipLogError(Inet, "[TEST] Server:: Initializing IPv4 is enabled");
+#else
+    ChipLogError(Inet, "[TEST] Server:: Initializing IPv4 is NOT enabled");
+#endif // INET_CONFIG_ENABLE_IPV4
+    ChipLogError(Inet, "[TEST] Server:: Initializing TCP transports, Port:%d", mOperationalServicePort);
     // Init transport before operations with secure session mgr.
     err = mTransports.Init(TcpListenParameters(DeviceLayer::TCPEndPointManager())
                                .SetAddressType(IPAddressType::kIPv6)

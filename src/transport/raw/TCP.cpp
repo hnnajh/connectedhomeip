@@ -74,6 +74,7 @@ void TCPBase::CloseActiveConnections()
 
 CHIP_ERROR TCPBase::Init(TcpListenParameters & params)
 {
+    ChipLogError(Inet, "[TEST] TCPBase::Init(TcpListenParameters, Port:%d", params.GetListenPort());
     CHIP_ERROR err = CHIP_NO_ERROR;
 
     VerifyOrExit(mState == State::kNotReady, err = CHIP_ERROR_INCORRECT_STATE);
@@ -92,6 +93,8 @@ CHIP_ERROR TCPBase::Init(TcpListenParameters & params)
     mListenSocket->mAppState            = reinterpret_cast<void *>(this);
     mListenSocket->OnConnectionReceived = HandleIncomingConnection;
     mListenSocket->OnAcceptError        = HandleAcceptError;
+    mListenSocket->OnDataReceived       = HandleDataReceived;
+    mListenSocket->OnConnectComplete    = HandleTCPConnectionComplete;
 
     mEndpointType = params.GetAddressType();
 
@@ -178,6 +181,7 @@ TCPBase::ActiveConnectionState * TCPBase::FindActiveConnection(const Inet::TCPEn
 
 CHIP_ERROR TCPBase::SendMessage(const Transport::PeerAddress & address, System::PacketBufferHandle && msgBuf)
 {
+    ChipLogError(Inet, "[TEST] TCPBase::SendMessage");
     // Sent buffer data format is:
     //    - packet size as a uint16_t
     //    - actual data
@@ -201,9 +205,11 @@ CHIP_ERROR TCPBase::SendMessage(const Transport::PeerAddress & address, System::
 
     if (connection != nullptr && connection->mConnectionState == State::kConnected)
     {
+        ChipLogError(Inet, "[TEST] TCPBase::SendMessage, sending buffer");
         return connection->mEndPoint->Send(std::move(msgBuf));
     }
 
+    ChipLogError(Inet, "[TEST] TCPBase::SendMessage after connect");
     return SendAfterConnect(address, std::move(msgBuf));
 }
 
@@ -226,7 +232,8 @@ CHIP_ERROR TCPBase::StartConnect(const PeerAddress & addr)
     activeConnection->mEndPoint        = endPoint;
     activeConnection->mConnectionState = State::kConnecting;
 
-    ReturnErrorOnFailure(endPoint->Connect(addr.GetIPAddress(), addr.GetPort(), addr.GetInterface()));
+    ChipLogError(Inet, "[TEST] TCPBase::connect, port=%d , 5540", addr.GetPort());
+    ReturnErrorOnFailure(endPoint->Connect(addr.GetIPAddress(), 5540, addr.GetInterface()));
 
     mUsedEndPointCount++;
 
@@ -396,7 +403,7 @@ void TCPBase::CloseConnectionInternal(ActiveConnectionState * connection, CHIP_E
 
 CHIP_ERROR TCPBase::HandleTCPEndPointDataReceived(Inet::TCPEndPoint * endPoint, System::PacketBufferHandle && buffer)
 {
-    ChipLogError(Inet, "[TEST] HandleTCPEndPointDataReceived");
+    ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointDataReceived");
     Inet::IPAddress ipAddress;
     uint16_t port;
     Inet::InterfaceId interfaceId;
@@ -419,7 +426,7 @@ CHIP_ERROR TCPBase::HandleTCPEndPointDataReceived(Inet::TCPEndPoint * endPoint, 
 
 void TCPBase::HandleTCPEndPointConnectComplete(Inet::TCPEndPoint * endPoint, CHIP_ERROR conErr)
 {
-    ChipLogError(Inet, "[TEST] HandleTCPEndPointConnectComplete");
+    ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointConnectComplete");
     CHIP_ERROR err          = CHIP_NO_ERROR;
     bool foundPendingPacket = false;
     TCPBase * tcp           = reinterpret_cast<TCPBase *>(endPoint->mAppState);
@@ -434,10 +441,12 @@ void TCPBase::HandleTCPEndPointConnectComplete(Inet::TCPEndPoint * endPoint, CHI
 
     if (conErr == CHIP_NO_ERROR)
     {
+        ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointConnectComplete, adding delegates");
         // Set the Data received handler when connection completes
         endPoint->OnDataReceived     = HandleTCPEndPointDataReceived;
         endPoint->OnDataSent         = nullptr;
         endPoint->OnConnectionClosed = HandleTCPEndPointConnectionClosed;
+        endPoint->OnConnectComplete  = HandleTCPConnectionComplete;
 
         activeConnection = tcp->FindActiveConnection(endPoint);
         VerifyOrDie(activeConnection != nullptr);
@@ -453,16 +462,20 @@ void TCPBase::HandleTCPEndPointConnectComplete(Inet::TCPEndPoint * endPoint, CHI
             return;
         }
 
+        ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointConnectComplete, sending packets");
         // Send any pending packets that are queued for this connection
         tcp->mPendingPackets.ForEachActiveObject([&](PendingPacket * pending) {
-            if (pending->mPeerAddress == addr)
+            ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointConnectComplete, sending a single packet");
+            //if (pending->mPeerAddress == addr)
             {
+                ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointConnectComplete, sending packets, address matching");
                 foundPendingPacket                = true;
                 System::PacketBufferHandle buffer = std::move(pending->mPacketBuffer);
                 tcp->mPendingPackets.ReleaseObject(pending);
 
                 if ((conErr == CHIP_NO_ERROR) && (err == CHIP_NO_ERROR))
                 {
+                    ChipLogError(Inet, "[TEST] TCPBase::HandleTCPEndPointConnectComplete, sending packet through TCP");
                     err = endPoint->Send(std::move(buffer));
                 }
             }
@@ -501,11 +514,37 @@ void TCPBase::HandleTCPEndPointConnectionClosed(Inet::TCPEndPoint * endPoint, CH
     ChipLogProgress(Inet, "Connection closed.");
 }
 
+CHIP_ERROR TCPBase::HandleDataReceived(Inet::TCPEndPoint * endPoint, chip::System::PacketBufferHandle && buffer)
+{
+    ChipLogError(Inet, "[TEST] TCPBase::HandleDataReceived");
+    Inet::IPAddress ipAddress;
+    uint16_t port;
+    Inet::InterfaceId interfaceId;
+
+    endPoint->GetPeerInfo(&ipAddress, &port);
+    endPoint->GetInterfaceId(&interfaceId);
+    PeerAddress peerAddress = PeerAddress::TCP(ipAddress, port, interfaceId);
+
+    TCPBase * tcp  = reinterpret_cast<TCPBase *>(endPoint->mAppState);
+    CHIP_ERROR err = tcp->ProcessReceivedBuffer(endPoint, peerAddress, std::move(buffer));
+
+    if (err != CHIP_NO_ERROR)
+    {
+        // Connection could need to be closed at this point
+        ChipLogError(Inet, "Failed to accept received TCP message: %s", ErrorStr(err));
+        return CHIP_ERROR_UNEXPECTED_EVENT;
+    }
+    return CHIP_NO_ERROR;
+}
+
+void TCPBase::HandleTCPConnectionComplete(Inet::TCPEndPoint * endPoint, CHIP_ERROR aError) {
+    ChipLogError(Inet, "[TEST] TCPBase::HandleTCPConnectionComplete");
+}
 // Handler for incoming connection requests from peer nodes
 void TCPBase::HandleIncomingConnection(Inet::TCPEndPoint * listenEndPoint, Inet::TCPEndPoint * endPoint,
                                        const Inet::IPAddress & peerAddress, uint16_t peerPort)
 {
-    ChipLogError(Inet, "[TEST] HandleIncomingConnection");
+    ChipLogError(Inet, "[TEST] TCPBase::HandleIncomingConnection");
     TCPBase * tcp                            = reinterpret_cast<TCPBase *>(listenEndPoint->mAppState);
     ActiveConnectionState * activeConnection = nullptr;
     Inet::InterfaceId interfaceId;
@@ -524,6 +563,8 @@ void TCPBase::HandleIncomingConnection(Inet::TCPEndPoint * listenEndPoint, Inet:
         endPoint->OnDataReceived     = HandleTCPEndPointDataReceived;
         endPoint->OnDataSent         = nullptr;
         endPoint->OnConnectionClosed = HandleTCPEndPointConnectionClosed;
+        endPoint->OnConnectComplete  = HandleTCPConnectionComplete;
+        endPoint->EnableReceive();
 
         // By default, disable TCP Nagle buffering by setting TCP_NODELAY socket option to true
         endPoint->EnableNoDelay();

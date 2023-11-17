@@ -37,6 +37,7 @@ CHIP_ERROR CASEClient::EstablishSession(const CASEClientInitParams & params, con
     VerifyOrReturnError(params.fabricTable != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
     // Create a UnauthenticatedSession for CASE pairing.
+    ChipLogError(Inet, "[TEST] CASEClient::EstablishSession, Adding a new session");
     Optional<SessionHandle> session = params.sessionManager->CreateUnauthenticatedSession(peerAddress, remoteMRPConfig);
     VerifyOrReturnError(session.HasValue(), CHIP_ERROR_NO_MEMORY);
 

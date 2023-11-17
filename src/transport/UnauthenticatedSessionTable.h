@@ -203,6 +203,7 @@ class UnauthenticatedSessionTable
 public:
     ~UnauthenticatedSessionTable()
     {
+        ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable:~UnauthenticatedSessionTable releasing all entries");
 #if !CHIP_SYSTEM_CONFIG_POOL_USE_HEAP
         // When not using heap pools, our entries never actually get released
         // back to the pool (which lets us make the entries 4 bytes smaller by
@@ -235,6 +236,17 @@ public:
         return Optional<SessionHandle>::Missing();
     }
 
+    CHECK_RETURN_VALUE Optional<SessionHandle> returnFirst(NodeId ephemeralInitiatorNodeID)
+    {
+        UnauthenticatedSession * result = returnFirstOne(UnauthenticatedSession::SessionRole::kInitiator, ephemeralInitiatorNodeID);
+        if (result != nullptr)
+        {   ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable: returnFirst, returning valid object");
+            return MakeOptional<SessionHandle>(*result);
+        }
+        ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable: returnFirst, returning NOT valid object");
+        return Optional<SessionHandle>::Missing();
+    }
+
     CHECK_RETURN_VALUE Optional<SessionHandle> FindInitiator(NodeId ephemeralInitiatorNodeID)
     {
         UnauthenticatedSession * result = FindEntry(UnauthenticatedSession::SessionRole::kInitiator, ephemeralInitiatorNodeID);
@@ -253,10 +265,11 @@ public:
         CHIP_ERROR err = AllocEntry(UnauthenticatedSession::SessionRole::kInitiator, ephemeralInitiatorNodeID, config, result);
         if (err == CHIP_NO_ERROR)
         {
+            ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable AllocInitiator adding session");
             result->SetPeerAddress(peerAddress);
             return MakeOptional<SessionHandle>(*result);
         }
-
+        ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable AllocInitiator adding NOT session");
         return Optional<SessionHandle>::Missing();
     }
 
@@ -274,6 +287,7 @@ private:
     CHIP_ERROR AllocEntry(UnauthenticatedSession::SessionRole sessionRole, NodeId ephemeralInitiatorNodeID,
                           const ReliableMessageProtocolConfig & config, UnauthenticatedSession *& entry)
     {
+        ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable Creating a new object");
         auto entryToUse = mEntries.CreateObject(sessionRole, ephemeralInitiatorNodeID, config, *this);
         if (entryToUse != nullptr)
         {
@@ -292,6 +306,18 @@ private:
         mEntries.ResetObject(entryToUse, sessionRole, ephemeralInitiatorNodeID, config, *this);
         entry = entryToUse;
         return CHIP_NO_ERROR;
+    }
+
+    CHECK_RETURN_VALUE UnauthenticatedSession * returnFirstOne(UnauthenticatedSession::SessionRole sessionRole,
+                                                          NodeId ephemeralInitiatorNodeID)
+    {
+        UnauthenticatedSession * result = nullptr;
+        mEntries.ForEachActiveObject([&](UnauthenticatedSession * entry) {
+                ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable returnFirstOne return first Entry");
+                result = entry;
+                return Loop::Break;
+        });
+        return result;
     }
 
     CHECK_RETURN_VALUE UnauthenticatedSession * FindEntry(UnauthenticatedSession::SessionRole sessionRole,
@@ -326,7 +352,10 @@ private:
         return result;
     }
 
-    void ReleaseEntry(EntryType * entry) { mEntries.ReleaseObject(entry); }
+    void ReleaseEntry(EntryType * entry) {
+        ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable UnauthenticatedSessionTable Releasing entry");
+        mEntries.ReleaseObject(entry);
+    }
 
     ObjectPool<EntryType, kMaxSessionCount> mEntries;
 };
@@ -335,6 +364,7 @@ private:
 template <size_t kMaxSessionCount>
 void detail::UnauthenticatedSessionPoolEntry<kMaxSessionCount>::ReleaseSelfToPool()
 {
+    ChipLogError(Inet, "[TEST] UnauthenticatedSessionTable Releasing entry from the session table");
     mSessionTable.ReleaseEntry(this);
 }
 #endif // CHIP_SYSTEM_CONFIG_POOL_USE_HEAP

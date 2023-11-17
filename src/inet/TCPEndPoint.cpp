@@ -39,6 +39,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <utility>
+#include <lib/core/ErrorStr.h>
 
 namespace chip {
 namespace Inet {
@@ -94,6 +95,7 @@ CHIP_ERROR TCPEndPoint::Connect(const IPAddress & addr, uint16_t port, Interface
 
 CHIP_ERROR TCPEndPoint::Send(System::PacketBufferHandle && data, bool push)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPoint::Send");
     VerifyOrReturnError(mState == State::kConnected || mState == State::kReceiveShutdown, CHIP_ERROR_INCORRECT_STATE);
     CHIP_ERROR res = CHIP_NO_ERROR;
 
@@ -313,11 +315,13 @@ bool TCPEndPoint::IsConnected(State state)
 
 CHIP_ERROR TCPEndPoint::DriveSending()
 {
+    ChipLogError(Inet, "[TEST] TCPEndPoint::DriveSending");
     CHIP_ERROR err = DriveSendingImpl();
 
     if (err != CHIP_NO_ERROR)
     {
-        DoClose(err, false);
+        ChipLogError(Inet, "[TEST] CASESession::DriveSending, Error=%s", ErrorStr(err));
+        //DoClose(err, false);
     }
 
     CHIP_SYSTEM_FAULT_INJECT_ASYNC_EVENT();
@@ -327,10 +331,15 @@ CHIP_ERROR TCPEndPoint::DriveSending()
 
 void TCPEndPoint::DriveReceiving()
 {
+    ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving");
     // If there's data in the receive queue and the app is ready to receive it then call the app's callback
     // with the entire receive queue.
+    ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving , (!mRcvQueue.IsNull() = %d", !mRcvQueue.IsNull());
+    ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving , mReceiveEnabled = %d", mReceiveEnabled);
+    ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving , OnDataReceived is null = %d", OnDataReceived == nullptr);
     if (!mRcvQueue.IsNull() && mReceiveEnabled && OnDataReceived != nullptr)
     {
+        ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving, delegates are okay");
         // Acknowledgement is done after handling the buffers to allow the
         // application processing to throttle flow.
         uint16_t ackLength = mRcvQueue->TotalLength();
@@ -341,12 +350,15 @@ void TCPEndPoint::DriveReceiving()
             return;
         }
         AckReceive(ackLength);
+    } else {
+        ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving, delegates are NOT okay");
     }
 
     // If the connection is closing, and the receive queue is now empty, call DoClose() to complete
     // the process of closing the connection.
     if (mState == State::kClosing && mRcvQueue.IsNull())
     {
+        ChipLogError(Inet, "[TEST] TCPEndPoint::DriveReceiving, closing connection");
         DoClose(CHIP_NO_ERROR, false);
     }
 }

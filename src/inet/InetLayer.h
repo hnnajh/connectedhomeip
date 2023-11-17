@@ -82,7 +82,7 @@ public:
     CHIP_ERROR NewEndPoint(EndPoint ** retEndPoint)
     {
         assertChipStackLockedByCurrentThread();
-        ChipLogError(Inet, "[TEST] is initialized");
+        ChipLogError(Inet, "[TEST] NewEndPoint -> is initialized");
         VerifyOrReturnError(mLayerState.IsInitialized(), CHIP_ERROR_INCORRECT_STATE);
 
         *retEndPoint = CreateEndPoint();

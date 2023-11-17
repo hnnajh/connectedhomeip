@@ -646,6 +646,7 @@ CHIP_ERROR TCPEndPointImplLwIP::GetPCB(IPAddressType addrType)
 
 void TCPEndPointImplLwIP::HandleDataSent(uint16_t lenSent)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataSent");
     if (IsConnected())
     {
         // Ensure we do not have internal inconsistency in the lwIP, which
@@ -706,9 +707,11 @@ void TCPEndPointImplLwIP::HandleDataSent(uint16_t lenSent)
 
 void TCPEndPointImplLwIP::HandleDataReceived(System::PacketBufferHandle && buf)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived");
     // Only receive new data while in the Connected or SendShutdown states.
     if (mState == State::kConnected || mState == State::kSendShutdown)
     {
+        ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived, state is connected");
         // Mark the connection as being active.
         MarkActive();
 
@@ -747,12 +750,16 @@ void TCPEndPointImplLwIP::HandleDataReceived(System::PacketBufferHandle && buf)
         }
 
         // Drive the received data into the app.
+        ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived, drive receiving");
         DriveReceiving();
+    } else {
+        ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived, disconnected");
     }
 }
 
 void TCPEndPointImplLwIP::HandleIncomingConnection(TCPEndPoint * conEP)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleIncomingConnection");
     CHIP_ERROR err = CHIP_NO_ERROR;
     IPAddress peerAddr;
     uint16_t peerPort;
@@ -832,6 +839,7 @@ err_t TCPEndPointImplLwIP::LwIPHandleConnectComplete(void * arg, struct tcp_pcb 
 
 err_t TCPEndPointImplLwIP::LwIPHandleIncomingConnection(void * arg, struct tcp_pcb * tpcb, err_t lwipErr)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::LwIPHandleIncomingConnection");
     CHIP_ERROR err = chip::System::MapErrorLwIP(lwipErr);
 
     if (arg != NULL)
@@ -860,6 +868,7 @@ err_t TCPEndPointImplLwIP::LwIPHandleIncomingConnection(void * arg, struct tcp_p
         // Ensure that TCP timers have been started
         if (err == CHIP_NO_ERROR)
         {
+            ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::LwIPHandleIncomingConnection, endpoint was created successfully");
             err_t error = start_tcp_timers();
             if (error != ERR_OK)
             {
@@ -930,6 +939,7 @@ err_t TCPEndPointImplLwIP::LwIPHandleIncomingConnection(void * arg, struct tcp_p
 
 err_t TCPEndPointImplLwIP::LwIPHandleDataReceived(void * arg, struct tcp_pcb * tpcb, struct pbuf * p, err_t _err)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::LwIPHandleDataReceived");
     err_t res = ERR_OK;
 
     if (arg != NULL)
@@ -994,6 +1004,7 @@ err_t TCPEndPointImplLwIP::LwIPHandleDataSent(void * arg, struct tcp_pcb * tpcb,
 
 void TCPEndPointImplLwIP::LwIPHandleError(void * arg, err_t lwipErr)
 {
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::LwIPHandleError");
     if (arg != NULL)
     {
         TCPEndPointImplLwIP * ep             = static_cast<TCPEndPointImplLwIP *>(arg);

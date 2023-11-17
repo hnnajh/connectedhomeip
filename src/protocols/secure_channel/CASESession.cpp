@@ -47,6 +47,7 @@
 #include <system/TLVPacketBufferBackingStore.h>
 #include <tracing/macros.h>
 #include <transport/SessionManager.h>
+#include <lib/core/ErrorStr.h>
 
 namespace {
 
@@ -372,12 +373,14 @@ struct CASESession::HandleSigma3Data
 
 CASESession::~CASESession()
 {
+    ChipLogError(Inet, "[TEST] CASESession::~CASESession");
     // Let's clear out any security state stored in the object, before destroying it.
     Clear();
 }
 
 void CASESession::OnSessionReleased()
 {
+    ChipLogError(Inet, "[TEST] CASESession::~OnSessionReleased");
     // Call into our super-class before we clear our state.
     PairingSession::OnSessionReleased();
     Clear();
@@ -385,38 +388,9 @@ void CASESession::OnSessionReleased()
 
 void CASESession::Clear()
 {
-    // Cancel any outstanding work.
-    if (mSendSigma3Helper)
-    {
-        mSendSigma3Helper->CancelWork();
-        mSendSigma3Helper.reset();
-    }
-    if (mHandleSigma3Helper)
-    {
-        mHandleSigma3Helper->CancelWork();
-        mHandleSigma3Helper.reset();
-    }
+    ChipLogError(Inet, "[TEST] CASESession::Clear");
+    return;
 
-    // This function zeroes out and resets the memory used by the object.
-    // It's done so that no security related information will be leaked.
-    mCommissioningHash.Clear();
-    PairingSession::Clear();
-
-    mState = State::kInitialized;
-    Crypto::ClearSecretData(mIPK);
-
-    if (mFabricsTable != nullptr)
-    {
-        mFabricsTable->RemoveFabricDelegate(this);
-
-        mFabricsTable->ReleaseEphemeralKeypair(mEphemeralKey);
-        mEphemeralKey = nullptr;
-    }
-
-    mLocalNodeId  = kUndefinedNodeId;
-    mPeerNodeId   = kUndefinedNodeId;
-    mFabricsTable = nullptr;
-    mFabricIndex  = kUndefinedFabricIndex;
 }
 
 void CASESession::InvalidateIfPendingEstablishmentOnFabric(FabricIndex fabricIndex)
@@ -429,6 +403,7 @@ void CASESession::InvalidateIfPendingEstablishmentOnFabric(FabricIndex fabricInd
     {
         return;
     }
+    ChipLogError(Inet, "[TEST] CASESession::InvalidateIfPendingEstablishmentOnFabric");
     AbortPendingEstablish(CHIP_ERROR_CANCELLED);
 }
 
@@ -439,6 +414,7 @@ CHIP_ERROR CASESession::Init(SessionManager & sessionManager, Credentials::Certi
     VerifyOrReturnError(mGroupDataProvider != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
     VerifyOrReturnError(sessionManager.GetSessionKeystore() != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
 
+    ChipLogError(Inet, "[TEST] CASESession::Init");
     Clear();
 
     ReturnErrorOnFailure(mCommissioningHash.Begin());
@@ -486,6 +462,7 @@ CASESession::PrepareForSessionEstablishment(SessionManager & sessionManager, Fab
 exit:
     if (err != CHIP_NO_ERROR)
     {
+        ChipLogError(Inet, "[TEST] CASESession::PrepareForSessionEstablishment, clear");
         Clear();
     }
     return err;
@@ -556,6 +533,7 @@ CHIP_ERROR CASESession::EstablishSession(SessionManager & sessionManager, Fabric
 exit:
     if (err != CHIP_NO_ERROR)
     {
+        ChipLogError(Inet, "[TEST] CASESession::EstablishSession, clear");
         Clear();
     }
     return err;
@@ -575,7 +553,8 @@ void CASESession::HandleConnectionComplete(void * context, Inet::TCPEndPoint * c
     err = caseSession->SendSigma1();
     if (err != CHIP_NO_ERROR)
     {
-        caseSession->Clear();
+        ChipLogError(Inet, "[TEST] CASESession::HandleConnectionComplete, Error=%s", ErrorStr(err));
+        //caseSession->Clear();
     }
 }
 
@@ -587,6 +566,7 @@ void CASESession::HandleConnectionClosed(void * context, Inet::TCPEndPoint * con
     CASESession * caseSession = reinterpret_cast<CASESession *>(context);
     if (conErr == CHIP_NO_ERROR)
     {
+        ChipLogError(Inet, "[TEST] CASESession::HandleConnectionClosed, clear");
         caseSession->Clear();
     }
     else
@@ -604,11 +584,13 @@ void CASESession::OnResponseTimeout(ExchangeContext * ec)
     // Discard the exchange so that Clear() doesn't try aborting it.  The
     // exchange will handle that.
     DiscardExchange();
+    ChipLogError(Inet, "[TEST] CASESession::OnResponseTimeout");
     AbortPendingEstablish(CHIP_ERROR_TIMEOUT);
 }
 
 void CASESession::AbortPendingEstablish(CHIP_ERROR err)
 {
+    ChipLogError(Inet, "[TEST] CASESession::AbortPendingEstablish, error=%s", ErrorStr(err));
     Clear();
     // Do this last in case the delegate frees us.
     NotifySessionEstablishmentError(err);
@@ -1231,6 +1213,7 @@ CHIP_ERROR CASESession::HandleSigma2_and_SendSigma3(System::PacketBufferHandle &
 {
     MATTER_TRACE_SCOPE("HandleSigma2_and_SendSigma3", "CASESession");
     ReturnErrorOnFailure(HandleSigma2(std::move(msg)));
+    ChipLogError(Inet, "[TEST] CASESession::HandleSigma2_and_SendSigma3 , sending Sigma3a");
     ReturnErrorOnFailure(SendSigma3a());
 
     return CHIP_NO_ERROR;
@@ -1590,6 +1573,7 @@ CHIP_ERROR CASESession::SendSigma3c(SendSigma3Data & data, CHIP_ERROR status)
     SuccessOrExit(err);
 
     // Call delegate to send the Msg3 to peer
+    ChipLogError(Inet, "[TEST] CASESession::SendSigma3c");
     err = mExchangeCtxt->SendMessage(Protocols::SecureChannel::MsgType::CASE_Sigma3, std::move(msg_R3),
                                      SendFlags(SendMessageFlags::kExpectResponse));
     SuccessOrExit(err);
@@ -1613,6 +1597,7 @@ exit:
     {
         SendStatusReport(mExchangeCtxt, kProtocolCodeInvalidParam);
         DiscardExchange();
+        ChipLogError(Inet, "[TEST] CASESession::SendSigma3c");
         AbortPendingEstablish(err);
     }
 
@@ -1836,6 +1821,7 @@ exit:
         // Abort the pending establish, which is normally done by CASESession::OnMessageReceived,
         // but in the background processing case must be done here.
         DiscardExchange();
+        ChipLogError(Inet, "[TEST] CASESession::HandleSigma3c");
         AbortPendingEstablish(err);
     }
 
@@ -2279,6 +2265,7 @@ exit:
         // Discard the exchange so that Clear() doesn't try aborting it.  The
         // exchange will handle that.
         DiscardExchange();
+        ChipLogError(Inet, "[TEST] CASESession::OnMessageReceived");
         AbortPendingEstablish(err);
     }
     return err;

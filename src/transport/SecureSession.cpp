@@ -23,6 +23,7 @@ namespace Transport {
 
 void SecureSessionDeleter::Release(SecureSession * entry)
 {
+    ChipLogError(Inet, "[TEST] SecureSessionDeleter::Release");
     entry->mTable.ReleaseSession(entry);
 }
 
@@ -188,7 +189,7 @@ void SecureSession::Retain()
 #if CHIP_CONFIG_SECURE_SESSION_REFCOUNT_LOGGING
     ChipLogProgress(SecureChannel, "SecureSession[%p]: ++ %d -> %d", this, GetReferenceCount(), GetReferenceCount() + 1);
 #endif
-
+    ChipLogError(Inet, "[TEST] SecureSession::Retain()");
     ReferenceCounted<SecureSession, SecureSessionDeleter, 0, uint16_t>::Retain();
 }
 
@@ -198,6 +199,7 @@ void SecureSession::Release()
     ChipLogProgress(SecureChannel, "SecureSession[%p]: -- %d -> %d", this, GetReferenceCount(), GetReferenceCount() - 1);
 #endif
 
+    ChipLogError(Inet, "[TEST] SecureSession::Release()");
     ReferenceCounted<SecureSession, SecureSessionDeleter, 0, uint16_t>::Release();
 }
 

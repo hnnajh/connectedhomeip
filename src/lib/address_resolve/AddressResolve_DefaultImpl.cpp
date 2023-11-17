@@ -296,7 +296,10 @@ void Resolver::OnOperationalNodeResolved(const Dnssd::ResolvedNodeData & nodeDat
         {
             char ipAddress[100];
             nodeData.resolutionData.ipAddress[i].ToString(ipAddress, 100);
-            ChipLogError(Discovery, "[TEST] address[%zu]=%s", i , ipAddress);
+            ChipLogError(Discovery, "[TEST] address[%zu]=%s, IPv6=%d", i , ipAddress, nodeData.resolutionData.ipAddress[i].IsIPv6());
+            if (nodeData.resolutionData.ipAddress[i].IsIPv6()) {
+                continue;
+            }
 #if !INET_CONFIG_ENABLE_IPV4
             if (!nodeData.resolutionData.ipAddress[i].IsIPv6())
             {

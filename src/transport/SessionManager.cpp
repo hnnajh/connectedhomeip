@@ -411,6 +411,7 @@ CHIP_ERROR SessionManager::SendPreparedMessage(const SessionHandle & sessionHand
                     destination = &(multicastAddress.SetInterface(interfaceId));
                     if (mTransportMgr != nullptr)
                     {
+                        ChipLogError(Inet, "[TEST] SesssionManager::SendPreparedMessage");
                         if (CHIP_NO_ERROR != mTransportMgr->SendMessage(*destination, std::move(tempBuf)))
                         {
                             ChipLogError(Inet, "Failed to send Multicast message on interface %s", name);
@@ -439,6 +440,7 @@ CHIP_ERROR SessionManager::SendPreparedMessage(const SessionHandle & sessionHand
 
     if (mTransportMgr != nullptr)
     {
+        ChipLogError(Inet, "[TEST] SesssionManager::SendPreparedMessage");
         return mTransportMgr->SendMessage(*destination, std::move(msgBuf));
     }
 
@@ -563,6 +565,7 @@ CHIP_ERROR SessionManager::InjectCaseSessionWithTestKey(SessionHolder & sessionH
 
 void SessionManager::OnMessageReceived(const PeerAddress & peerAddress, System::PacketBufferHandle && msg)
 {
+    ChipLogError(Inet, "[TEST] SessionManager::OnMessageReceived");
     PacketHeader partialPacketHeader;
 
     CHIP_ERROR err = partialPacketHeader.DecodeFixed(msg);
@@ -574,6 +577,7 @@ void SessionManager::OnMessageReceived(const PeerAddress & peerAddress, System::
 
     if (partialPacketHeader.IsEncrypted())
     {
+        ChipLogError(Inet, "[TEST] SessionManager::OnMessageReceived, is encrypted");
         if (partialPacketHeader.IsGroupSession())
         {
             SecureGroupMessageDispatch(partialPacketHeader, peerAddress, std::move(msg));
@@ -585,6 +589,7 @@ void SessionManager::OnMessageReceived(const PeerAddress & peerAddress, System::
     }
     else
     {
+        ChipLogError(Inet, "[TEST] SessionManager::OnMessageReceived, is NOT encrypted");
         UnauthenticatedMessageDispatch(partialPacketHeader, peerAddress, std::move(msg));
     }
 }
@@ -651,6 +656,7 @@ CHIP_ERROR SessionManager::Disconnect(const PeerAddress & peerAddress)
 void SessionManager::UnauthenticatedMessageDispatch(const PacketHeader & partialPacketHeader,
                                                     const Transport::PeerAddress & peerAddress, System::PacketBufferHandle && msg)
 {
+    ChipLogError(Inet, "[TEST] SessionManager::UnauthenticatedMessageDispatch");
     MATTER_TRACE_SCOPE("Unauthenticated Message Dispatch", "SessionManager");
 
     // Drop unsecured messages with privacy enabled.
@@ -677,6 +683,7 @@ void SessionManager::UnauthenticatedMessageDispatch(const PacketHeader & partial
     Optional<SessionHandle> optionalSession;
     if (source.HasValue())
     {
+        ChipLogError(Inet, "[TEST] SessionManager::UnauthenticatedMessageDispatch, has source");
         // Assume peer is the initiator, we are the responder.
         optionalSession = mUnauthenticatedSessions.FindOrAllocateResponder(source.Value(), GetDefaultMRPConfig());
         if (!optionalSession.HasValue())
@@ -687,16 +694,18 @@ void SessionManager::UnauthenticatedMessageDispatch(const PacketHeader & partial
     }
     else
     {
+        ChipLogError(Inet, "[TEST] SessionManager::UnauthenticatedMessageDispatch, has no source");
         // Assume peer is the responder, we are the initiator.
-        optionalSession = mUnauthenticatedSessions.FindInitiator(destination.Value());
+        optionalSession = mUnauthenticatedSessions.returnFirst(destination.Value());
         if (!optionalSession.HasValue())
         {
             ChipLogProgress(Inet, "Received unknown unsecure packet for initiator 0x" ChipLogFormatX64,
                             ChipLogValueX64(destination.Value()));
-            return;
+            //return;
         }
     }
 
+    ChipLogError(Inet, "[TEST] SessionManager::UnauthenticatedMessageDispatch, continue processing");
     const SessionHandle & session                        = optionalSession.Value();
     Transport::UnauthenticatedSession * unsecuredSession = session->AsUnauthenticatedSession();
     unsecuredSession->SetPeerAddress(peerAddress);
@@ -720,12 +729,14 @@ void SessionManager::UnauthenticatedMessageDispatch(const PacketHeader & partial
     }
     else
     {
+        ChipLogError(Inet, "[TEST] SessionManager::UnauthenticatedMessageDispatch, not duplicated");
         // VerifyUnencrypted always returns one of CHIP_NO_ERROR or
         // CHIP_ERROR_DUPLICATE_MESSAGE_RECEIVED.
         unsecuredSession->GetPeerMessageCounter().CommitUnencrypted(packetHeader.GetMessageCounter());
     }
     if (mCB != nullptr)
     {
+        ChipLogError(Inet, "[TEST] SessionManager::UnauthenticatedMessageDispatch, callback is not null");
         MATTER_LOG_MESSAGE_RECEIVED(chip::Tracing::IncomingMessageType::kUnauthenticated, &payloadHeader, &packetHeader,
                                     unsecuredSession, &peerAddress, chip::ByteSpan(msg->Start(), msg->TotalLength()));
 

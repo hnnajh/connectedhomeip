@@ -126,6 +126,7 @@ Optional<SessionHandle> CASESessionManager::FindExistingSession(const ScopedNode
 
 void CASESessionManager::ReleaseSession(OperationalSessionSetup * session)
 {
+    ChipLogError(Inet, "[TEST] CASESessionManager::ReleaseSession");
     if (session != nullptr)
     {
         mConfig.sessionSetupPool->Release(session);
