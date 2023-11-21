@@ -977,6 +977,7 @@ void DeviceCommissioner::OnSessionEstablishmentError(CHIP_ERROR err)
 
 void DeviceCommissioner::OnSessionEstablished(const SessionHandle & session)
 {
+    ChipLogError(Inet, "[TEST] DeviceCommissioner::OnSessionEstablished");
     // PASE session established.
     CommissioneeDeviceProxy * device = mDeviceInPASEEstablishment;
 

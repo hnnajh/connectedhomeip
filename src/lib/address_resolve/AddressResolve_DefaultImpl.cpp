@@ -308,6 +308,7 @@ void Resolver::OnOperationalNodeResolved(const Dnssd::ResolvedNodeData & nodeDat
             }
 #endif
             result.address.SetIPAddress(nodeData.resolutionData.ipAddress[i]);
+            // hnnajh: workaround till we read the actual mdns TXT records
             result.address.SetTransportType(chip::Transport::Type::kTcp);
             current->LookupResult(result);
         }

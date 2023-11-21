@@ -406,6 +406,7 @@ void OperationalSessionSetup::OnSessionEstablishmentError(CHIP_ERROR error)
 
 void OperationalSessionSetup::OnSessionEstablished(const SessionHandle & session)
 {
+    ChipLogError(Inet, "[TEST] OperationalSessionSetup::OnSessionEstablished");
     VerifyOrReturn(mState == State::Connecting,
                    ChipLogError(Discovery, "OnSessionEstablished was called while we were not connecting"));
 

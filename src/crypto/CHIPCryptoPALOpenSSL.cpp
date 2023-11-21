@@ -285,6 +285,11 @@ CHIP_ERROR AES_CCM_decrypt(const uint8_t * ciphertext, size_t ciphertext_length,
                            const uint8_t * tag, size_t tag_length, const Aes128KeyHandle & key, const uint8_t * nonce,
                            size_t nonce_length, uint8_t * plaintext)
 {
+    ChipLogError(Inet, "[TEST] AES_CCM_decrypt, ciphertext=%s", ciphertext);
+    ChipLogError(Inet, "[TEST] AES_CCM_decrypt, aad=%s", aad);
+    ChipLogError(Inet, "[TEST] AES_CCM_decrypt, tag=%s", tag);
+    ChipLogError(Inet, "[TEST] AES_CCM_decrypt, nonce=%s", nonce);
+    ChipLogError(Inet, "[TEST] AES_CCM_decrypt, plaintext=%s", plaintext);
 #if CHIP_CRYPTO_BORINGSSL
     EVP_AEAD_CTX * context = nullptr;
     const EVP_AEAD * aead  = nullptr;

@@ -174,6 +174,7 @@ void CommissioningWindowManager::OnSessionEstablishmentStarted()
 
 void CommissioningWindowManager::OnSessionEstablished(const SessionHandle & session)
 {
+    ChipLogError(Inet, "[TEST] CommissioningWindowManager::OnSessionEstablished");
     DeviceLayer::SystemLayer().CancelTimer(HandleSessionEstablishmentTimeout, this);
 
     ChipLogProgress(AppServer, "Commissioning completed session establishment step");

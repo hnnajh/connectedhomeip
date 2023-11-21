@@ -34,6 +34,7 @@ CHIP_ERROR PairingSession::AllocateSecureSession(SessionManager & sessionManager
 
 CHIP_ERROR PairingSession::ActivateSecureSession(const Transport::PeerAddress & peerAddress)
 {
+    ChipLogError(Inet, "[TEST] PairingSession::ActivateSecureSession, start");
     // Prepare SecureSession fields, including key derivation, first, before activation
     Transport::SecureSession * secureSession = mSecureSessionHolder->AsSecureSession();
     ReturnErrorOnFailure(DeriveSecureSession(secureSession->GetCryptoContext()));
@@ -42,6 +43,7 @@ CHIP_ERROR PairingSession::ActivateSecureSession(const Transport::PeerAddress & 
     secureSession->SetPeerAddress(peerAddress);
     secureSession->GetSessionMessageCounter().GetPeerMessageCounter().SetCounter(Transport::PeerMessageCounter::kInitialSyncValue);
 
+    ChipLogError(Inet, "[TEST] PairingSession::ActivateSecureSession, peerSessionId=%d", peerSessionId);
     // Call Activate last, otherwise errors on anything after would lead to
     // a partially valid session.
     secureSession->Activate(GetLocalScopedNodeId(), GetPeer(), GetPeerCATs(), peerSessionId, mRemoteMRPConfig);
@@ -58,7 +60,7 @@ void PairingSession::Finish()
 
     // Discard the exchange so that Clear() doesn't try closing it. The exchange will handle that.
     DiscardExchange();
-
+    ChipLogError(Inet, "[TEST] PairingSession::Finish");
     CHIP_ERROR err = ActivateSecureSession(address);
     if (err == CHIP_NO_ERROR)
     {
