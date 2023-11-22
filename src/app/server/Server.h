@@ -501,6 +501,7 @@ private:
         {
             auto * sessionResumptionStorage = mServer->GetSessionResumptionStorage();
             VerifyOrReturn(sessionResumptionStorage != nullptr);
+            ChipLogError(Inet, "[TEST] ClearCASEResumptionStateOnFabricChange");
             CHIP_ERROR err = sessionResumptionStorage->DeleteAll(fabricIndex);
             if (err != CHIP_NO_ERROR)
             {
@@ -514,6 +515,7 @@ private:
         {
             auto * subscriptionResumptionStorage = mServer->GetSubscriptionResumptionStorage();
             VerifyOrReturn(subscriptionResumptionStorage != nullptr);
+            ChipLogError(Inet, "[TEST] ClearSubscriptionResumptionStateOnFabricChange");
             CHIP_ERROR err = subscriptionResumptionStorage->DeleteAll(fabricIndex);
             if (err != CHIP_NO_ERROR)
             {

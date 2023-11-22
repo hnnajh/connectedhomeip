@@ -87,7 +87,15 @@ CHIP_ERROR CASEServer::OnMessageReceived(Messaging::ExchangeContext * ec, const 
         {
             // Handshake wasn't stuck, send the busy status report and let the existing handshake continue.
 
-
+            // A successful CASE handshake can take several seconds and some may time out (30 seconds or more).
+            // TODO: Come up with better estimate: https://github.com/project-chip/connectedhomeip/issues/28288
+            // For now, setting minimum wait time to 5000 milliseconds.
+            CHIP_ERROR err = SendBusyStatusReport(ec, System::Clock::Milliseconds16(5000));
+            if (err != CHIP_NO_ERROR)
+            {
+                ChipLogError(Inet, "Failed to send the busy status report, err:%" CHIP_ERROR_FORMAT, err.Format());
+            }
+            return err;
         }
     }
 

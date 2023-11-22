@@ -32,6 +32,7 @@ public:
 
     virtual void Release(OperationalSessionSetup * device) = 0;
 
+    virtual void loopAllEntries() = 0;
     virtual OperationalSessionSetup * FindSessionSetup(ScopedNodeId peerId, bool forAddressUpdate) = 0;
 
     virtual void ReleaseAllSessionSetupsForFabric(FabricIndex fabricIndex) = 0;
@@ -45,20 +46,36 @@ template <size_t N>
 class OperationalSessionSetupPool : public OperationalSessionSetupPoolDelegate
 {
 public:
-    ~OperationalSessionSetupPool() override { mSessionSetupPool.ReleaseAll(); }
+    ~OperationalSessionSetupPool() override {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::Destructor/ReleaseAll");
+        mSessionSetupPool.ReleaseAll(); }
 
     OperationalSessionSetup * Allocate(const CASEClientInitParams & params, CASEClientPoolDelegate * clientPool,
                                        ScopedNodeId peerId, OperationalSessionReleaseDelegate * releaseDelegate) override
     {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::Allocate");
         return mSessionSetupPool.CreateObject(params, clientPool, peerId, releaseDelegate);
     }
 
-    void Release(OperationalSessionSetup * device) override { mSessionSetupPool.ReleaseObject(device); }
+    void Release(OperationalSessionSetup * device) override {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::Release");
+        mSessionSetupPool.ReleaseObject(device);
+    }
+
+    void loopAllEntries() override {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::loopAllEntries");
+        mSessionSetupPool.ForEachActiveObject([&](auto * activeSetup) {
+            ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::loopAllEntries, peerId=%" PRIu64, activeSetup->GetPeerId().GetNodeId());
+            return Loop::Continue;
+        });
+    }
 
     OperationalSessionSetup * FindSessionSetup(ScopedNodeId peerId, bool forAddressUpdate) override
     {
         OperationalSessionSetup * foundDevice = nullptr;
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::FindSessionSetup");
         mSessionSetupPool.ForEachActiveObject([&](auto * activeSetup) {
+            ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::FindSessionSetup, peerId=%" PRIu64, peerId.GetNodeId());
             if (activeSetup->GetPeerId() == peerId && activeSetup->IsForAddressUpdate() == forAddressUpdate)
             {
                 foundDevice = activeSetup;
@@ -72,6 +89,7 @@ public:
 
     void ReleaseAllSessionSetupsForFabric(FabricIndex fabricIndex) override
     {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::ReleaseAllSessionSetupsForFabric");
         mSessionSetupPool.ForEachActiveObject([&](auto * activeSetup) {
             if (activeSetup->GetFabricIndex() == fabricIndex)
             {
@@ -83,6 +101,7 @@ public:
 
     void ReleaseAllSessionSetup() override
     {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetupPool::ReleaseAllSessionSetup");
         mSessionSetupPool.ForEachActiveObject([&](auto * activeSetup) {
             Release(activeSetup);
             return Loop::Continue;

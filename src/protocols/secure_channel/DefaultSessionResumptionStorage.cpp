@@ -25,6 +25,7 @@ namespace chip {
 CHIP_ERROR DefaultSessionResumptionStorage::FindByScopedNodeId(const ScopedNodeId & node, ResumptionIdStorage & resumptionId,
                                                                Crypto::P256ECDHDerivedSecret & sharedSecret, CATValues & peerCATs)
 {
+    ChipLogError(Inet, "[TEST] DefaultSessionResumptionStorage::FindByScopedNodeId");
     ReturnErrorOnFailure(LoadState(node, resumptionId, sharedSecret, peerCATs));
     return CHIP_NO_ERROR;
 }
@@ -32,6 +33,7 @@ CHIP_ERROR DefaultSessionResumptionStorage::FindByScopedNodeId(const ScopedNodeI
 CHIP_ERROR DefaultSessionResumptionStorage::FindByResumptionId(ConstResumptionIdView resumptionId, ScopedNodeId & node,
                                                                Crypto::P256ECDHDerivedSecret & sharedSecret, CATValues & peerCATs)
 {
+    ChipLogError(Inet, "[TEST] DefaultSessionResumptionStorage::FindByResumptionId");
     ReturnErrorOnFailure(FindNodeByResumptionId(resumptionId, node));
     ResumptionIdStorage tmpResumptionId;
     ReturnErrorOnFailure(FindByScopedNodeId(node, tmpResumptionId, sharedSecret, peerCATs));
@@ -42,6 +44,7 @@ CHIP_ERROR DefaultSessionResumptionStorage::FindByResumptionId(ConstResumptionId
 
 CHIP_ERROR DefaultSessionResumptionStorage::FindNodeByResumptionId(ConstResumptionIdView resumptionId, ScopedNodeId & node)
 {
+    ChipLogError(Inet, "[TEST] DefaultSessionResumptionStorage::FindNodeByResumptionId");
     ReturnErrorOnFailure(LoadLink(resumptionId, node));
     return CHIP_NO_ERROR;
 }
@@ -49,6 +52,7 @@ CHIP_ERROR DefaultSessionResumptionStorage::FindNodeByResumptionId(ConstResumpti
 CHIP_ERROR DefaultSessionResumptionStorage::Save(const ScopedNodeId & node, ConstResumptionIdView resumptionId,
                                                  const Crypto::P256ECDHDerivedSecret & sharedSecret, const CATValues & peerCATs)
 {
+    ChipLogError(Inet, "[TEST] DefaultSessionResumptionStorage::Save");
     SessionIndex index;
     ReturnErrorOnFailure(LoadIndex(index));
 
@@ -108,6 +112,7 @@ CHIP_ERROR DefaultSessionResumptionStorage::Save(const ScopedNodeId & node, Cons
 
 CHIP_ERROR DefaultSessionResumptionStorage::Delete(const ScopedNodeId & node)
 {
+    ChipLogError(Inet, "[TEST] DefaultSessionResumptionStorage::Delete");
     SessionIndex index;
     ReturnErrorOnFailure(LoadIndex(index));
 
@@ -183,6 +188,7 @@ CHIP_ERROR DefaultSessionResumptionStorage::Delete(const ScopedNodeId & node)
 
 CHIP_ERROR DefaultSessionResumptionStorage::DeleteAll(FabricIndex fabricIndex)
 {
+    ChipLogError(Inet, "[TEST] DefaultSessionResumptionStorage::DeleteAll");
     CHIP_ERROR stickyErr = CHIP_NO_ERROR;
     size_t found         = 0;
     SessionIndex index;

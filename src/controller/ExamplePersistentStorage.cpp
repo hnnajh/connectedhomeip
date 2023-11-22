@@ -70,6 +70,7 @@ std::string GetFilename(const char * directory, const char * name)
 
 CHIP_ERROR PersistentStorage::Init(const char * name, const char * directory)
 {
+    ChipLogError(Inet, "[TEST] PersistentStorage::Init, name=%s, directory=%s", name, directory);
     CHIP_ERROR err = CHIP_NO_ERROR;
 
     std::ifstream ifs;

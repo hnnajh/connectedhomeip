@@ -747,6 +747,7 @@ public:
 
 CHIP_ERROR FabricTable::NotifyFabricUpdated(FabricIndex fabricIndex)
 {
+    ChipLogError(Inet, "[TEST] FabricTable::NotifyFabricUpdated");
     FabricTable::Delegate * delegate = mDelegateListRoot;
     while (delegate)
     {
@@ -1653,6 +1654,7 @@ CHIP_ERROR FabricTable::AddNewPendingFabricCommon(const ByteSpan & noc, const By
                                                   Crypto::P256Keypair * existingOpKey, bool isExistingOpKeyExternallyOwned,
                                                   AdvertiseIdentity advertiseIdentity, FabricIndex * outNewFabricIndex)
 {
+    ChipLogError(Inet, "[TEST] FabricTable::AddNewPendingFabricCommon");
     VerifyOrReturnError(mOpCertStore != nullptr, CHIP_ERROR_INCORRECT_STATE);
     VerifyOrReturnError(outNewFabricIndex != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
     static_assert(kMaxValidFabricIndex <= UINT8_MAX, "Cannot create more fabrics than UINT8_MAX");
@@ -1724,6 +1726,7 @@ CHIP_ERROR FabricTable::UpdatePendingFabricCommon(FabricIndex fabricIndex, const
                                                   Crypto::P256Keypair * existingOpKey, bool isExistingOpKeyExternallyOwned,
                                                   AdvertiseIdentity advertiseIdentity)
 {
+    ChipLogError(Inet, "[TEST] FabricTable::UpdatePendingFabricCommon");
     VerifyOrReturnError(mOpCertStore != nullptr, CHIP_ERROR_INCORRECT_STATE);
     VerifyOrReturnError(IsValidFabricIndex(fabricIndex), CHIP_ERROR_INVALID_ARGUMENT);
 

@@ -72,6 +72,7 @@ void OperationalSessionSetup::MoveToState(State aTargetState)
 
 bool OperationalSessionSetup::AttachToExistingSecureSession()
 {
+    ChipLogError(Inet, "[TEST] OperationalSessionSetup::AttachToExistingSecureSession");
     VerifyOrReturnError(mState == State::NeedsAddress || mState == State::ResolvingAddress || mState == State::HasAddress ||
                             mState == State::WaitingForRetry,
                         false);
@@ -94,6 +95,7 @@ bool OperationalSessionSetup::AttachToExistingSecureSession()
 void OperationalSessionSetup::Connect(Callback::Callback<OnDeviceConnected> * onConnection,
                                       Callback::Callback<OnDeviceConnectionFailure> * onFailure)
 {
+    ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect");
     CHIP_ERROR err   = CHIP_NO_ERROR;
     bool isConnected = false;
 
@@ -107,13 +109,16 @@ void OperationalSessionSetup::Connect(Callback::Callback<OnDeviceConnected> * on
     switch (mState)
     {
     case State::Uninitialized:
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, Uninitialized");
         err = CHIP_ERROR_INCORRECT_STATE;
         break;
 
     case State::NeedsAddress:
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, NeedsAddress");
         isConnected = AttachToExistingSecureSession();
         if (!isConnected)
         {
+            ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, not connected");
             // LookupPeerAddress could perhaps call back with a result
             // synchronously, so do our state update first.
             MoveToState(State::ResolvingAddress);
@@ -130,10 +135,12 @@ void OperationalSessionSetup::Connect(Callback::Callback<OnDeviceConnected> * on
 
     case State::ResolvingAddress:
     case State::WaitingForRetry:
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, WaitingForRetry");
         isConnected = AttachToExistingSecureSession();
         break;
 
     case State::HasAddress:
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, HasAddress");
         isConnected = AttachToExistingSecureSession();
         if (!isConnected)
         {
@@ -148,9 +155,11 @@ void OperationalSessionSetup::Connect(Callback::Callback<OnDeviceConnected> * on
         break;
 
     case State::Connecting:
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, Connecting");
         break;
 
     case State::SecureConnected:
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, SecureConnected");
         isConnected = true;
         break;
 
@@ -160,6 +169,7 @@ void OperationalSessionSetup::Connect(Callback::Callback<OnDeviceConnected> * on
 
     if (isConnected)
     {
+        ChipLogError(Inet, "[TEST] OperationalSessionSetup::Connect, isConnected");
         MoveToState(State::SecureConnected);
     }
 
@@ -420,6 +430,7 @@ void OperationalSessionSetup::OnSessionEstablished(const SessionHandle & session
         return;
     }
 
+    ChipLogError(Inet, "[TEST] OperationalSessionSetup::OnSessionEstablished, SecureConnected");
     MoveToState(State::SecureConnected);
 
     DequeueConnectionCallbacks(CHIP_NO_ERROR);

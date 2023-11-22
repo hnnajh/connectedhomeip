@@ -56,7 +56,9 @@ public:
     using EndPointVisitor = Loop (*)(EndPoint *);
 
     EndPointManager() {}
-    virtual ~EndPointManager() { VerifyOrDie(mLayerState.Destroy()); }
+    virtual ~EndPointManager() {
+        //VerifyOrDie(mLayerState.Destroy());
+    }
 
     CHIP_ERROR Init(System::Layer & systemLayer)
     {

@@ -216,6 +216,7 @@ public:
 
         void OnFabricRemoved(const chip::FabricTable & fabricTable, FabricIndex fabricIndex) override
         {
+            ChipLogError(Inet, "[TEST] CHIPDeviceControllerFactory::OnFabricRemoved");
             (void) fabricTable;
             if (mGroupDataProvider != nullptr)
             {
@@ -227,6 +228,7 @@ public:
         void OnFabricUpdated(const chip::FabricTable & fabricTable, chip::FabricIndex fabricIndex) override
         {
             (void) fabricTable;
+            ChipLogError(Inet, "[TEST] CHIPDeviceControllerFactory::OnFabricUpdated");
             ClearCASEResumptionStateOnFabricChange(fabricIndex);
         }
 
@@ -234,6 +236,7 @@ public:
         void ClearCASEResumptionStateOnFabricChange(chip::FabricIndex fabricIndex)
         {
             VerifyOrReturn(mSessionResumptionStorage != nullptr);
+            ChipLogError(Inet, "[TEST] CHIPDeviceControllerFactory::ClearCASEResumptionStateOnFabricChange");
             CHIP_ERROR err = mSessionResumptionStorage->DeleteAll(fabricIndex);
             if (err != CHIP_NO_ERROR)
             {

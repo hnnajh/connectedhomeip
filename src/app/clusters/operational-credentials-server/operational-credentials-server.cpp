@@ -281,7 +281,31 @@ void CleanupSessionsForFabric(SessionManager & sessionMgr, FabricIndex fabricInd
 
 void FailSafeCleanup(const chip::DeviceLayer::ChipDeviceEvent * event)
 {
-    (void) event;
+    ChipLogError(Zcl, "[TEST] FailSafeCleanup");
+    ChipLogError(Zcl, "OpCreds: Proceeding to FailSafeCleanup on fail-safe expiry!");
+    FabricIndex fabricIndex = event->FailSafeTimerExpired.fabricIndex;
+    // If an AddNOC or UpdateNOC command has been successfully invoked, terminate all CASE sessions associated with the Fabric
+    // whose Fabric Index is recorded in the Fail-Safe context (see ArmFailSafe Command) by clearing any associated Secure
+    // Session Context at the Server.
+    if (event->FailSafeTimerExpired.addNocCommandHasBeenInvoked || event->FailSafeTimerExpired.updateNocCommandHasBeenInvoked)
+    {
+        SessionManager & sessionMgr = Server::GetInstance().GetSecureSessionManager();
+        CleanupSessionsForFabric(sessionMgr, fabricIndex);
+    }
+    auto & fabricTable = Server::GetInstance().GetFabricTable();
+    fabricTable.RevertPendingFabricData();
+    // If an AddNOC command had been successfully invoked, achieve the equivalent effect of invoking the RemoveFabric command
+    // against the Fabric Index stored in the Fail-Safe Context for the Fabric Index that was the subject of the AddNOC
+    // command.
+    if (event->FailSafeTimerExpired.addNocCommandHasBeenInvoked)
+    {
+        CHIP_ERROR err;
+        err = DeleteFabricFromTable(fabricIndex);
+        if (err != CHIP_NO_ERROR)
+        {
+            ChipLogError(Zcl, "OpCreds: failed to delete fabric at index %u: %" CHIP_ERROR_FORMAT, fabricIndex, err.Format());
+        }
+    }
 }
 
 void OnPlatformEventHandler(const chip::DeviceLayer::ChipDeviceEvent * event, intptr_t arg)

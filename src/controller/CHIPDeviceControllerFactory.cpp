@@ -285,6 +285,7 @@ CHIP_ERROR DeviceControllerFactory::InitSystemState(FactoryInitParams params)
         .sessionSetupPool  = stateParams.sessionSetupPool,
     };
 
+    stateParams.sessionSetupPool->loopAllEntries();
     // TODO: Need to be able to create a CASESessionManagerConfig here!
     stateParams.caseSessionManager = Platform::New<CASESessionManager>();
     ReturnErrorOnFailure(stateParams.caseSessionManager->Init(stateParams.systemLayer, sessionManagerConfig));

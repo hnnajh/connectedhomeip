@@ -425,6 +425,7 @@ CHIP_ERROR SimpleSubscriptionResumptionStorage::DeleteMaxCount()
 
 CHIP_ERROR SimpleSubscriptionResumptionStorage::DeleteAll(FabricIndex fabricIndex)
 {
+    ChipLogError(Inet, "[TEST] SimpleSubscriptionResumptionStorage::DeleteAll");
     CHIP_ERROR deleteErr = CHIP_NO_ERROR;
 
     uint16_t count = 0;

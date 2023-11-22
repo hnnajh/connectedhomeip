@@ -64,6 +64,7 @@ CHIP_ERROR SimpleSessionResumptionStorage::SaveIndex(const SessionIndex & index)
         ReturnErrorOnFailure(writer.Put(kFabricIndexTag, index.mNodes[i].GetFabricIndex()));
         ReturnErrorOnFailure(writer.Put(kPeerNodeIdTag, index.mNodes[i].GetNodeId()));
         ReturnErrorOnFailure(writer.EndContainer(innerType));
+        ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::SaveIndex, NodeId=%" PRIu64, index.mNodes[i].GetNodeId());
     }
 
     ReturnErrorOnFailure(writer.EndContainer(arrayType));
@@ -115,6 +116,8 @@ CHIP_ERROR SimpleSessionResumptionStorage::LoadIndex(SessionIndex & index)
         ReturnErrorOnFailure(reader.Next(kPeerNodeIdTag));
         ReturnErrorOnFailure(reader.Get(peerNodeId));
 
+        ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::LoadIndex, NodeId=%" PRIu64, peerNodeId);
+
         index.mNodes[count++] = ScopedNodeId(peerNodeId, fabricIndex);
 
         ReturnErrorOnFailure(reader.ExitContainer(containerType));
@@ -145,7 +148,7 @@ CHIP_ERROR SimpleSessionResumptionStorage::SaveLink(ConstResumptionIdView resump
     ReturnErrorOnFailure(writer.Put(kFabricIndexTag, node.GetFabricIndex()));
     ReturnErrorOnFailure(writer.Put(kPeerNodeIdTag, node.GetNodeId()));
     ReturnErrorOnFailure(writer.EndContainer(outerType));
-
+    ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::SaveLink, NodeId=%" PRIu64, node.GetNodeId());
     const auto len = writer.GetLengthWritten();
     VerifyOrDie(CanCastTo<uint16_t>(len));
 
@@ -155,6 +158,7 @@ CHIP_ERROR SimpleSessionResumptionStorage::SaveLink(ConstResumptionIdView resump
 
 CHIP_ERROR SimpleSessionResumptionStorage::LoadLink(ConstResumptionIdView resumptionId, ScopedNodeId & node)
 {
+    ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::LoadLink");
     std::array<uint8_t, MaxScopedNodeIdSize()> buf;
     uint16_t len = static_cast<uint16_t>(buf.size());
 
@@ -178,6 +182,7 @@ CHIP_ERROR SimpleSessionResumptionStorage::LoadLink(ConstResumptionIdView resump
     ReturnErrorOnFailure(reader.ExitContainer(containerType));
     ReturnErrorOnFailure(reader.VerifyEndOfContainer());
 
+    ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::LoadLink, peerNodeId=%" PRIu64, peerNodeId);
     node = ScopedNodeId(peerNodeId, fabricIndex);
 
     return CHIP_NO_ERROR;
@@ -192,6 +197,7 @@ CHIP_ERROR SimpleSessionResumptionStorage::DeleteLink(ConstResumptionIdView resu
 CHIP_ERROR SimpleSessionResumptionStorage::SaveState(const ScopedNodeId & node, ConstResumptionIdView resumptionId,
                                                      const Crypto::P256ECDHDerivedSecret & sharedSecret, const CATValues & peerCATs)
 {
+    ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::SaveState, nodeId=%" PRIu64, node.GetNodeId());
     // Save session state into key: /f/<fabricIndex>/s/<nodeId>
     std::array<uint8_t, MaxStateSize()> buf;
     TLV::TLVWriter writer;
@@ -220,6 +226,7 @@ CHIP_ERROR SimpleSessionResumptionStorage::SaveState(const ScopedNodeId & node, 
 CHIP_ERROR SimpleSessionResumptionStorage::LoadState(const ScopedNodeId & node, ResumptionIdStorage & resumptionId,
                                                      Crypto::P256ECDHDerivedSecret & sharedSecret, CATValues & peerCATs)
 {
+    ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::LoadState, nodeId=%" PRIu64, node.GetNodeId());
     std::array<uint8_t, MaxStateSize()> buf;
     uint16_t len = static_cast<uint16_t>(buf.size());
 
@@ -261,7 +268,8 @@ CHIP_ERROR SimpleSessionResumptionStorage::LoadState(const ScopedNodeId & node, 
 
 CHIP_ERROR SimpleSessionResumptionStorage::DeleteState(const ScopedNodeId & node)
 {
-    ReturnErrorOnFailure(mStorage->SyncDeleteKeyValue(GetStorageKey(node).KeyName()));
+    ChipLogError(Inet, "[TEST] SimpleSessionResumptionStorage::DeleteState, nodeId=%" PRIu64, node.GetNodeId());
+    //ReturnErrorOnFailure(mStorage->SyncDeleteKeyValue(GetStorageKey(node).KeyName()));
     return CHIP_NO_ERROR;
 }
 

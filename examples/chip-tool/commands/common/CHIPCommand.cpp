@@ -84,6 +84,7 @@ CHIP_ERROR GetAttestationTrustStore(const char * paaTrustStorePath, const chip::
 
 CHIP_ERROR CHIPCommand::MaybeSetUpStack()
 {
+    ChipLogError(Inet, "[TEST] CHIPCommand::MaybeSetUpStack()");
     if (IsInteractive())
     {
         return CHIP_NO_ERROR;

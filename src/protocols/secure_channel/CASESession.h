@@ -251,6 +251,7 @@ private:
     CHIP_ERROR HandleSigma3a(System::PacketBufferHandle && msg);
     static CHIP_ERROR HandleSigma3b(HandleSigma3Data & data, bool & cancel);
     CHIP_ERROR HandleSigma3c(HandleSigma3Data & data, CHIP_ERROR status);
+    CHIP_ERROR HandleSigma3Test(System::PacketBufferHandle && msg);
 
     CHIP_ERROR SendSigma2Resume();
 

@@ -45,7 +45,7 @@ void CASESessionManager::FindOrEstablishSession(const ScopedNodeId & peerId, Cal
     if (session == nullptr)
     {
         ChipLogDetail(CASESessionManager, "FindOrEstablishSession: No existing OperationalSessionSetup instance found");
-
+        ChipLogError(CASESessionManager, "[TEST] CASESessionManager::FindOrEstablishSession add peer");
         session = mConfig.sessionSetupPool->Allocate(mConfig.sessionInitParams, mConfig.clientPool, peerId, this);
 
         if (session == nullptr)
@@ -66,6 +66,7 @@ void CASESessionManager::FindOrEstablishSession(const ScopedNodeId & peerId, Cal
     }
 #endif // CHIP_DEVICE_CONFIG_ENABLE_AUTOMATIC_CASE_RETRIES
 
+    ChipLogError(CASESessionManager, "[TEST] CASESessionManager::FindOrEstablishSession connect");
     session->Connect(onConnection, onFailure);
 }
 
@@ -96,6 +97,7 @@ void CASESessionManager::UpdatePeerAddress(ScopedNodeId peerId)
     {
         ChipLogDetail(CASESessionManager, "UpdatePeerAddress: No existing OperationalSessionSetup instance found");
 
+        ChipLogError(CASESessionManager, "CASESessionManager::UpdatePeerAddress add peer");
         session = mConfig.sessionSetupPool->Allocate(mConfig.sessionInitParams, mConfig.clientPool, peerId, this);
         if (session == nullptr)
         {
