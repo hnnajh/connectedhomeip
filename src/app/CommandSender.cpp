@@ -29,9 +29,15 @@
 #include <platform/LockTracker.h>
 #include <protocols/Protocols.h>
 #include <protocols/interaction_model/Constants.h>
+#include <chrono>
 
 namespace chip {
 namespace app {
+using std::chrono::high_resolution_clock;
+using std::chrono::duration_cast;
+using std::chrono::duration;
+using std::chrono::milliseconds;
+static std::chrono::time_point<std::chrono::high_resolution_clock> start;
 
 CommandSender::CommandSender(Callback * apCallback, Messaging::ExchangeManager * apExchangeMgr, bool aIsTimedRequest,
                              bool aSuppressResponse) :
@@ -72,6 +78,8 @@ CHIP_ERROR CommandSender::AllocateBuffer()
 
 CHIP_ERROR CommandSender::SendCommandRequestInternal(const SessionHandle & session, Optional<System::Clock::Timeout> timeout)
 {
+    ChipLogError(Inet, "[TEST] CommandSender::SendCommandRequestInternal");
+    start = high_resolution_clock::now();
     VerifyOrReturnError(mState == State::AddedCommand, CHIP_ERROR_INCORRECT_STATE);
 
     ReturnErrorOnFailure(Finalize(mPendingInvokeData));
@@ -226,6 +234,11 @@ exit:
 
 CHIP_ERROR CommandSender::ProcessInvokeResponse(System::PacketBufferHandle && payload)
 {
+    auto t2 = high_resolution_clock::now();
+    /* Getting number of milliseconds as an integer. */
+    auto ms_int = duration_cast<milliseconds>(t2 - start);
+    ChipLogError(Inet, "[TEST] CommandSender::ProcessInvokeResponse, latency=%lld ms", ms_int.count());
+
     CHIP_ERROR err = CHIP_NO_ERROR;
     System::PacketBufferTLVReader reader;
     TLV::TLVReader invokeResponsesReader;
@@ -288,6 +301,11 @@ void CommandSender::Close()
 
 CHIP_ERROR CommandSender::ProcessInvokeResponseIB(InvokeResponseIB::Parser & aInvokeResponse)
 {
+    auto t2 = high_resolution_clock::now();
+    /* Getting number of milliseconds as an integer. */
+    auto ms_int = duration_cast<milliseconds>(t2 - start);
+    ChipLogError(Inet, "[TEST] CommandSender::ProcessInvokeResponseIB, latency=%lld ms", ms_int.count());
+
     CHIP_ERROR err = CHIP_NO_ERROR;
     ClusterId clusterId;
     CommandId commandId;

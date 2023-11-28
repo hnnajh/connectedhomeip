@@ -41,6 +41,7 @@ using namespace chip::app::Clusters;
 void AppDeviceCallbacks::PostAttributeChangeCallback(EndpointId endpointId, ClusterId clusterId, AttributeId attributeId,
                                                      uint8_t type, uint16_t size, uint8_t * value)
 {
+    ChipLogError(Inet, "[TEST] AppDeviceCallbacks::PostAttributeChangeCallback");
     ESP_LOGI(TAG, "PostAttributeChangeCallback - Cluster ID: '0x%" PRIx32 "', EndPoint ID: '0x%x', Attribute ID: '0x%" PRIx32 "'",
              clusterId, endpointId, attributeId);
 

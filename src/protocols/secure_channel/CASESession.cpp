@@ -389,8 +389,33 @@ void CASESession::OnSessionReleased()
 void CASESession::Clear()
 {
     ChipLogError(Inet, "[TEST] CASESession::Clear");
-    return;
-
+    // Cancel any outstanding work.
+    if (mSendSigma3Helper)
+    {
+        mSendSigma3Helper->CancelWork();
+        mSendSigma3Helper.reset();
+    }
+    if (mHandleSigma3Helper)
+    {
+        mHandleSigma3Helper->CancelWork();
+        mHandleSigma3Helper.reset();
+    }
+    // This function zeroes out and resets the memory used by the object.
+    // It's done so that no security related information will be leaked.
+    mCommissioningHash.Clear();
+    PairingSession::Clear();
+    mState = State::kInitialized;
+    Crypto::ClearSecretData(mIPK);
+    if (mFabricsTable != nullptr)
+    {
+        mFabricsTable->RemoveFabricDelegate(this);
+        mFabricsTable->ReleaseEphemeralKeypair(mEphemeralKey);
+        mEphemeralKey = nullptr;
+    }
+    mLocalNodeId  = kUndefinedNodeId;
+    mPeerNodeId   = kUndefinedNodeId;
+    mFabricsTable = nullptr;
+    mFabricIndex  = kUndefinedFabricIndex;
 }
 
 void CASESession::InvalidateIfPendingEstablishmentOnFabric(FabricIndex fabricIndex)

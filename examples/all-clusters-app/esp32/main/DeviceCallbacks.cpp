@@ -36,6 +36,7 @@
 #include <common/CHIPDeviceManager.h>
 #include <esp_log.h>
 #include <lib/dnssd/Advertiser.h>
+#include <chrono>
 
 #if CONFIG_DEVICE_TYPE_ESP32_C3_DEVKITM
 #include <app-common/zap-generated/ids/Clusters.h>
@@ -93,9 +94,16 @@ Identify gIdentify1 = {
 void AppDeviceCallbacks::PostAttributeChangeCallback(EndpointId endpointId, ClusterId clusterId, AttributeId attributeId,
                                                      uint8_t type, uint16_t size, uint8_t * value)
 {
+    ChipLogError(Inet, "[TEST] AppDeviceCallbacks::PostAttributeChangeCallback");
     ESP_LOGI(TAG, "PostAttributeChangeCallback - Cluster ID: '0x%" PRIx32 "', EndPoint ID: '0x%x' , Attribute ID: '0x%" PRIx32 "'",
              clusterId, endpointId, attributeId);
 
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
+
+    auto t1 = high_resolution_clock::now();
     switch (clusterId)
     {
     case Clusters::OnOff::Id:
@@ -117,7 +125,10 @@ void AppDeviceCallbacks::PostAttributeChangeCallback(EndpointId endpointId, Clus
         ESP_LOGI(TAG, "Unhandled cluster ID: %" PRIu32, clusterId);
         break;
     }
-
+    auto t2 = high_resolution_clock::now();
+    /* Getting number of milliseconds as an integer. */
+    auto ms_int = duration_cast<milliseconds>(t2 - t1);
+    ChipLogError(Inet, "[TEST] AppDeviceCallbacks::PostAttributeChangeCallback, Latency=%lld ms", ms_int.count());
     ESP_LOGI(TAG, "Current free heap: %u\n", static_cast<unsigned int>(heap_caps_get_free_size(MALLOC_CAP_8BIT)));
 }
 
