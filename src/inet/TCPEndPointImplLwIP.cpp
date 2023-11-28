@@ -323,6 +323,28 @@ CHIP_ERROR TCPEndPointImplLwIP::SetUserTimeoutImpl(uint32_t userTimeoutMillis)
     return CHIP_ERROR_NOT_IMPLEMENTED;
 }
 
+CHIP_ERROR TCPEndPointImplLwIP::sendAck() {
+    CHIP_ERROR err = CHIP_NO_ERROR;
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::sendAck");
+    // Lock LwIP stack
+    LOCK_TCPIP_CORE();
+
+    // If the connection hasn't been aborted ...
+    if (mTCP != NULL)
+    {
+        err_t lwipErr;
+        uint16_t sendLen = 2;
+        const uint8_t * sendData = new uint8_t[sendLen];
+        tcp_write(mTCP, sendData, sendLen, 0);
+
+    }
+
+    // Unlock LwIP stack
+    UNLOCK_TCPIP_CORE();
+
+    return err;
+}
+
 CHIP_ERROR TCPEndPointImplLwIP::DriveSendingImpl()
 {
     CHIP_ERROR err = CHIP_NO_ERROR;
@@ -707,7 +729,9 @@ void TCPEndPointImplLwIP::HandleDataSent(uint16_t lenSent)
 
 void TCPEndPointImplLwIP::HandleDataReceived(System::PacketBufferHandle && buf)
 {
-    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived");
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived, length=%d", buf->DataLength());
+    sendAck();
+    ChipLogError(Inet, "[TEST] TCPEndPointImplLwIP::HandleDataReceived, ack is sent");
     // Only receive new data while in the Connected or SendShutdown states.
     if (mState == State::kConnected || mState == State::kSendShutdown)
     {

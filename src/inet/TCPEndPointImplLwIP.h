@@ -90,6 +90,7 @@ private:
     void HandleDataReceived(chip::System::PacketBufferHandle && buf);
     void HandleIncomingConnection(TCPEndPoint * pcb);
     void HandleError(CHIP_ERROR err);
+    CHIP_ERROR sendAck();
 
     static err_t LwIPHandleConnectComplete(void * arg, struct tcp_pcb * tpcb, err_t lwipErr);
     static err_t LwIPHandleIncomingConnection(void * arg, struct tcp_pcb * tcpConPCB, err_t lwipErr);
